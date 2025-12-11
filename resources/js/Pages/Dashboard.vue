@@ -290,226 +290,148 @@ function deleteSelected() {
 </script>
 
 <template>
-  <Head title="Users Table" />
-
-  <AuthenticatedLayout>
-
-    <div class="card p-4 ">
-
-        <h4>DashBoard</h4>
-
-
-
-<!-- Controles: filtros + ações / botão eliminar -->
-<div class="d-flex flex-column flex-md-row align-items-start mt-3 w-100 gap-2">
-
-  <!-- Botão Eliminar (aparece apenas se houver seleção) -->
-  <div v-if="selected.length > 0" class="ms-auto">
-    <button
-      @click="deleteSelected"
-      class="btn btn-danger btn-sm"
-    >
-      Eliminar ({{ selected.length }})
-    </button>
-  </div>
-
-  <!-- Toda a seção de filtros + pesquisa + botões, ocultada se houver seleção -->
-  <template v-else>
-
-    <!-- Filtros -->
-    <div class="d-flex flex-column flex-md-row gap-2 w-100">
-        <select v-model="filterStatus" class="form-select form-select-sm equal-height">
-            <option value="">Status</option>
-            <option>Active</option>
-            <option>Inactive</option>
-            <option>Pending</option>
-        </select>
-
-        <select v-model="filterRole" class="form-select form-select-sm equal-height">
-            <option value="">Role</option>
-            <option>Admin</option>
-            <option>User</option>
-            <option>Manager</option>
-        </select>
-
-        <select v-model="filterPlan" class="form-select form-select-sm equal-height">
-            <option value="">Plan</option>
-            <option>Basic</option>
-            <option>Premium</option>
-            <option>Enterprise</option>
-        </select>
-    </div>
-
-    <!-- Ações: pesquisa, pageSize, Exportar, Adicionar -->
-    <div class="d-flex flex-column flex-md-row gap-2 w-100 mt-2 mt-md-0 ms-md-auto">
-        <select v-model="pageSize" class="form-select form-select-sm equal-height small-width">
-            <option v-for="opt in pageSizeOptions" :key="opt" :value="opt">
-                {{ opt }}
-            </option>
-        </select>
-
-        <input
-            v-model="search"
-            placeholder="Pesquisar"
-            class="form-control form-control-sm equal-height"
-        />
-
-        <button class="btn btn-outline-secondary btn-sm equal-height">
-            Exportar
-        </button>
-
-        <button class="btn btn-primary btn-sm equal-height" style="min-width: 90px;">
-            + Adicionar
-        </button>
-    </div>
-
-  </template>
-
-</div>
-
-
-
-
-
-
-        <div class="table-responsive text-nowrap mt-3">
-            <!--  TABELA -->
-            <table class="min-w-full text-left mt-6 text-sm">
-                <thead class="bg-gray-100 ">
-                    <tr class="border-b">
-                    <th class="py-3 px-2" >
-                        <input class=""  ref="headerCheckbox" type="checkbox" v-model="selectAll" @change="toggleSelectAll" style="border-radius:20%"/>
-                    </th>
-
-                    <th v-for="col in columns" :key="col.key" class="py-3 px-2 font-semibold text-gray-600">
-                        {{ col.label }}
-                    </th>
-
-                    <th class="py-3 px-2 font-semibold text-gray-600">Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr v-for="row in paginatedRows" :key="row.id"  :class="{ 'bg-blue-100': selected.includes(row.id) }" class="border-b hover:bg-gray-50">
-
-                    <td class="p-3 text-left">
-                        <input type="checkbox" :value="row.id" v-model="selected" style="border-radius:20%"/>
-                    </td>
-
-                    <!-- NAME + EMAIL (na mesma célula) -->
-                    <td class="p-3 text-left">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-gray-800">{{ row.name }}</span>
-                            <span class="text-xs text-gray-500">{{ row.email }}</span>
-                        </div>
-                    </td>
-
-                    <!-- ROLE -->
-                    <td class="p-3 text-left">
-                        <span class="px-2 py-1 text-xs rounded text-gray-700">
-                            {{ row.role }}
-                        </span>
-                    </td>
-
-                    <!-- STATUS -->
-                    <td class="p-3 text-left">
-                    <span
-                        class="px-2 py-1 text-xs font-semibold rounded"
-                        :class="{
-                        'bg-green-100 text-green-700': row.status === 'Active',
-                        'bg-red-100 text-red-700': row.status === 'Inactive',
-                        'bg-yellow-100 text-yellow-700': row.status === 'Pending',
-                        }"
+    <AuthenticatedLayout>
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+                <div class="card" style="
+                    background-image: url('assets/img/avatars/pitruca.webp');
+                    background-repeat: no-repeat;
+                    background-size: contain
+                    background-position: right;
+                    "
                     >
-                        {{ row.status }}
-                    </span>
-                    </td>
-
-                    <!-- PLAN -->
-                    <td class="p-3 text-left">
-                    <span class="px-2 py-1 text-xs rounded">
-                        {{ row.plan }}
-                    </span>
-                    </td>
-
-                    <!-- CREATED AT -->
-                    <td class="p-3 text-left">
-                    <span class="text-xs text-gray-600">{{ row.created_at }}</span>
-                    </td>
-
-
-                    <td class="p-3 text-gray-700 flex gap-3">
-                        <button >View</button>
-                        <button >Delete</button>
-                    </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- PAGINAÇÃO FINAL -->
-            <div class="flex items-center justify-between mt-6 px-2">
-
-                <!-- TOTAL DE REGISTOS (ESQUERDA) -->
-                <div class="text-gray-600 text-sm">
-                    Mostrando
-                    <strong>{{ paginatedRows.length }}</strong>
-                    de
-                    <strong>{{ filteredRows.length }}</strong>
-                    registos
+                    <div class="d-flex align-items-end" >
+                        <div class="col-sm-8" >
+                            <div class="card-body">
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-center text-sm-left">
+                            <div class="card-body pb-0 px-0 px-md-4">
+                                <img src="assets/img/illustrations/man-with-laptop-light.png" height="100"/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-
-            <!-- CONTROLES (DIREITA) -->
-            <div class="flex items-center gap-1">
-
-                <!-- Anterior -->
-                <button
-                @click="prevPage"
-                :disabled="currentPage === 1"
-                class="px-3 py-1 border rounded disabled:opacity-40"
-                >
-                «
-                </button>
-
-                <!-- Números das páginas -->
-                <button
-                v-for="p in pageNumbers"
-                :key="p"
-                @click="goToPage(p)"
-                class="px-3 py-1 border rounded"
-                :class="p === currentPage ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
-                >
-                {{ p }}
-                </button>
-
-                <!-- Próxima -->
-                <button
-                @click="nextPage"
-                :disabled="currentPage === totalPages"
-                class="px-3 py-1 border rounded disabled:opacity-40"
-                >
-                »
-                </button>
-
-            </div>
             </div>
 
+            <div class="col-lg-12 col-md-4 order-1">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                        src="assets/img/icons/unicons/cc-primary.png"
+                                        alt="chart success"
+                                        class="rounded"
+                                        />
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Patrimónios</span>
+                                <h3 class="card-title mb-2">12</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                        src="assets/img/icons/unicons/cc-success.png"
+                                        alt="chart success"
+                                        class="rounded"
+                                        />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Responsaveis</span>
+                                <h3 class="card-title mb-2">12</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                        src="assets/img/icons/unicons/cc-warning.png"
+                                        alt="chart success"
+                                        class="rounded"
+                                        />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Locais</span>
+                                <h3 class="card-title mb-2">12</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                        src="assets/img/icons/unicons/wallet.png"
+                                        alt="chart success"
+                                        class="rounded"
+                                        />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Departamentos</span>
+                                <h3 class="card-title mb-2">12</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                        src="assets/img/icons/unicons/wallet-info.png"
+                                        alt="chart success"
+                                        class="rounded"
+                                        />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Categorias</span>
+                                <h3 class="card-title mb-2">12</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                        src="assets/img/icons/unicons/chart-success.png"
+                                        alt="chart success"
+                                        class="rounded"
+                                        />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Movimentações</span>
+                                <h3 class="card-title mb-2">12</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
 
-  </AuthenticatedLayout>
+    </AuthenticatedLayout>
 </template>
 
 <style scoped>
-.equal-height {
-  height: 32px; /* altura desejada */
-  padding: 0.25rem 0.5rem; /* ajusta o padding interno */
-  line-height: 1.2; /* garante que o texto fique centralizado */
-}
 
-.small-width {
-  width: 60px; /* largura suficiente para dois dígitos */
-  min-width: 50px; /* garante que não fique muito pequeno */
-}
+
 </style>

@@ -14,12 +14,12 @@ class UtilizadorController extends Controller
 {
     //Rota, funcao que chama a view de listagem dos utilizadores
     public function index(){
-            return Inertia::render('Utilizador/Utilizador',[
-                'flash' => [
-                        'success' => session('success'),
-                        'erro' => session('erro'),
-                    ]
-                ]);
+        return Inertia::render('Utilizador/Utilizador',[
+            'flash' => [
+                'success' => session('success'),
+                'erro' => session('erro'),
+                ]
+            ]);
     }
 
     //Rota, funcao de registo de utilizador
