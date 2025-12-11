@@ -7,5 +7,7 @@ use Inertia\Inertia;
 
 class DepartamentoController extends Controller
 {
-    //
+    public function index(){
+        
+    }
 }
