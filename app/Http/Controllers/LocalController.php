@@ -17,4 +17,13 @@ class LocalController extends Controller
                 ]
             ]);
     }
+
+    public function buscarLocais(){
+        return Inertia::render('Local/Local',[
+            'flash' => [
+                'success' => session('success'),
+                'erro' => session('erro'),
+                ]
+            ]);
+    }
 }
