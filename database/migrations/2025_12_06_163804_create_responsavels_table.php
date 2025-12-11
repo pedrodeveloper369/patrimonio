@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('nome');
             $table->string('contacto');
             $table->string('cargo');
-            $table->foreignId('id_unidade')->constrained('unidades')->onDelete('cascade');
             $table->timestamps();
         });
     }

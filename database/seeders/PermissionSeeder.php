@@ -31,63 +31,65 @@ class PermissionSeeder extends Seeder
         /*12*/Permission::create(['name' => 'editar_perfil_proprio']);
 
         //MÓDULO DE UNIDADES 7
-        /*13*/Permission::create(['name' => 'unidades']);
-        /*14*/Permission::create(['name' => 'ver_unidades']);
-        /*15*/Permission::create(['name' => 'cadastrar_unidade']);
-        /*16*/Permission::create(['name' => 'editar_unidade']);
-        /*17*/Permission::create(['name' => 'eliminar_unidade']);
-        /*18*/Permission::create(['name' => 'ver_relatorios_unidade']);
-        /*19*/Permission::create(['name' => 'ver_patrimonio_unidade']);
+        /*13Permission::create(['name' => 'unidades']);
+        /*14*Permission::create(['name' => 'ver_unidades']);
+        /*15*Permission::create(['name' => 'cadastrar_unidade']);
+        /*16*Permission::create(['name' => 'editar_unidade']);
+        /*17*Permission::create(['name' => 'eliminar_unidade']);
+        /*18*Permission::create(['name' => 'ver_relatorios_unidade']);
+        /*19*Permission::create(['name' => 'ver_patrimonio_unidade']);*/
 
         //MÓDULO DE CATEGORIAS DE PATRIMÓNIO 7
-        /*20*/Permission::create(['name' => 'categorias']);
-        /*21*/Permission::create(['name' => 'ver_categorias']);
-        /*22*/Permission::create(['name' => 'cadastrar_categoria']);
-        /*23*/Permission::create(['name' => 'editar_categoria']);
-        /*24*/Permission::create(['name' => 'eliminar_categoria']);
+        /*13*/Permission::create(['name' => 'categorias']);
+        /*14*/Permission::create(['name' => 'ver_categorias']);
+        /*15*/Permission::create(['name' => 'cadastrar_categoria']);
+        /*16*/Permission::create(['name' => 'editar_categoria']);
+        /*17*/Permission::create(['name' => 'eliminar_categoria']);
 
         //MÓDULO DE RESPONSÁVEIS 8
-        /*25*/Permission::create(['name' => 'responsaveis']);
-        /*26*/Permission::create(['name' => 'ver_responsaveis']);
-        /*27*/Permission::create(['name' => 'cadastrar_responsavel']);
-        /*28*/Permission::create(['name' => 'editar_responsavel']);
-        /*29*/Permission::create(['name' => 'eliminar_responsavel']);
-        /*30*/Permission::create(['name' => 'atribuir_patrimonio_responsavel']);
-        /*31*/Permission::create(['name' => 'trasnferir_patrimonio_responsavel']);
-        /*32*/Permission::create(['name' => 'ver_patrimonio_responsavel']);
-        /*33*/Permission::create(['name' => 'filtrar_responsaveis_por_unidade']);
+        /*18*/Permission::create(['name' => 'responsaveis']);
+        /*19*/Permission::create(['name' => 'ver_responsaveis']);
+        /*20*/Permission::create(['name' => 'cadastrar_responsavel']);
+        /*21*/Permission::create(['name' => 'editar_responsavel']);
+        /*22*/Permission::create(['name' => 'eliminar_responsavel']);
+        /*23*/Permission::create(['name' => 'atribuir_patrimonio_responsavel']);
+        /*24*/Permission::create(['name' => 'trasnferir_patrimonio_responsavel']);
+        /*25*/Permission::create(['name' => 'ver_patrimonio_responsavel']);
 
         //MÓDULO DE PATRIMÓNIO 5
-        /*34*/Permission::create(['name' => 'patrimonio']);
-        /*35*/Permission::create(['name' => 'cadastrar_patrimonio']);
-        /*36*/Permission::create(['name' => 'ver_patrimonios']);
-        /*37*/Permission::create(['name' => 'editar_patrimonio']);
-        /*38*/Permission::create(['name' => 'eliminar_patrimonio']);
+        /*26*/Permission::create(['name' => 'patrimonio']);
+        /*27*/Permission::create(['name' => 'cadastrar_patrimonio']);
+        /*28*/Permission::create(['name' => 'ver_patrimonios']);
+        /*29*/Permission::create(['name' => 'editar_patrimonio']);
+        /*30*/Permission::create(['name' => 'eliminar_patrimonio']);
 
         //MÓDULO DE MOVIMENTAÇÃO DO PATRIMÓNIO 8
-        /*39*/Permission::create(['name' => 'movimentacoes']);
-        /*40*/Permission::create(['name' => 'ver_movimentacoes']);
-        /*41*/Permission::create(['name' => 'editar_movimentacao']);
-        /*42*/Permission::create(['name' => 'eliminar_movimentacao']);
-        /*43*/Permission::create(['name' => 'historico_movimentacoes']);
-        /*44*/Permission::create(['name' => 'movimentar_entre_unidades']);
-        /*45*/Permission::create(['name' => 'movimentar_dentro_unidade']);
-        /*46*/Permission::create(['name' => 'movimentar_responsavel']);
+        /*31*/Permission::create(['name' => 'movimentacoes']);
+        /*32*/Permission::create(['name' => 'ver_movimentacoes']);
+        /*33*/Permission::create(['name' => 'editar_movimentacao']);
+        /*34*/Permission::create(['name' => 'eliminar_movimentacao']);
+        /*35*/Permission::create(['name' => 'historico_movimentacoes']);
+        /*36*/Permission::create(['name' => 'movimentar_responsavel']);
 
         //MÓDULO DE RELATÓRIOS 8
-        /*47*/Permission::create(['name' => 'relatorios']);
-        /*48*/Permission::create(['name' => 'ver_relatorios']);
-        /*49*/Permission::create(['name' => 'relatorio_por_unidade']);
-        /*50*/Permission::create(['name' => 'relatorio_por_categoria']);
-        /*51*/Permission::create(['name' => 'relatorio_estado_patrimonio']);
-        /*52*/Permission::create(['name' => 'relatorio_patrimonio_movimentado']);
-        /*53*/Permission::create(['name' => 'exportar_relatorios_pdf']);
+        /*37*/Permission::create(['name' => 'relatorios']);
+        /*38*/Permission::create(['name' => 'ver_relatorios']);
+        /*39*/Permission::create(['name' => 'relatorio_por_categoria']);
+        /*40*/Permission::create(['name' => 'relatorio_estado_patrimonio']);
+        /*41*/Permission::create(['name' => 'relatorio_patrimonio_movimentado']);
+        /*42*/Permission::create(['name' => 'exportar_relatorios_pdf']);
 
         //MÓDULO DE CONFIGURAÇÕES DO GRUPO 4
-        /*54*/Permission::create(['name' => 'Configuracoes']);
-        /*55*/Permission::create(['name' => 'ver_empresa']);
-        /*56*/Permission::create(['name' => 'editar_empresa']);
-        /*57*/Permission::create(['name' => 'gerir_dados_empresa']);
+        /*43*/Permission::create(['name' => 'Configuracoes']);
+        /*44*/Permission::create(['name' => 'ver_empresa']);
+        /*45*/Permission::create(['name' => 'editar_empresa']);
+        /*46*/Permission::create(['name' => 'gerir_dados_empresa']);
+
+        //MÓDULO DE DEPARTAMENTO
+        /*47*/Permission::create(['name' => 'departamento']);
+        /*48*/Permission::create(['name' => 'criar_departamento']);
+        /*49*/Permission::create(['name' => 'editar_departamento']);
+        /*50*/Permission::create(['name' => 'eliminar_departamento']);
 
     }
 }

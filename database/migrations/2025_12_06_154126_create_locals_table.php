@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('departamento')->nullable();
             $table->string('sector')->nullable();
             $table->string('armazem')->nullable();
-            $table->foreignId('id_unidade')->constrained('unidades')->onDelete('cascade');
             $table->timestamps();
         });
     }

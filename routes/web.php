@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UnidadeController;
+use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\ResponsavelController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\RelatorioController;
@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/patrimonio', [PatrimonioController::class, 'index'])->name('patrimonio') ;
 
     //Rotas unidades
-    Route::get('/unidades', [UnidadeController::class, 'index'])->name('unidade') ;
+    Route::get('/departamento', [DepartamentoController::class, 'index'])->name('departamento') ;
 
     //Rotas responsaveis
     Route::get('/responsaveis', [ResponsavelController::class, 'index'])->name('responsavel') ;

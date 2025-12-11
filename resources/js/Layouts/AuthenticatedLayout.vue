@@ -54,12 +54,13 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('unidade') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('unidade')"  >
+                    <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('departamento')"  >
 
                             <i class="bx bx-building me-2"></i>
-                            <strong>Unidades</strong>
+                            <strong>Departamentos</strong>
                         </Link>
+                        
                     </li>
                     <li :class="['menu-item', route().current('categoria') ? 'active' : '']">
                         <Link class="menu-link" :href="route('categoria')"  >

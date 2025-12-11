@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class UnidadeController extends Controller
+class DepartamentoController extends Controller
 {
     //
 }
