@@ -10,24 +10,19 @@ import '../../public/assets/vendor/fonts/boxicons.css';
 import '../../public/assets/vendor/css/core.css';
 import '../../public/assets/vendor/css/pages/page-auth.css';
 import '../../public/assets/vendor/css/theme-default.css';
-
 // JS Helpers e config
 import '../../public/assets/vendor/js/helpers.js';
 import '../../public/assets/js/config.js';
 //window.config = window.config || config;
 
 import DatatableDirective from './directives/datatable';
-
-
 import $ from 'jquery';
 window.$ = window.jQuery = $; // disponibiliza globalmente
 
 import 'datatables.net-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
-//import '../../public/assets/js/dashboards-analytics.js';
 const appName = 'CRM';
-
 
 createInertiaApp({
     title: (title) => `${appName}`,
@@ -69,7 +64,6 @@ window.initMenu = function() {
     }
 };
 
-
 //para os scripts
 window.addEventListener('load', async () => {
 
@@ -103,7 +97,6 @@ window.addEventListener('load', async () => {
         console.error('Sneat scripts load error:', error);
     }
 });
-
 
 function initSidebarScripts() {
   if (typeof $ !== 'undefined' && $('.sidebar-left').length) {

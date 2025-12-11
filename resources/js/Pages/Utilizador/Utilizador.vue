@@ -241,9 +241,9 @@ const submitEditar = () => {
 <template>
     <AuthenticatedLayout>
         <h4 class=""><strong>Utilizadores</strong></h4>
-         <div class="card  p-4 mb-2">
+         <div class="card  p-4 mb-2" style="border:1px solid #debbb3">
 
-           <div class="d-flex flex-column flex-md-row gap-2 w-100">
+           <div class="d-flex flex-column flex-md-row gap-2 w-100" >
 
                 <!-- Status -->
                 <div class="select-icon-wrapper equal-height">
@@ -269,68 +269,68 @@ const submitEditar = () => {
 
         </div>
 
-        <div class="card p-4 ">
+        <div class="card p-4 " style="border:1px solid #debbb3">
 
             <div class="table-responsive text-nowrap mt-3">
-            <table v-datatable="{datatableOptions, defaultPageSize: 10,
-                    deleteAction: (selectedIds) => {
-                        //chama modal
-                        openDeleteModal(selectedIds);
-                    },
-                    actionsHtml: `
-                        <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
-                    `
-                    }"
-                @selection-changed="onSelectionChanged"
-                @datatable-delete="onDeleteRequested"
-                class="table table-hover mt-3 min-w-full  mt-6 text-sm"
-            >
-
-            <thead class="bg-gray-100 ">
-                <tr>
-                <th></th>
-                <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
-                <th>Ações</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr v-for="u in filteredUsers" :key="u.id" :data-id="u.id">
-                <td></td>
-                <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
-                <td>{{ u.contacto }}</td>
-                <td>{{ u.role }}</td>
-                <td>
-                     <span
-                        class="px-2 py-1 text-xs font-semibold rounded"
-                        :class="{
-                        'bg-green-100 text-green-700': u.estado === 'Activo',
-                        'bg-red-100 text-red-700': u.estado === 'Inactivo',
-                        //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
+                <table v-datatable="{datatableOptions, defaultPageSize: 10,
+                        deleteAction: (selectedIds) => {
+                            //chama modal
+                            openDeleteModal(selectedIds);
+                        },
+                        actionsHtml: `
+                            <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
+                        `
                         }"
-                    >
-                        {{ u.estado }}
-                    </span>
+                    @selection-changed="onSelectionChanged"
+                    @datatable-delete="onDeleteRequested"
+                    class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                >
 
-                </td>
+                <thead class="bg-gray-100 ">
+                    <tr>
+                    <th></th>
+                    <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                    <th>Ações</th>
+                    </tr>
+                </thead>
 
-                <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
-                <td>
-                    <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
-                </td>
-                </tr>
-            </tbody>
-            </table>
+                <tbody>
+                    <tr v-for="u in filteredUsers" :key="u.id" :data-id="u.id">
+                    <td></td>
+                    <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
+                    <td>{{ u.contacto }}</td>
+                    <td>{{ u.role }}</td>
+                    <td>
+                        <span
+                            class="px-2 py-1 text-xs font-semibold rounded"
+                            :class="{
+                            'bg-green-100 text-green-700': u.estado === 'Activo',
+                            'bg-red-100 text-red-700': u.estado === 'Inactivo',
+                            //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
+                            }"
+                        >
+                            {{ u.estado }}
+                        </span>
+
+                    </td>
+
+                    <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+                    <td>
+                        <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                        <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
             </div>
 
         </div>
 
 
         <!--MODAL ELIMINAR-->
-        <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
+        <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true" >
+            <div class="modal-dialog modal-sm" role="document" >
+                <div class="modal-content" style="border:1px solid #debbb3">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirmar Eliminação</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -359,7 +359,7 @@ const submitEditar = () => {
         <!--MODAL REGISTAR-->
         <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
+                <div class="modal-content" style="border:1px solid #debbb3">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel3">Registar Utilizador</h5>
                         <button
@@ -439,7 +439,7 @@ const submitEditar = () => {
         <!--MODAL EDITAR-->
         <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
+                <div class="modal-content" style="border:1px solid #debbb3">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel3">Actualizar Utilizador</h5>
                         <button
@@ -531,7 +531,7 @@ const submitEditar = () => {
         <!--MODAL DETALHE-->
         <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
+                <div class="modal-content" style="border:1px solid #debbb3">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
                         <button

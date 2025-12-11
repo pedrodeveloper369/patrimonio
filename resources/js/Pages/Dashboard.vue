@@ -291,32 +291,37 @@ function deleteSelected() {
 
 <template>
     <AuthenticatedLayout>
+        <h4 class=""><strong>Painel de Controlo</strong></h4>
         <div class="row">
             <div class="col-lg-12 mb-4 order-0">
-                <div class="card" style="
-                    background-image: url('assets/img/avatars/pitruca.webp');
-                    background-repeat: no-repeat;
-                    background-size: contain
-                    "
-                    >
-                    <div class="d-flex align-items-end" >
-                        <div class="col-sm-8" >
-                            <div class="card-body">
-                            </div>
+                  <div class="card">
+                    <div class="d-flex align-items-end row">
+                      <div class="col-sm-8">
+                        <div class="card-body" >
+                          <img src="assets/img/avatars/pitruca.webp" style="height:300px"/>
                         </div>
-                        <div class="col-sm-4 text-center text-sm-left">
-                            <div class="card-body pb-0 px-0 px-md-4">
-                                <img src="assets/img/illustrations/man-with-laptop-light.png" height="100"/>
-                            </div>
+                      </div>
+                      <div class="col-sm-4 text-center text-sm-left">
+                        <div class="card-body pb-0 px-0 px-md-4">
+                          <img
+                            src="assets/img/illustrations/man-with-laptop-light.png"
+                            height="140"
+                            alt="View Badge User"
+                            data-app-dark-img="illustrations/man-with-laptop-dark.png"
+                            data-app-light-img="illustrations/man-with-laptop-light.png"
+                          />
                         </div>
+                      </div>
                     </div>
-                </div>
+                  </div>
             </div>
+          
+             <h5 class="mt-3"><strong>Dados estatísticos</strong></h5>
 
             <div class="col-lg-12 col-md-4 order-1">
                 <div class="row">
-                    <div class="col-lg-2 col-md-4 col-6 mb-4">
-                        <div class="card">
+                    <div class="col-lg-2 col-md-4 col-6 mb-4" >
+                        <div class="card" style="border:1px solid #debbb3">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -333,7 +338,7 @@ function deleteSelected() {
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card">
+                        <div class="card" style="border:1px solid #debbb3">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -351,7 +356,7 @@ function deleteSelected() {
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card">
+                        <div class="card" style="border:1px solid #debbb3">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -369,7 +374,7 @@ function deleteSelected() {
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card">
+                        <div class="card" style="border:1px solid #debbb3">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -387,7 +392,7 @@ function deleteSelected() {
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card">
+                        <div class="card" style="border:1px solid #debbb3">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -405,7 +410,7 @@ function deleteSelected() {
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card">
+                        <div class="card" style="border:1px solid #debbb3">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -426,6 +431,77 @@ function deleteSelected() {
                 </div>
             </div>
         </div>
+
+         <div class="card" style="border:1px solid #debbb3">
+                <h5 class="card-header">Patrimónios Recentes</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-hover table-striped">
+                    <thead>
+                      <tr>
+                       <th>Foto</th>
+                        <th>Código</th>
+                        <th>Patrimonio</th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                        <th>Localização</th>
+                        <th>Responsável</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <tr>
+                            <td>
+                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                            </td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td><span class="badge bg-label-primary me-1">Active</span></td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                        </tr>
+                         <tr>
+                            <td>
+                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                            </td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td><span class="badge bg-label-primary me-1">Active</span></td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                        </tr>
+                         <tr>
+                            <td>
+                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                            </td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td><span class="badge bg-label-primary me-1">Active</span></td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                        </tr>
+                         <tr>
+                            <td>
+                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                            </td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td><span class="badge bg-label-primary me-1">Active</span></td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                            <td>Albert Cook</td>
+                        </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
     </AuthenticatedLayout>
 </template>

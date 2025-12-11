@@ -30,7 +30,7 @@ const showingNavigationDropdown = ref(false);
                     >
                     <Link :href="route('dashboard')"  class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                        <strong>Dashboard</strong>
+                        <strong>Painel de Controlo</strong>
                     </Link>
                     </li>
 
@@ -186,7 +186,7 @@ const showingNavigationDropdown = ref(false);
                         <!-- Search -->
                         <div class="navbar-nav align-items-center">
                             <div class="nav-item d-flex align-items-center">
-                                {{ $page.props.auth.user.name }} / {{ $page.props.auth.user.role }}
+
                             </div>
                         </div>
 
