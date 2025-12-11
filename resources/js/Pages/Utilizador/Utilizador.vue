@@ -260,9 +260,8 @@ const submitEditar = () => {
                     <i class="bx bx-user icon"></i>
                     <select v-model="filterRole" class="form-select form-select-sm">
                         <option value="">Perfil</option>
-                        <option>admin</option>
-                        <option>User</option>
-                        <option>Manager</option>
+                        <option>Admin</option>
+                        <option>Gestor</option>
                     </select>
                 </div>
             </div>
