@@ -297,7 +297,6 @@ function deleteSelected() {
                     background-image: url('assets/img/avatars/pitruca.webp');
                     background-repeat: no-repeat;
                     background-size: contain
-                    background-position: right;
                     "
                     >
                     <div class="d-flex align-items-end" >

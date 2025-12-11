@@ -203,7 +203,7 @@ const showingNavigationDropdown = ref(false);
                             <li>
                                 <div class="dropdown-item flex-grow-1">
                                     <span class="fw-semibold d-block"> {{ $page.props.auth.user.name }}</span>
-                                    <small class="text-muted">Admin</small>
+                                    <small class="text-muted">{{ $page.props.auth.user.role }}</small>
                                 </div>
                             </li>
                             <li>
@@ -211,10 +211,10 @@ const showingNavigationDropdown = ref(false);
                             </li>
 
                             <li >
-                                <a class="dropdown-item" :href="route('configuracao')">
+                                <Link class="dropdown-item" :href="route('configuracao')">
                                     <i class="bx bx-cog me-2"></i>
                                     <span class="align-middle">Configurações</span>
-                                </a>
+                                </Link>
                             </li>
 
                             <li>
