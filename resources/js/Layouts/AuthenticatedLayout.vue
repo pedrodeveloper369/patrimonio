@@ -34,46 +34,25 @@ const showingNavigationDropdown = ref(false);
                     </Link>
                     </li>
 
-                     <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Patrimónios</span></li>
+                    <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
                         <Link class="menu-link" :href="route('patrimonio')"  >
                             <i class="bx bx-archive me-2"></i>
                             <strong>Patrimónios</strong>
                         </Link>
                     </li>
-                     <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('responsavel')"  >
-                           <i class="bx bx-user me-2"></i>
-                            <strong>Responsáveis</strong>
+
+                     <li :class="['menu-item', route().current('categoria') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('categoria')"  >
+                           <i class="bx bx-category me-2"></i>
+                            <strong>Categorias</strong>
                         </Link>
                     </li>
-
+                    
                     <li :class="['menu-item', route().current('local') ? 'active' : '']">
                         <Link class="menu-link" :href="route('local')"  >
                             <i class="bx bx-map me-2"></i>
                            <strong>Localizações</strong>
-                        </Link>
-                    </li>
-
-                    <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('departamento')"  >
-
-                            <i class="bx bx-sitemap me-2"></i>
-                            <strong>Departamentos</strong>
-                        </Link>
-
-                    </li>
-                     <li :class="['menu-item', route().current('cargo') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('cargo')"  >
-
-                            <i class="bx bx-id-card me-2"></i>
-                            <strong>Cargos</strong>
-                        </Link>
-
-                    </li>
-                    <li :class="['menu-item', route().current('categoria') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('categoria')"  >
-                           <i class="bx bx-category me-2"></i>
-                            <strong>Categorias</strong>
                         </Link>
                     </li>
 
@@ -88,6 +67,30 @@ const showingNavigationDropdown = ref(false);
                         <Link class="menu-link" :href="route('relatorio')"  >
                             <i class="bx bx-file me-2"></i>
                             <strong>Relatórios</strong>
+                        </Link>
+                    </li>
+
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Estrutura Organizacional</span></li>
+                    <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('departamento')"  >
+
+                            <i class="bx bx-sitemap me-2"></i>
+                            <strong>Departamentos</strong>
+                        </Link>
+                    </li>
+
+                    <li :class="['menu-item', route().current('cargo') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('cargo')"  >
+
+                            <i class="bx bx-id-card me-2"></i>
+                            <strong>Cargos</strong>
+                        </Link>
+                    </li>
+
+                    <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('responsavel')"  >
+                           <i class="bx bx-user me-2"></i>
+                            <strong>Responsáveis</strong>
                         </Link>
                     </li>
 
