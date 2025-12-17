@@ -80,7 +80,7 @@ class UtilizadorController extends Controller
 
     //funcao que pega da base de dados todos os utilizadores
     public function dados_utilizadores(){
-        $query = User::query(); // apenas a query, não carrega tudo ainda
+        $query = User::query()->where('role','!=','Admin'); // apenas a query, não carrega tudo ainda
         return DataTables::of($query)->make(true);
     }
 

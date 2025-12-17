@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ResponsavelController extends Controller
+class CargoController extends Controller
 {
     public function index(){
-        return Inertia::render('Responsavel/Responsavel',[
+        return Inertia::render('Cargo/Cargo',[
             'flash' => [
                 'success' => session('success'),
                 'erro' => session('erro'),
                 ]
             ]);
     }
-
 }

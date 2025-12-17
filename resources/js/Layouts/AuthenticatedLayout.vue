@@ -37,7 +37,7 @@ const showingNavigationDropdown = ref(false);
                      <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
                         <Link class="menu-link" :href="route('patrimonio')"  >
                             <i class="bx bx-archive me-2"></i>
-                            <strong>Património</strong>
+                            <strong>Patrimónios</strong>
                         </Link>
                     </li>
                      <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
@@ -50,15 +50,23 @@ const showingNavigationDropdown = ref(false);
                     <li :class="['menu-item', route().current('local') ? 'active' : '']">
                         <Link class="menu-link" :href="route('local')"  >
                             <i class="bx bx-map me-2"></i>
-                           <strong>Local</strong>
+                           <strong>Localizações</strong>
                         </Link>
                     </li>
 
                     <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
                         <Link class="menu-link" :href="route('departamento')"  >
 
-                            <i class="bx bx-building me-2"></i>
+                            <i class="bx bx-sitemap me-2"></i>
                             <strong>Departamentos</strong>
+                        </Link>
+
+                    </li>
+                     <li :class="['menu-item', route().current('cargo') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('cargo')"  >
+
+                            <i class="bx bx-id-card me-2"></i>
+                            <strong>Cargos</strong>
                         </Link>
 
                     </li>
@@ -186,7 +194,7 @@ const showingNavigationDropdown = ref(false);
                         <!-- Search -->
                         <div class="navbar-nav align-items-center">
                             <div class="nav-item d-flex align-items-center">
-
+                                <label>Sistema de Gestão de Patrimónios</label>
                             </div>
                         </div>
 

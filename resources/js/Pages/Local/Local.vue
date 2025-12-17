@@ -86,22 +86,6 @@ onMounted(() => {
     modalEl.addEventListener('hidden.bs.modal', resetModal)
 })
 
-//filtros computed
-const filterStatus = ref('')
-const filterRole = ref('')
-
-//funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
-// filtros e a nova lista é usada na tabela
-
-const filteredUsers = computed(() => {
-  return users.value.filter(u => {
-    const matchesStatus = !filterStatus.value || u.estado === filterStatus.value
-    const matchesRole   = !filterRole.value || u.role === filterRole.value
-    return matchesStatus && matchesRole /*&& matchesSearch*/
-  })
-})
-
-
 
 const columns = [
   { label: 'Nome', key: 'name' },
@@ -240,34 +224,7 @@ const submitEditar = () => {
 
 <template>
     <AuthenticatedLayout>
-        <h4 class=""><strong>Local</strong></h4>
-         <div class="card  p-4 mb-2">
-
-           <div class="d-flex flex-column flex-md-row gap-2 w-100">
-
-                <!-- Status -->
-                <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-filter icon"></i>
-                    <select v-model="filterStatus" class="form-select form-select-sm">
-                        <option value="">Estado</option>
-                        <option>Activo</option>
-                        <option>Inactivo</option>
-                    </select>
-                </div>
-
-                <!-- Role -->
-                <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-user icon"></i>
-                    <select v-model="filterRole" class="form-select form-select-sm">
-                        <option value="">Perfil</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
-                    </select>
-                </div>
-            </div>
-
-
-        </div>
+        <h4 class=""><strong>Localizações</strong></h4>
 
         <div class="card p-4 ">
 
@@ -295,7 +252,7 @@ const submitEditar = () => {
             </thead>
 
             <tbody>
-                <tr v-for="u in filteredUsers" :key="u.id" :data-id="u.id">
+                <tr v-for="u in users" :key="u.id" :data-id="u.id">
                 <td></td>
                 <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
                 <td>{{ u.contacto }}</td>

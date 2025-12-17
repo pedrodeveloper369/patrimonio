@@ -11,6 +11,7 @@ use App\Http\Controllers\MovimentacaoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UtilizadorController;
+use App\Http\Controllers\CargoController;
 use App\Http\Controllers\EmpresaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -42,10 +43,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     //Rotas patrimonio
-    Route::get('/patrimonio', [PatrimonioController::class, 'index'])->name('patrimonio') ;
+    Route::get('/patrimonios', [PatrimonioController::class, 'index'])->name('patrimonio') ;
 
-    //Rotas unidades
-    Route::get('/departamento', [DepartamentoController::class, 'index'])->name('departamento') ;
+    //Rotas departamento
+    Route::get('/departamentos', [DepartamentoController::class, 'index'])->name('departamento') ;
+
+    //Rotas cargo
+    Route::get('/cargos', [CargoController::class, 'index'])->name('cargo') ;
+
 
     //Rotas responsaveis
     Route::get('/responsaveis', [ResponsavelController::class, 'index'])->name('responsavel') ;
@@ -55,10 +60,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/movimentacoes',[MovimentacaoController::class, 'index'])->name('movimentacao') ;
 
     //Rotas locais
-    Route::get('/locais', [LocalController::class, 'index'])->name('local') ;
+    Route::get('/localizacoes', [LocalController::class, 'index'])->name('local') ;
 
     //Rotas configuracao
-    Route::get('/configuracao', [ConfiguracaoController::class, 'index'])->name('configuracao') ;
+    Route::get('/configuracoes', [ConfiguracaoController::class, 'index'])->name('configuracao') ;
     Route::post('/configuracao/actualizar-perfil', [ConfiguracaoController::class, 'actualizar_perfil'])->name('configuracao.update.perfil');
     Route::post('/configuracao/actualizar-definicao', [ConfiguracaoController::class, 'actualizar_definicao'])->name('configuracao.update.definicao');
 

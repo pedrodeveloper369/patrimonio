@@ -45,6 +45,7 @@ createInertiaApp({
     },
 });
 
+
 // Reexecuta scripts do dashboard sempre que mudar de página (ex: após login)
 router.on('navigate', async (event) => {
     setTimeout(() => initSidebarScripts(), 300);
@@ -66,7 +67,6 @@ window.initMenu = function() {
 
 //para os scripts
 window.addEventListener('load', async () => {
-
     const loadScript = (src) => {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -86,9 +86,6 @@ window.addEventListener('load', async () => {
         await loadScript('/assets/vendor/js/menu.js');
         await loadScript('/assets/vendor/libs/apex-charts/apexcharts.js');
         await loadScript('/assets/js/main.js');
-
-
-
 
         // executar scripts Sneat ao fim
         initSneatScripts();

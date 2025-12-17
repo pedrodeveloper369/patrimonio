@@ -43,8 +43,36 @@ const submit = () => {
     })
 }
 
+//mensagens de registo
+const page = usePage()
+    watch(() => page.props.flash.erro, (msg) => {
+    if (msg) {
+        Swal.fire({
+        toast: true,          // transforma em notificação estilo toast
+        position: 'top-end',  // canto direito superior
+        icon: 'error',
+        title: msg,
+        showConfirmButton: false, // sem botão de confirmação
+        timer: 6000,          // desaparece após 3 segundos
+        timerProgressBar: true,
+        })
+    }
+})
 
-
+// Mensagem de sucesso
+watch(() => page.props.flash.success, (msg) => {
+  if (msg) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: msg,
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+    })
+  }
+})
 
 
 // Função para resetar o formulário
@@ -154,7 +182,7 @@ const submitEditar = () => {
 
 <template>
     <AuthenticatedLayout>
-        <h4 class=""><strong>Movimentações</strong></h4>
+        <h4 class=""><strong>Cargos</strong></h4>
 
         <div class="card p-4 ">
 
@@ -165,7 +193,7 @@ const submitEditar = () => {
                         openDeleteModal(selectedIds);
                     },
                     actionsHtml: `
-                       
+                        <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
                     `
                     }"
                 @selection-changed="onSelectionChanged"

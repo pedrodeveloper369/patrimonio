@@ -294,13 +294,14 @@ function deleteSelected() {
         <h4 class=""><strong>Painel de Controlo</strong></h4>
         <div class="row">
             <div class="col-lg-12 mb-4 order-0">
-                  <div class="card">
+                  <div class="card" style="border:1px solid #debbb3">
                     <div class="d-flex align-items-end row">
                       <div class="col-sm-8">
                         <div class="card-body" >
                           <img src="assets/img/avatars/pitruca.webp" style="height:300px"/>
                         </div>
                       </div>
+
                       <div class="col-sm-4 text-center text-sm-left">
                         <div class="card-body pb-0 px-0 px-md-4">
                           <img
@@ -315,7 +316,7 @@ function deleteSelected() {
                     </div>
                   </div>
             </div>
-          
+
              <h5 class="mt-3"><strong>Dados estatísticos</strong></h5>
 
             <div class="col-lg-12 col-md-4 order-1">
