@@ -121,6 +121,15 @@ const rows = ref([
   },
 ]);
 
+
+const props = defineProps({
+  departamentoTotal: Number,
+  responsavelTotal: Number,
+});
+const departamentoTotal = ref(props.departamentoTotal);
+const responsavelTotal = ref(props.responsavelTotal);
+
+
 // ==========================================
 // COLUNAS DA TABELA
 // ==========================================
@@ -352,7 +361,7 @@ function deleteSelected() {
 
                                 </div>
                                 <span class="fw-semibold d-block mb-1">Responsaveis</span>
-                                <h3 class="card-title mb-2">12</h3>
+                                <h3 class="card-title mb-2">{{ responsavelTotal }}</h3>
                             </div>
                         </div>
                     </div>
@@ -388,7 +397,7 @@ function deleteSelected() {
 
                                 </div>
                                 <span class="fw-semibold d-block mb-1">Departamentos</span>
-                                <h3 class="card-title mb-2">12</h3>
+                                <h3 class="card-title mb-2">{{departamentoTotal}}</h3>
                             </div>
                         </div>
                     </div>
@@ -433,7 +442,7 @@ function deleteSelected() {
             </div>
         </div>
 
-         <div class="card" style="border:1px solid #debbb3">
+        <div class="card" style="border:1px solid #debbb3">
                 <h5 class="card-header">Patrimónios Recentes</h5>
                 <div class="table-responsive text-nowrap">
                   <table class="table table-hover table-striped">
@@ -502,7 +511,7 @@ function deleteSelected() {
                     </tbody>
                   </table>
                 </div>
-              </div>
+        </div>
 
     </AuthenticatedLayout>
 </template>

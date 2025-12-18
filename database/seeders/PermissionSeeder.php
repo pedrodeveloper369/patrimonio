@@ -91,5 +91,11 @@ class PermissionSeeder extends Seeder
         /*49*/Permission::create(['name' => 'editar_departamento']);
         /*50*/Permission::create(['name' => 'eliminar_departamento']);
 
+        //MÓDULO DE CARGO
+        /*51*/Permission::create(['name' => 'cargo']);
+        /*52*/Permission::create(['name' => 'criar_cargo']);
+        /*53*/Permission::create(['name' => 'editar_cargo']);
+        /*54*/Permission::create(['name' => 'eliminar_cargo']);
+
     }
 }

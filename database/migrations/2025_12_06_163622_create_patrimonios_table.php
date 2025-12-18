@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('código')->nullable();
             $table->string('descricao')->nullable();
             $table->string('qtd')->nullable();
+            $table->string('imagem')->nullable();
             $table->foreignId('id_categoria')->constrained('categorias')->onDelete('cascade');
             $table->foreignId('id_localizacao')->constrained('locals')->onDelete('cascade');
             $table->foreignId('id_estado_patrimonio')->constrained('estado_patrimonios')->onDelete('cascade');

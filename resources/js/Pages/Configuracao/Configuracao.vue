@@ -72,7 +72,7 @@ watch(() => page.props.flash.success, (msg) => {
   <AuthenticatedLayout>
     <h4>Configurações</h4>
 
-    <div class="card mb-4" style="border:1px solid #debbb3">
+    <div class="card mb-4" >
 
         <div class="card-body">
             <div class="row">

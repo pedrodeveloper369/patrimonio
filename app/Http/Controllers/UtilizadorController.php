@@ -8,10 +8,19 @@ use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Services\Helper;
 
 
 class UtilizadorController extends Controller
 {
+
+    protected Helper $helper;
+
+    public function __construct(Helper $helper)
+    {
+        $this->helper = $helper;
+    }
+
     //Rota, funcao que chama a view de listagem dos utilizadores
     public function index(){
         return Inertia::render('Utilizador/Utilizador',[
@@ -45,9 +54,9 @@ class UtilizadorController extends Controller
             $this->eliminarUtilizador($request->ids);
             return redirect()->route('users')
                      ->with('success', 'Eliminação bem sucedida!');
-        } catch (\Exception $e) {
+        } catch (\Exception $th) {
            return redirect()->route('users')
-                    ->with('erro', 'Ocorreu um erro ao eliminar1n'.$th->getMessage());
+                    ->with('erro', 'Ocorreu um erro ao eliminar \n'.$th->getMessage());
         }
     }
 
@@ -89,7 +98,7 @@ class UtilizadorController extends Controller
 
         DB::beginTransaction();
         $utilizador = new User();
-        $utilizador->name = $request->nome;
+        $utilizador->name = $this->helper->formatarNomeProprio($request->nome);
         $utilizador->contacto = $request->contacto;
 
         $utilizador->email = $request->email;
@@ -135,7 +144,7 @@ class UtilizadorController extends Controller
     {
         return $request->validate(
             [
-                'nome' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõ\s]+$/'],
+                'nome' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'contacto' => ['required', 'digits_between:9,12'],
                 'email' => ['required', 'email','unique:users,email'],
                 'senha' => ['required', 'min:6'],
@@ -166,7 +175,7 @@ class UtilizadorController extends Controller
     {
         return $request->validate(
             [
-                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõ\s]+$/'],
+                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'contacto_editar' => ['required', 'digits_between:9,12'],
                 'senha_editar' => ['required', 'min:6'],
                 'confirma_senha_editar' => ['required', 'min:6', 'same:senha'],
@@ -192,7 +201,7 @@ class UtilizadorController extends Controller
     {
         return $request->validate(
             [
-                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõ\s]+$/'],
+                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'contacto_editar' => ['required', 'digits_between:9,12'],
             ],
             [
@@ -210,7 +219,7 @@ class UtilizadorController extends Controller
     {
         return $request->validate(
             [
-                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõ\s]+$/'],
+                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'contacto_editar' => ['required', 'digits_between:9,12'],
                 'email_editar' => ['required', 'email','unique:users,email'],
                 'senha_editar' => ['required', 'min:6'],
@@ -241,7 +250,7 @@ class UtilizadorController extends Controller
     {
         return $request->validate(
             [
-                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõ\s]+$/'],
+                'nome_editar' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'contacto_editar' => ['required', 'digits_between:9,12'],
                 'email_editar' => ['required', 'email','unique:users,email'],
             ],

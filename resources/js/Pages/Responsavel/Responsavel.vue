@@ -5,27 +5,32 @@ import axios from 'axios';
 import { useForm , usePage } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 
-const users = ref([]);
+const responsavel = ref([]);
+
+//pegando dados vindo do controller
+const props = defineProps({
+  departamento: Array,
+  cargo: Array,
+});
+const departamentos = ref(props.departamento);
+const cargos = ref(props.cargo);
+
+
 
 //declaracao do formulario e os seus dados
 const form = useForm({
     nome: '',
     contacto: '',
-    email: '',
-    senha: '',
-    confirma_senha: '',
+    departamento: '',
+    cargo: '',
 })
 
 const formEditar = useForm({
     id: '',
-    nome_editar: '',
-    contacto_editar: '',
-    email_editar: '',
-    email_copia_editar: '',
-    estado: '',
-    senha_editar: '',
-    confirma_senha_editar: '',
-    estado: '',
+    nome: '',
+    contacto: '',
+    departamento: '',
+    cargo: '',
 })
 
 const formEliminar = useForm({
@@ -34,11 +39,11 @@ const formEliminar = useForm({
 
 // Função para enviar
 const submit = () => {
-    form.post(route('utilizador.registar'), {
+    form.post(route('responsavel.registar'), {
         onSuccess: () => {
             $('#modalRegistar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_responsaveis()  //recarrega a tabela
         }
     })
 }
@@ -87,50 +92,40 @@ onMounted(() => {
 })
 
 //filtros computed
-const filterStatus = ref('')
-const filterRole = ref('')
+const filterDepa = ref('')
+const filterCargo = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
-
-const filteredUsers = computed(() => {
-  return users.value.filter(u => {
-    const matchesStatus = !filterStatus.value || u.estado === filterStatus.value
-    const matchesRole   = !filterRole.value || u.role === filterRole.value
-    return matchesStatus && matchesRole /*&& matchesSearch*/
+const filteredResponsavel = computed(() => {
+  return responsavel.value.filter(resp => {
+    const matchesDepa = !filterDepa.value || resp.departamento === filterDepa.value
+    const matchesCargo   = !filterCargo.value || resp.cargo === filterCargo.value
+    return matchesDepa && matchesCargo
   })
 })
 
 
-
-const columns = [
-  { label: 'Nome', key: 'name' },
-  { label: 'Contacto', key: 'contacto' },
-  { label: 'Perfil', key: 'role' },
-  { label: 'Status', key: 'status' },
-  { label: 'Criado em', key: 'created_at' },
-];
-
 function handleDelete(ids) {
-  users.value = users.value.filter(u => !ids.includes(u.id));
+  responsavel.value = responsavel.value.filter(u => !ids.includes(u.id));
 }
 
 function handleRowAction({ action, row }) {
   console.log(action, row);
 }
 
-//const users = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
+//const responsavel = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
 // Busca os dados do Laravel via rota relativa
 onMounted(async () => {
-  listar_utilizadores()
+  listar_responsaveis()
 });
 
-const listar_utilizadores = async () => {
+const listar_responsaveis = async () => {
   try {
-    const response = await axios.get('/utilizadores/dados')
-    users.value = response.data.data || response.data
+    const response = await axios.get('/responsavel/dados')
+    responsavel.value = response.data.data || response.data
   } catch (error) {
-    console.error('Erro ao carregar usuários:', error)
+    console.error('Erro ao carregar responsaveis:', error)
   }
 }
 
@@ -141,14 +136,13 @@ const deleteMessage = ref("");         // Mensagem que a modal vai mostrar
 const showDeleteModal = ref(false);    // Controla a modal
 
 const submitEliminar = () => {
-    formEliminar.post(route('utilizador.eliminar'), {
+    formEliminar.post(route('responsavel.eliminar'), {
         onSuccess: () => {
             $('#modalEliminar').modal('hide');
-            listar_utilizadores()  //recarrega a tabela
+            listar_responsaveis()  //recarrega a tabela
         }
     })
 }
-
 
 function openDeleteModal(ids) {
     deletingIds.value = ids;
@@ -156,91 +150,41 @@ function openDeleteModal(ids) {
     $('#modalEliminar').modal('show');
 }
 
-
 //ver detalhes
-function ver_detalhes(utilizador){
-
-    document.getElementById('nome').innerText = utilizador.name;
-    document.getElementById('email').innerText = utilizador.email;
-    document.getElementById('contacto').innerText = utilizador.contacto;
-    document.getElementById('perfil').innerText = utilizador.role;
-    document.getElementById('estado').innerText = utilizador.estado;
-    document.getElementById('data_registo').innerText = utilizador.created_at;
-
+function ver_detalhes(responsavel){
+    document.getElementById('nome').innerText = responsavel.name;
+    document.getElementById('contacto').innerText = responsavel.contacto;
+    document.getElementById('departamento').innerText = responsavel.departamento;
+    document.getElementById('cargo').innerText = responsavel.cargo;
+    document.getElementById('data_registo').innerText = responsavel.created_at;
 }
 
-//editar utilizador
-function editar_utilizador(utilizador){
+//editar responsavel
+function editar_responsavel(responsavel){
     formEditar.reset(); // limpa tudo corretamente
-
-    formEditar.id = utilizador.id;
-    formEditar.nome_editar = utilizador.name;
-    formEditar.estado = utilizador.estado;
-    formEditar.contacto_editar = utilizador.contacto;
-    formEditar.email_editar = utilizador.email;
-    formEditar.email_copia_editar = utilizador.email;
-    formEditar.senha_editar =  utilizador.password;   // opcional
-    formEditar.confirma_senha_editar =  utilizador.password; // opcional
+    formEditar.id = responsavel.id;
+    formEditar.nome = responsavel.nome;
+    formEditar.contacto = responsavel.contacto;
+    formEditar.departamento = responsavel.id_departamento;
+    formEditar.cargo = responsavel.id_cargo;
 }
 
 // Função para enviar
 const submitEditar = () => {
-    formEditar.post(route('utilizador.editar'), {
+    formEditar.post(route('responsavel.editar'), {
         onSuccess: () => {
             $('#modalEditar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_responsaveis()  //recarrega a tabela
         }
     })
 }
-
-//funcao que envia os ids para o back para eliminar
-/*async function confirmDelete() {
-    //fecha  a modal
-    $('#modalEliminar').modal('hide');
-
-    try {
-        await axios.post('/utilizadores/delete', { ids: deletingIds.value });
-
-        // Atualiza a tabela
-        listar_utilizadores();
-
-        // Limpa arrays
-        alert(deletingIds.value );
-        deletingIds.value = [];
-
-        selectedToDelete.value = [];
-        desmarcartabela();
-
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Eliminação bem sucedida',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-
-    } catch (error) {
-        console.error(error); // opcional para debugging
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: error.response?.data?.message || 'Ocorreu um erro ao eliminar',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-    }
-}*/
 
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <h4 class=""><strong>Responáveis</strong></h4>
+        <h4 class=""><strong>Funcionários (Responsáveis) </strong></h4>
          <div class="card  p-4 mb-2">
 
            <div class="d-flex flex-column flex-md-row gap-2 w-100">
@@ -248,20 +192,30 @@ const submitEditar = () => {
                 <!-- Status -->
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-filter icon"></i>
-                    <select v-model="filterStatus" class="form-select form-select-sm">
+                    <select v-model="filterDepa" class="form-select form-select-sm">
                         <option value="">Departamento</option>
-                        <option>Activo</option>
-                        <option>Inactivo</option>
+                        <option
+                            v-for="dep in departamentos"
+                            :key="dep.id"
+                            :value="dep.nome"
+                        >
+                            {{ dep.nome }}
+                        </option>
                     </select>
                 </div>
 
                 <!-- Role -->
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-user icon"></i>
-                    <select v-model="filterRole" class="form-select form-select-sm">
+                    <select v-model="filterCargo" class="form-select form-select-sm">
                         <option value="">Cargo</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
+                         <option
+                                v-for="dep in cargos"
+                                :key="dep.id"
+                                :value="dep.nome"
+                            >
+                                {{ dep.nome }}
+                            </option>
                     </select>
                 </div>
             </div>
@@ -289,35 +243,29 @@ const submitEditar = () => {
             <thead class="bg-gray-100 ">
                 <tr>
                 <th></th>
-                <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                <th>Nome</th>
+                <th>Contacto</th>
+                <th>Departamento</th>
+                <th>Cargo</th>
+                <th>Data de Registo</th>
                 <th>Ações</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr v-for="u in filteredUsers" :key="u.id" :data-id="u.id">
+                <tr v-for="resp in filteredResponsavel" :key="resp.id" :data-id="resp.id">
                 <td></td>
-                <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
-                <td>{{ u.contacto }}</td>
-                <td>{{ u.role }}</td>
-                <td>
-                     <span
-                        class="px-2 py-1 text-xs font-semibold rounded"
-                        :class="{
-                        'bg-green-100 text-green-700': u.estado === 'Activo',
-                        'bg-red-100 text-red-700': u.estado === 'Inactivo',
-                        //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
-                        }"
-                    >
-                        {{ u.estado }}
-                    </span>
+                <td class="p-3" ><strong style="color: #212529 !important;">{{ resp.nome }} </strong> </td>
+                <td>{{ resp.contacto }}</td>
+                <td>{{ resp.departamento }}</td>
+                <td>{{ resp.cargo }}</td>
 
-                </td>
 
-                <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+
+                <td class="date-cell">{{ new Date(resp.created_at).toLocaleDateString() }}</td>
                 <td>
-                    <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                    <button class="" @click="ver_detalhes(resp)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                    <button class=""  @click="editar_responsavel(resp)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
                 </td>
                 </tr>
             </tbody>
@@ -361,7 +309,7 @@ const submitEditar = () => {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Registar Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Registar Responsavel</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -385,7 +333,7 @@ const submitEditar = () => {
                                 <div class="row  mb-3">
                                     <div class="col mb-0">
                                         <label for="emailLarge" class="">Contacto</label>
-                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="xxxx@xxx.xx" />
+                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="9xxxxxxxx" />
                                         <div v-if="form.errors.contacto" class="text-red-500 text-sm mt-1">
                                             {{ form.errors.contacto }}
                                         </div>
@@ -395,33 +343,47 @@ const submitEditar = () => {
                                 </div>
                                 <div class="row g-2 mb-3">
                                     <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input type="text" v-model="form.email" class="form-control" placeholder="xxxx@xxx.xx" />
-                                    <div v-if="form.errors.email" class="text-red-500 text-sm mt-1">
-                                        {{ form.errors.email }}
-                                    </div>
+                                        <label for="emailLarge" class="">Departamento</label>
+                                       <select v-model="form.departamento" class="form-select">
+                                            <option value="">Seleccione o Departamento</option>
+
+                                            <option
+                                                v-for="dep in departamentos"
+                                                :key="dep.id"
+                                                :value="dep.id"
+                                            >
+                                                {{ dep.nome }}
+                                            </option>
+
+                                        </select>
+
+
+                                        <div v-if="form.errors.departamento" class="text-red-500 text-sm mt-1">
+                                            {{ form.errors.departamento }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row g-2">
                                     <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input type="password" v-model="form.senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.senha }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input type="password" v-model="form.confirma_senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.confirma_senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.confirma_senha }}
+                                        <label for="emailLarge" class="">Cargo</label>
+                                         <select v-model="form.cargo" class="form-select ">
+                                            <option value="">Seleccione o Cargo</option>
+
+                                            <option
+                                                v-for="dep in cargos"
+                                                :key="dep.id"
+                                                :value="dep.id"
+                                            >
+                                                {{ dep.nome }}
+                                            </option>
+
+                                        </select>
+
+                                        <div v-if="form.errors.cargo" class="text-red-500 text-sm mt-1">
+                                            {{ form.errors.cargo }}
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
@@ -441,7 +403,7 @@ const submitEditar = () => {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Responsavel</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -455,9 +417,9 @@ const submitEditar = () => {
                                 <div class="row" >
                                     <div class="col mb-3">
                                         <label for="nameLarge" class="">Nome</label>
-                                        <input id="nome_edit"  type="text" v-model="formEditar.nome_editar" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="formEditar.errors.nome_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.nome_editar }}
+                                        <input type="text" v-model="formEditar.nome" class="form-control" placeholder="Enter Name" />
+                                        <div v-if="formEditar.errors.nome" class="text-red-500 text-sm mt-1">
+                                            {{ formEditar.errors.nome }}
                                         </div>
                                     </div>
 
@@ -465,55 +427,56 @@ const submitEditar = () => {
                                 <div class="row  mb-3">
                                     <div class="col mb-0">
                                         <label for="emailLarge" class="">Contacto</label>
-                                        <input id="contacto_edit" type="text" v-model="formEditar.contacto_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="formEditar.errors.contacto_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.contacto_editar }}
+                                        <input type="text" v-model="formEditar.contacto" class="form-control" placeholder="9xxxxxxxx" />
+                                        <div v-if="formEditar.errors.contacto" class="text-red-500 text-sm mt-1">
+                                            {{ formEditar.errors.contacto }}
                                         </div>
 
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Estado</label>
-                                       <select v-model="formEditar.estado" class="form-select">
-                                            <option value="Activo">Activar</option>
-                                            <option value="Inactivo">Desactivar</option>
-                                        </select>
                                     </div>
 
                                 </div>
                                 <div class="row g-2 mb-3">
                                     <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input id="email_edit" type="text" v-model="formEditar.email_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                            <input id="email_copia_edit" type="hidden" v-model="formEditar.email_copia_editar" class="form-control" placeholder="xxxx@xxx.xx" />
+                                        <label for="emailLarge" class="">Departamento</label>
+                                       <select v-model="formEditar.departamento" class="form-select">
+                                            <option value="">Seleccione o Departamento</option>
 
-                                    <div v-if="formEditar.errors.email_editar" class="text-red-500 text-sm mt-1">
-                                        {{ formEditar.errors.email_editar }}
-                                    </div>
+                                            <option
+                                                v-for="dep in departamentos"
+                                                :key="dep.id"
+                                                :value="dep.id"
+                                            >
+                                                {{ dep.nome }}
+                                            </option>
+
+                                        </select>
+
+
+                                        <div v-if="formEditar.errors.departamento" class="text-red-500 text-sm mt-1">
+                                            {{ formEditar.errors.departamento }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row g-2">
                                     <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input id="senha_edit" type="password" v-model="formEditar.senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.senha_editar }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input id="confirmar_senha_edit" type="password" v-model="formEditar.confirma_senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.confirma_senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.confirma_senha_editar }}
+                                        <label for="emailLarge" class="">Cargo</label>
+                                         <select v-model="formEditar.cargo" class="form-select ">
+                                            <option value="">Seleccione o Cargo</option>
+
+                                            <option
+                                                v-for="dep in cargos"
+                                                :key="dep.id"
+                                                :value="dep.id"
+                                            >
+                                                {{ dep.nome }}
+                                            </option>
+                                        </select>
+
+                                        <div v-if="formEditar.errors.cargo" class="text-red-500 text-sm mt-1">
+                                            {{ formEditar.errors.cargo }}
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
@@ -533,7 +496,7 @@ const submitEditar = () => {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Responsavel</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -553,14 +516,6 @@ const submitEditar = () => {
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Email</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="email"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
                                 <label for="emailLarge" class="form-label" >Contacto</label>
                             </div>
                             <div class="col mb-0">
@@ -569,18 +524,18 @@ const submitEditar = () => {
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Perfil</label>
+                                <label for="emailLarge" class="form-label">Departamento</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="perfil"></label>
+                                <label for="dobLarge" class="form-label" id="departamento"></label>
                             </div>
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Estado</label>
+                                <label for="emailLarge" class="form-label">Cargo</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="estado"></label>
+                                <label for="dobLarge" class="form-label" id="cargo"></label>
                             </div>
                         </div>
                          <div class="row g-2">

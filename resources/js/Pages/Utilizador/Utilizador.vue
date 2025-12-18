@@ -241,7 +241,7 @@ const submitEditar = () => {
 <template>
     <AuthenticatedLayout>
         <h4 class=""><strong>Utilizadores</strong></h4>
-         <div class="card  p-4 mb-2" style="border:1px solid #debbb3">
+         <div class="card  p-4 mb-2" >
 
            <div class="d-flex flex-column flex-md-row gap-2 w-100" >
 
@@ -269,7 +269,7 @@ const submitEditar = () => {
 
         </div>
 
-        <div class="card p-4 " style="border:1px solid #debbb3">
+        <div class="card p-4 " >
 
             <div class="table-responsive text-nowrap mt-3">
                 <table v-datatable="{datatableOptions, defaultPageSize: 10,
@@ -330,7 +330,7 @@ const submitEditar = () => {
         <!--MODAL ELIMINAR-->
         <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true" >
             <div class="modal-dialog modal-sm" role="document" >
-                <div class="modal-content" style="border:1px solid #debbb3">
+                <div class="modal-content" >
                     <div class="modal-header">
                         <h5 class="modal-title">Confirmar Eliminação</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -359,7 +359,7 @@ const submitEditar = () => {
         <!--MODAL REGISTAR-->
         <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" style="border:1px solid #debbb3">
+                <div class="modal-content" >
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel3">Registar Utilizador</h5>
                         <button
@@ -385,7 +385,7 @@ const submitEditar = () => {
                                 <div class="row  mb-3">
                                     <div class="col mb-0">
                                         <label for="emailLarge" class="">Contacto</label>
-                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="xxxx@xxx.xx" />
+                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="9xxxxxxxx" />
                                         <div v-if="form.errors.contacto" class="text-red-500 text-sm mt-1">
                                             {{ form.errors.contacto }}
                                         </div>
@@ -439,7 +439,7 @@ const submitEditar = () => {
         <!--MODAL EDITAR-->
         <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" style="border:1px solid #debbb3">
+                <div class="modal-content" >
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel3">Actualizar Utilizador</h5>
                         <button
@@ -465,7 +465,7 @@ const submitEditar = () => {
                                 <div class="row  mb-3">
                                     <div class="col mb-0">
                                         <label for="emailLarge" class="">Contacto</label>
-                                        <input id="contacto_edit" type="text" v-model="formEditar.contacto_editar" class="form-control" placeholder="xxxx@xxx.xx" />
+                                        <input id="contacto_edit" type="text" v-model="formEditar.contacto_editar" class="form-control" placeholder="9xxxxxxxx" />
                                         <div v-if="formEditar.errors.contacto_editar" class="text-red-500 text-sm mt-1">
                                             {{ formEditar.errors.contacto_editar }}
                                         </div>
@@ -531,7 +531,7 @@ const submitEditar = () => {
         <!--MODAL DETALHE-->
         <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content" style="border:1px solid #debbb3">
+                <div class="modal-content" >
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
                         <button

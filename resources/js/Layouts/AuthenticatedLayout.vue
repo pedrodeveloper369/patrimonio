@@ -48,7 +48,7 @@ const showingNavigationDropdown = ref(false);
                             <strong>Categorias</strong>
                         </Link>
                     </li>
-                    
+
                     <li :class="['menu-item', route().current('local') ? 'active' : '']">
                         <Link class="menu-link" :href="route('local')"  >
                             <i class="bx bx-map me-2"></i>
@@ -90,7 +90,7 @@ const showingNavigationDropdown = ref(false);
                     <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
                         <Link class="menu-link" :href="route('responsavel')"  >
                            <i class="bx bx-user me-2"></i>
-                            <strong>Responsáveis</strong>
+                            <strong>Funcionários</strong>
                         </Link>
                     </li>
 

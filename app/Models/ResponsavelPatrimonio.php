@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PatrimonioResponsavel extends Model
+class ResponsavelPatrimonio extends Model
 {
     //
 }

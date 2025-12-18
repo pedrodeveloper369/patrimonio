@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Departamento;
+use App\Models\Responsavel;
 
 class DashboardController extends Controller
 {
     public function index(){
         $patrimonioTotal = $this->pegarTotalPatrimonio();
-        $responsavelTotal = $this->pegarTotalResponsavel();
+        $responsavelTotal = Responsavel::count();
         $movimentacaoTotal = $this->pegarTotalMovimentacao();
         $categoriaTotal = $this->pegarTotalCategoria();
         $localTotal = $this->PegarTotalLocal();
-        $departamentoTotal = $this->pegarTotalDepartamento();
+        $departamentoTotal = Departamento::count();
         $patrimonioRecentes = $this->pegarPatrimoniosRecentes();
 
         return Inertia::render('Dashboard',[
@@ -21,7 +23,7 @@ class DashboardController extends Controller
             'departamentoTotal' =>$departamentoTotal,
             'localTotal' => $localTotal,
             'categoriaTotal' =>$categoriaTotal,
-            'responsavelTotal ' =>$responsavelTotal,
+            'responsavelTotal' =>$responsavelTotal,
             'patrimonioTotal' => $patrimonioTotal
         ]);
     }
