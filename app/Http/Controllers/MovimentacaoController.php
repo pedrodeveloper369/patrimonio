@@ -10,4 +10,5 @@ class MovimentacaoController extends Controller
     public function index(){
         return Inertia::render('Movimentacao/Movimentacao');
     }
+
 }

@@ -13,15 +13,15 @@ class ConfiguracaoSeeder extends Seeder
      */
     public function run(): void
     {
-        EstadoPatrimonio::create([ 'nome' => 'Activo']);
-        EstadoPatrimonio::create([ 'nome' => 'Inactivo']);
-        EstadoPatrimonio::create([ 'nome' => 'Disponível']);
-        EstadoPatrimonio::create([ 'nome' => 'Danificado']);
-        EstadoPatrimonio::create([ 'nome' => 'Em manutenção']);
-        EstadoPatrimonio::create([ 'nome' => 'Perdido']);
-        EstadoPatrimonio::create([ 'nome' => 'Obsoleto']);
-        EstadoPatrimonio::create([ 'nome' => 'Transferido']);
-        EstadoPatrimonio::create([ 'nome' => 'Emprestado']);
-        EstadoPatrimonio::create([ 'nome' => 'Descartado']);
+        EstadoPatrimonio::create([ 'nome' => 'Activo', 'cor' => '#22C55E']);
+        EstadoPatrimonio::create([ 'nome' => 'Inactivo', 'cor' => '#6B7280']);
+        EstadoPatrimonio::create([ 'nome' => 'Disponível', 'cor' => '#3B82F6']);
+        EstadoPatrimonio::create([ 'nome' => 'Danificado', 'cor' => '#F97316']);
+        EstadoPatrimonio::create([ 'nome' => 'Em manutenção', 'cor' => '#EAB308']);
+        EstadoPatrimonio::create([ 'nome' => 'Perdido', 'cor' => '#EF4444']);
+        EstadoPatrimonio::create([ 'nome' => 'Obsoleto', 'cor' => '#4B5563']);
+        EstadoPatrimonio::create([ 'nome' => 'Transferido', 'cor' => '#1D4ED8']);
+        EstadoPatrimonio::create([ 'nome' => 'Emprestado', 'cor' => '#8B5CF6']);
+        EstadoPatrimonio::create([ 'nome' => 'Descartado', 'cor' => '#111827']);
     }
 }

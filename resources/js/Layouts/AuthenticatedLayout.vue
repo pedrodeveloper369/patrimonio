@@ -62,13 +62,14 @@ const showingNavigationDropdown = ref(false);
                             <strong>Movimentações</strong>
                         </Link>
                     </li>
-
+                    <!--
                     <li :class="['menu-item', route().current('relatorio') ? 'active' : '']">
                         <Link class="menu-link" :href="route('relatorio')"  >
                             <i class="bx bx-file me-2"></i>
                             <strong>Relatórios</strong>
                         </Link>
                     </li>
+                    -->
 
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Estrutura Organizacional</span></li>
                     <li :class="['menu-item', route().current('departamento') ? 'active' : '']">

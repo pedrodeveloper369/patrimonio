@@ -88,20 +88,23 @@ onMounted(() => {
 
 //filtros computed
 const filterStatus = ref('')
-const filterRole = ref('')
+const filterDepartamento = ref('')
+const filterResponsavel = ref('')
+const filterLocal = ref('')
+const filterCategoria = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
-
 const filteredUsers = computed(() => {
   return users.value.filter(u => {
     const matchesStatus = !filterStatus.value || u.estado === filterStatus.value
-    const matchesRole   = !filterRole.value || u.role === filterRole.value
-    return matchesStatus && matchesRole /*&& matchesSearch*/
+    const filterDepartamento = !filterDepartamento.value || u.estado === filterDepartamento.value
+    const filterResponsavel = !filterResponsavel.value || u.estado === filterResponsavel.value
+    const filterLocal = !filterLocal.value || u.estado === filterLocal.value
+    const filterCategoria = !filterCategoria.value || u.role === filterCategoria.value
+    return matchesStatus && filterDepartamento && filterResponsavel && filterLocal && filterCategoria
   })
 })
-
-
 
 const columns = [
   { label: 'Nome', key: 'name' },
@@ -149,30 +152,25 @@ const submitEliminar = () => {
     })
 }
 
-
 function openDeleteModal(ids) {
     deletingIds.value = ids;
     formEliminar.ids = ids;
     $('#modalEliminar').modal('show');
 }
 
-
 //ver detalhes
 function ver_detalhes(utilizador){
-
     document.getElementById('nome').innerText = utilizador.name;
     document.getElementById('email').innerText = utilizador.email;
     document.getElementById('contacto').innerText = utilizador.contacto;
     document.getElementById('perfil').innerText = utilizador.role;
     document.getElementById('estado').innerText = utilizador.estado;
     document.getElementById('data_registo').innerText = utilizador.created_at;
-
 }
 
 //editar utilizador
 function editar_utilizador(utilizador){
     formEditar.reset(); // limpa tudo corretamente
-
     formEditar.id = utilizador.id;
     formEditar.nome_editar = utilizador.name;
     formEditar.estado = utilizador.estado;
@@ -241,35 +239,60 @@ const submitEditar = () => {
 <template>
     <AuthenticatedLayout>
         <h4 class=""><strong>Patrimónios</strong></h4>
-         <div class="card  p-4 mb-2" style="border:1px solid #debbb3">
+         <div class="card  p-4 mb-2">
 
-           <div class="d-flex flex-column flex-md-row gap-2 w-100" >
+            <div class="d-flex flex-column flex-md-row gap-2 w-100">
 
-                <!-- Status -->
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-filter icon"></i>
                     <select v-model="filterStatus" class="form-select form-select-sm">
-                        <option value="">Estado</option>
+                        <option value="">Estado do Património</option>
                         <option>Activo</option>
                         <option>Inactivo</option>
                     </select>
                 </div>
 
-                <!-- Role -->
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-user icon"></i>
-                    <select v-model="filterRole" class="form-select form-select-sm">
-                        <option value="">Perfil</option>
+                    <select v-model="filterDepartamento" class="form-select form-select-sm">
+                        <option value="">Departamento</option>
                         <option>Admin</option>
                         <option>Gestor</option>
                     </select>
                 </div>
-            </div>
 
+                <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-user icon"></i>
+                    <select v-model="filterResponsavel" class="form-select form-select-sm">
+                        <option value="">Responsável</option>
+                        <option>Admin</option>
+                        <option>Gestor</option>
+                    </select>
+                </div>
+
+                <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-user icon"></i>
+                    <select v-model="filterLocal" class="form-select form-select-sm">
+                        <option value="">Localização</option>
+                        <option>Admin</option>
+                        <option>Gestor</option>
+                    </select>
+                </div>
+
+                 <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-user icon"></i>
+                    <select v-model="filterCategoria" class="form-select form-select-sm">
+                        <option value="">Categoria</option>
+                        <option>Admin</option>
+                        <option>Gestor</option>
+                    </select>
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="card p-4 " style="border:1px solid #debbb3">
+        <div class="card p-4 " >
 
             <div class="table-responsive text-nowrap mt-3">
                 <table v-datatable="{datatableOptions, defaultPageSize: 10,
@@ -278,6 +301,7 @@ const submitEditar = () => {
                             openDeleteModal(selectedIds);
                         },
                         actionsHtml: `
+                            <button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
                             <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
                         `
                         }"
@@ -326,7 +350,6 @@ const submitEditar = () => {
 
         </div>
 
-
         <!--MODAL ELIMINAR-->
         <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true" >
             <div class="modal-dialog modal-sm" role="document" >
@@ -354,7 +377,6 @@ const submitEditar = () => {
                 </div>
             </div>
         </div>
-
 
         <!--MODAL REGISTAR-->
         <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
@@ -600,8 +622,6 @@ const submitEditar = () => {
                 </div>
             </div>
         </div>
-
-
 
     </AuthenticatedLayout>
 </template>

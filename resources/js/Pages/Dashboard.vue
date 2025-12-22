@@ -342,7 +342,7 @@ function deleteSelected() {
                                         />
                                     </div>
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Patrimónios</span>
+                                <span class="fw-semibold d-block mb-1">Património</span>
                                 <h3 class="card-title mb-2">12</h3>
                             </div>
                         </div>
@@ -360,7 +360,7 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Responsaveis</span>
+                                <span class="fw-semibold d-block mb-1">Responsavel</span>
                                 <h3 class="card-title mb-2">{{ responsavelTotal }}</h3>
                             </div>
                         </div>
@@ -378,7 +378,7 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Locais</span>
+                                <span class="fw-semibold d-block mb-1">Localização</span>
                                 <h3 class="card-title mb-2">12</h3>
                             </div>
                         </div>
@@ -396,7 +396,7 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Departamentos</span>
+                                <span class="fw-semibold d-block mb-1">Departamento</span>
                                 <h3 class="card-title mb-2">{{departamentoTotal}}</h3>
                             </div>
                         </div>
@@ -414,7 +414,7 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Categorias</span>
+                                <span class="fw-semibold d-block mb-1">Categoria</span>
                                 <h3 class="card-title mb-2">12</h3>
                             </div>
                         </div>
@@ -432,7 +432,7 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Movimentações</span>
+                                <span class="fw-semibold d-block mb-1">Movimentação</span>
                                 <h3 class="card-title mb-2">12</h3>
                             </div>
                         </div>

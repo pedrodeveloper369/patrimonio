@@ -152,7 +152,7 @@ function openDeleteModal(ids) {
 
 //ver detalhes
 function ver_detalhes(responsavel){
-    document.getElementById('nome').innerText = responsavel.name;
+    document.getElementById('nome').innerText = responsavel.nome;
     document.getElementById('contacto').innerText = responsavel.contacto;
     document.getElementById('departamento').innerText = responsavel.departamento;
     document.getElementById('cargo').innerText = responsavel.cargo;
