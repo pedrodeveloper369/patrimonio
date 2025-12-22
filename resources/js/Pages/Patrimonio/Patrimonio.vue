@@ -4,6 +4,8 @@ import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
 import axios from 'axios';
 import { useForm , usePage } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
+import { router } from '@inertiajs/vue3';
+import TabelaDinamica from '@/Components/TabelaDinamica.vue';
 
 const users = ref([]);
 
@@ -192,47 +194,11 @@ const submitEditar = () => {
     })
 }
 
-//funcao que envia os ids para o back para eliminar
-/*async function confirmDelete() {
-    //fecha  a modal
-    $('#modalEliminar').modal('hide');
+//para rota
+window.chamar_pagina_registar = () => {
+  router.visit(route('registar.patrimonio'));
+};
 
-    try {
-        await axios.post('/utilizadores/delete', { ids: deletingIds.value });
-
-        // Atualiza a tabela
-        listar_utilizadores();
-
-        // Limpa arrays
-        alert(deletingIds.value );
-        deletingIds.value = [];
-
-        selectedToDelete.value = [];
-        desmarcartabela();
-
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Eliminação bem sucedida',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-
-    } catch (error) {
-        console.error(error); // opcional para debugging
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: error.response?.data?.message || 'Ocorreu um erro ao eliminar',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-    }
-}*/
 
 </script>
 
@@ -244,7 +210,7 @@ const submitEditar = () => {
             <div class="d-flex flex-column flex-md-row gap-2 w-100">
 
                 <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-filter icon"></i>
+                    <i class="bx bx-info-circle icon"></i>
                     <select v-model="filterStatus" class="form-select form-select-sm">
                         <option value="">Estado do Património</option>
                         <option>Activo</option>
@@ -253,7 +219,7 @@ const submitEditar = () => {
                 </div>
 
                 <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-user icon"></i>
+                    <i class="bx bx-sitemap icon"></i>
                     <select v-model="filterDepartamento" class="form-select form-select-sm">
                         <option value="">Departamento</option>
                         <option>Admin</option>
@@ -271,7 +237,7 @@ const submitEditar = () => {
                 </div>
 
                 <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-user icon"></i>
+                    <i class="bx bx-map icon"></i>
                     <select v-model="filterLocal" class="form-select form-select-sm">
                         <option value="">Localização</option>
                         <option>Admin</option>
@@ -280,7 +246,7 @@ const submitEditar = () => {
                 </div>
 
                  <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-user icon"></i>
+                    <i class="bx bx-category icon"></i>
                     <select v-model="filterCategoria" class="form-select form-select-sm">
                         <option value="">Categoria</option>
                         <option>Admin</option>
@@ -302,11 +268,14 @@ const submitEditar = () => {
                         },
                         actionsHtml: `
                             <button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
-                            <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
+                            <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
+                            
+
                         `
                         }"
                     @selection-changed="onSelectionChanged"
                     @datatable-delete="onDeleteRequested"
+                     @datatable-action="onDatatableAction"
                     class="table table-hover mt-3 min-w-full  mt-6 text-sm"
                 >
 
@@ -319,7 +288,7 @@ const submitEditar = () => {
                 </thead>
 
                 <tbody>
-                    <tr v-for="u in filteredUsers" :key="u.id" :data-id="u.id">
+                    <tr v-for="u in users" :key="u.id" :data-id="u.id">
                     <td></td>
                     <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
                     <td>{{ u.contacto }}</td>

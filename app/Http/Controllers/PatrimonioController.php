@@ -16,4 +16,15 @@ class PatrimonioController extends Controller
             ]);
     }
 
+      public function index_registar(){
+        return Inertia::render('Patrimonio/Registar_Patrimonio',[
+            'flash' => [
+                'success' => session('success'),
+                'erro' => session('erro'),
+                ]
+            ]);
+    }
+
+
+
 }

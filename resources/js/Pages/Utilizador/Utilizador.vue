@@ -247,7 +247,7 @@ const submitEditar = () => {
 
                 <!-- Status -->
                 <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-filter icon"></i>
+                    <i class="bx bx-info-circle  icon"></i>
                     <select v-model="filterStatus" class="form-select form-select-sm">
                         <option value="">Estado</option>
                         <option>Activo</option>

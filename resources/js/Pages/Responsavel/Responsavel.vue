@@ -191,7 +191,7 @@ const submitEditar = () => {
 
                 <!-- Status -->
                 <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-filter icon"></i>
+                    <i class="bx bx-sitemap icon"></i>
                     <select v-model="filterDepa" class="form-select form-select-sm">
                         <option value="">Departamento</option>
                         <option
@@ -233,6 +233,8 @@ const submitEditar = () => {
                     },
                     actionsHtml: `
                         <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
+                   
+                   
                     `
                     }"
                 @selection-changed="onSelectionChanged"

@@ -67,14 +67,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/responsavel/eliminar', [ResponsavelController::class, 'eliminar_responsavel'])->name('responsavel.eliminar');
     Route::post('/responsavel/editar', [ResponsavelController::class, 'editar_responsavel'])->name('responsavel.editar');
 
-
-
-
     //Rotas locais
     Route::get('/localizacoes', [LocalController::class, 'index'])->name('local') ;
 
     //Rotas patrimonio
     Route::get('/patrimonios', [PatrimonioController::class, 'index'])->name('patrimonio') ;
+    Route::get('/registar-patrimonio', [PatrimonioController::class, 'index_registar'])->name('registar.patrimonio') ;
 
     //Rotas movimentacoes
     Route::get('/movimentacoes',[MovimentacaoController::class, 'index'])->name('movimentacao') ;
