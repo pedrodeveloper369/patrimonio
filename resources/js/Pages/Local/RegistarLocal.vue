@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
 import axios from 'axios';
-import { useForm , usePage } from '@inertiajs/vue3';
+import { useForm , usePage, router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 import LocalTree from '@/Components/LocalTree.vue'
 
@@ -27,8 +27,45 @@ const form = useForm({
 
 // Função para enviar
 const submit = () => {
-    form.post(route('local.registar'))
+    form.post(route('local.registar'), {
+        onSuccess: () => {
+           redirecionar_pagina();
+        }
+    })
 }
+
+//mensagens de registo
+const page = usePage()
+
+watch(() => page.props.flash.erro, (msg) => {
+  if (msg) {
+    Swal.fire({
+      toast: true,          // transforma em notificação estilo toast
+      position: 'top-end',  // canto direito superior
+      icon: 'error',
+      title: msg,
+      showConfirmButton: false, // sem botão de confirmação
+      timer: 6000,          // desaparece após 3 segundos
+      timerProgressBar: true,
+    })
+  }
+})
+
+// Mensagem de sucesso
+watch(() => page.props.flash.success, (msg) => {
+  if (msg) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: msg,
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+    })
+  }
+})
+
 
 
 //funcao de selecção exclusiva
@@ -52,6 +89,10 @@ function confirmarLocal() {
 function abrirmodal(){
     localSelecionado.value = '';
     $('#modalBuscarLocal').modal('show')
+}
+
+function redirecionar_pagina(){
+    router.visit(route('local'));
 }
 
 </script>

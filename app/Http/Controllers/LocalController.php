@@ -21,20 +21,26 @@ class LocalController extends Controller
 
     public function index(){
 
-        $tipoLocal = TipoLocal::orderBy('nome', 'asc')->get();
-        return Inertia::render('Local/Local',[
-            'tipoLocal' => $tipoLocal,
+       return Inertia::render('Local/Local', [
+            'tipoLocal' => TipoLocal::orderBy('nome')->get(),
             'flash' => [
                 'success' => session('success'),
                 'erro' => session('erro'),
-                ]
+            ],
         ]);
     }
 
     public function index_registar(){
         $tipoLocal = TipoLocal::orderBy('nome', 'asc')->get();
         $caminhosLocal = $this->caminhos_organizados();
-        return Inertia::render('Local/RegistarLocal',['tipoLocal' => $tipoLocal, 'caminhosLocal' =>$caminhosLocal]);
+        return Inertia::render('Local/RegistarLocal',[
+            'tipoLocal' => $tipoLocal,
+            'caminhosLocal' =>$caminhosLocal,
+            'flash' => [
+                'success' => session('success'),
+                'erro' => session('erro'),
+            ],
+        ]);
     }
 
     public function registar_local(Request $request){
@@ -49,12 +55,13 @@ class LocalController extends Controller
             $local->parent_id = $request->id_local; //este é o id do espaco geral onde o local a ser cadastrado pertencerá
             $local->save();
             DB::commit();
-            return redirect()->route('local')
+
+            return redirect()->route('registar.local')
                      ->with('success', 'local registado com sucesso!');
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('local')
+            return redirect()->route('registar.local')
                     ->with('erro', 'Ocorreu um erro ao registar o local \n'.$th->getMessage());
         }
     }
@@ -100,7 +107,16 @@ class LocalController extends Controller
 
     //funcao que pega da base de dados todos os locals
     public function dados_local(){
-        return Local::all();
+        return DB::table('locals')
+            ->join('tipo_locals', 'tipo_locals.id', '=', 'locals.id_tipolocal')
+            ->leftJoin('locals as parent', 'parent.id', '=', 'locals.parent_id')
+            ->select(
+                'locals.id',
+                'locals.nome',
+                'tipo_locals.nome as tipo',
+                DB::raw('COALESCE(parent.nome, "—") as localizacao')
+            )
+            ->get();
     }
 
     function caminho(Local $local)

@@ -5,13 +5,15 @@ import axios from 'axios';
 import { useForm , usePage, router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 
-const responsavel = ref([]);
+const local = ref([]);
 
 //pegando dados vindo do controller
 const props = defineProps({
   tipoLocal: Array,
+  locais: Array,
 });
 const tipoLocal = ref(props.tipoLocal);
+const locais = ref(props.locais);
 
 
 //declaracao do formulario e os seus dados
@@ -36,17 +38,18 @@ const formEliminar = useForm({
 
 // Função para enviar
 const submit = () => {
-    form.post(route('responsavel.registar'), {
+    form.post(route('local.registar'), {
         onSuccess: () => {
             $('#modalRegistar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_responsaveis()  //recarrega a tabela
+            listar_locais()  //recarrega a tabela
         }
     })
 }
 
 //mensagens de registo
 const page = usePage()
+
 watch(() => page.props.flash.erro, (msg) => {
   if (msg) {
     Swal.fire({
@@ -93,34 +96,34 @@ const filterLocal = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
-const filteredLocalização = computed(() => {
-  return responsavel.value.filter(resp => {
-    const matchesLocal = !filterLocal.value || resp.departamento === filterLocal.value
+const filteredLocalizacao = computed(() => {
+  return local.value.filter(local => {
+    const matchesLocal = !filterLocal.value || local.tipo === filterLocal.value
     return matchesLocal
   })
 })
 
 
 function handleDelete(ids) {
-  responsavel.value = responsavel.value.filter(u => !ids.includes(u.id));
+  local.value = local.value.filter(u => !ids.includes(u.id));
 }
 
 function handleRowAction({ action, row }) {
   console.log(action, row);
 }
 
-//const responsavel = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
+//const local = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
 // Busca os dados do Laravel via rota relativa
 onMounted(async () => {
-  listar_responsaveis()
+  listar_locais()
 });
 
-const listar_responsaveis = async () => {
+const listar_locais = async () => {
   try {
-    const response = await axios.get('/responsavel/dados')
-    responsavel.value = response.data.data || response.data
+    const response = await axios.get('/local/dados')
+    local.value = response.data.data || response.data
   } catch (error) {
-    console.error('Erro ao carregar responsaveis:', error)
+    console.error('Erro ao carregar locais:', error)
   }
 }
 
@@ -131,10 +134,10 @@ const deleteMessage = ref("");         // Mensagem que a modal vai mostrar
 const showDeleteModal = ref(false);    // Controla a modal
 
 const submitEliminar = () => {
-    formEliminar.post(route('responsavel.eliminar'), {
+    formEliminar.post(route('local.eliminar'), {
         onSuccess: () => {
             $('#modalEliminar').modal('hide');
-            listar_responsaveis()  //recarrega a tabela
+            listar_locais()  //recarrega a tabela
         }
     })
 }
@@ -146,31 +149,31 @@ function openDeleteModal(ids) {
 }
 
 //ver detalhes
-function ver_detalhes(responsavel){
-    document.getElementById('nome').innerText = responsavel.nome;
-    document.getElementById('contacto').innerText = responsavel.contacto;
-    document.getElementById('departamento').innerText = responsavel.departamento;
-    document.getElementById('cargo').innerText = responsavel.cargo;
-    document.getElementById('data_registo').innerText = responsavel.created_at;
+function ver_detalhes(local){
+    document.getElementById('nome').innerText = local.nome;
+    document.getElementById('contacto').innerText = local.contacto;
+    document.getElementById('departamento').innerText = local.departamento;
+    document.getElementById('cargo').innerText = local.cargo;
+    document.getElementById('data_registo').innerText = local.created_at;
 }
 
-//editar responsavel
-function editar_responsavel(responsavel){
+//editar local
+function editar_local(local){
     formEditar.reset(); // limpa tudo corretamente
-    formEditar.id = responsavel.id;
-    formEditar.nome = responsavel.nome;
-    formEditar.contacto = responsavel.contacto;
-    formEditar.departamento = responsavel.id_departamento;
-    formEditar.cargo = responsavel.id_cargo;
+    formEditar.id = local.id;
+    formEditar.nome = local.nome;
+    formEditar.contacto = local.contacto;
+    formEditar.departamento = local.id_departamento;
+    formEditar.cargo = local.id_cargo;
 }
 
 // Função para enviar
 const submitEditar = () => {
-    formEditar.post(route('responsavel.editar'), {
+    formEditar.post(route('local.editar'), {
         onSuccess: () => {
             $('#modalEditar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_responsaveis()  //recarrega a tabela
+            listar_locais()  //recarrega a tabela
         }
     })
 }
@@ -239,18 +242,18 @@ window.chamar_pagina_registar_local = () => {
             </thead>
 
             <tbody>
-                <tr v-for="resp in filteredLocalização" :key="resp.id" :data-id="resp.id">
+                <tr v-for="local in filteredLocalizacao" :key="local.id" :data-id="local.id">
                 <td></td>
-                <td class="p-3" ><strong style="color: #212529 !important;">{{ resp.nome }} </strong> </td>
-                <td>{{ resp.contacto }}</td>
+                <td class="p-3" ><strong style="color: #212529 !important;">{{ local.nome }} </strong> </td>
+                <td>{{ local.tipo }}</td>
 
-                <td>{{ resp.cargo }}</td>
+                <td>{{ local.localizacao }}</td>
 
 
 
                 <td>
-                    <button class="" @click="ver_detalhes(resp)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_responsavel(resp)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                    <button class="" @click="ver_detalhes(local)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                    <button class=""  @click="editar_local(local)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
                 </td>
                 </tr>
             </tbody>
