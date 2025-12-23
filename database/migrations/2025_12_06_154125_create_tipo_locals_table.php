@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('locals', function (Blueprint $table) {
+        Schema::create('tipo_locals', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->foreignId('id_tipolocal')->constrained('tipo_locals')->onDelete('cascade');
-            // Local pai (hierarquia)
-            $table->foreignId('parent_id')->nullable()->constrained('locals')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('locals');
+        Schema::dropIfExists('tipo_locals');
     }
 };

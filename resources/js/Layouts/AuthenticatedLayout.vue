@@ -16,22 +16,22 @@ const showingNavigationDropdown = ref(false);
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme " >
                 <div class="app-brand demo mt-2">
-                    <div class="col-md-4 col-12 mb-3 mb-md-0">
+                    <div class="col-md-4 col-12 mb-md-0">
                         <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
                     </div>
                 </div>
                 <hr>
                 <div class="menu-inner-shadow"></div>
 
-                <ul class="menu-inner py-1 mt-3">
+                <ul class="menu-inner ">
                     <!-- Dashboard -->
                     <li :class="['menu-item', route().current('dashboard') ? 'active' : '']"
                      v-if="$page.props.auth.permissions.includes('ver_dashboard_admin')"
                     >
-                    <Link :href="route('dashboard')"  class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                        <strong>Painel de Controlo</strong>
-                    </Link>
+                        <Link :href="route('dashboard')"  class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <strong>Painel de Controlo</strong>
+                        </Link>
                     </li>
 
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Patrimónios</span></li>

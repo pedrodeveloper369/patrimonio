@@ -2,9 +2,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
 import axios from 'axios';
-import { useForm , usePage } from '@inertiajs/vue3';
+import { useForm , usePage, router  } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
-import { router } from '@inertiajs/vue3';
 import TabelaDinamica from '@/Components/TabelaDinamica.vue';
 
 const users = ref([]);
@@ -269,7 +268,7 @@ window.chamar_pagina_registar = () => {
                         actionsHtml: `
                             <button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
                             <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
-                            
+
 
                         `
                         }"

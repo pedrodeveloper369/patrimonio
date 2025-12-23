@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\EstadoPatrimonio;
+use App\Models\TipoLocal;
 
 class ConfiguracaoSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class ConfiguracaoSeeder extends Seeder
      */
     public function run(): void
     {
+        //configuracoes iniciais do estado que os patrimonios vai assumir
         EstadoPatrimonio::create([ 'nome' => 'Activo', 'cor' => '#22C55E']);
         EstadoPatrimonio::create([ 'nome' => 'Inactivo', 'cor' => '#6B7280']);
         EstadoPatrimonio::create([ 'nome' => 'Disponível', 'cor' => '#3B82F6']);
@@ -23,5 +25,20 @@ class ConfiguracaoSeeder extends Seeder
         EstadoPatrimonio::create([ 'nome' => 'Transferido', 'cor' => '#1D4ED8']);
         EstadoPatrimonio::create([ 'nome' => 'Emprestado', 'cor' => '#8B5CF6']);
         EstadoPatrimonio::create([ 'nome' => 'Descartado', 'cor' => '#111827']);
+
+
+        //configuração inicial dos tipos de localização
+        TipoLocal::create([ 'nome' => 'Pátio']);
+        TipoLocal::create([ 'nome' => 'Bloco']);
+        TipoLocal::create([ 'nome' => 'Edifício']);
+        TipoLocal::create([ 'nome' => 'Andar']);
+        TipoLocal::create([ 'nome' => 'Corredor']);
+        TipoLocal::create([ 'nome' => 'Hall']);
+        TipoLocal::create([ 'nome' => 'Sala']);
+        TipoLocal::create([ 'nome' => 'Sanitária']);
+        TipoLocal::create([ 'nome' => 'Armazem']);
+        TipoLocal::create([ 'nome' => 'Estante']);
+
+
     }
 }
