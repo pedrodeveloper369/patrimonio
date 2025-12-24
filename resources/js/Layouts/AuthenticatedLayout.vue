@@ -23,7 +23,7 @@ const showingNavigationDropdown = ref(false);
                 <hr>
                 <div class="menu-inner-shadow"></div>
 
-                <ul class="menu-inner ">
+                <ul class="menu-inner " >
                     <!-- Dashboard -->
                     <li :class="['menu-item', route().current('dashboard') ? 'active' : '']"
                      v-if="$page.props.auth.permissions.includes('ver_dashboard_admin')"
@@ -34,7 +34,6 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Patrimónios</span></li>
                     <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
                         <Link class="menu-link" :href="route('patrimonio')"  >
                             <i class="bx bx-archive me-2"></i>
@@ -70,8 +69,7 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
                     -->
-
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Estrutura Organizacional</span></li>
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Configurações</span></li>
                     <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
                         <Link class="menu-link" :href="route('departamento')"  >
 
@@ -154,8 +152,7 @@ const showingNavigationDropdown = ref(false);
                     <!-- Misc -->
 
 
-                   <li class="menu-header small text-uppercase"><span class="menu-header-text">Configurações</span></li>
-                     <!-- <li :class="['menu-item', route().current('empresa') ? 'active' : '']">
+                    <!-- <li :class="['menu-item', route().current('empresa') ? 'active' : '']">
                         <Link class="menu-link" :href="route('empresa')"  >
                             <i class="menu-icon bx bx-cog"></i>
                             <strong>Dados da Empresa</strong>

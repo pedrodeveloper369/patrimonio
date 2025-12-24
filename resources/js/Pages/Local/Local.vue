@@ -86,10 +86,6 @@ function resetModal() {
     form.clearErrors()
 }
 
-onMounted(() => {
-    const modalEl = document.getElementById('modalRegistar')
-    modalEl.addEventListener('hidden.bs.modal', resetModal)
-})
 
 //filtros computed
 const filterLocal = ref('')
@@ -151,10 +147,8 @@ function openDeleteModal(ids) {
 //ver detalhes
 function ver_detalhes(local){
     document.getElementById('nome').innerText = local.nome;
-    document.getElementById('contacto').innerText = local.contacto;
-    document.getElementById('departamento').innerText = local.departamento;
-    document.getElementById('cargo').innerText = local.cargo;
-    document.getElementById('data_registo').innerText = local.created_at;
+    document.getElementById('tipo').innerText = local.tipo;
+    document.getElementById('localizacao').innerText = local.caminho_completo;
 }
 
 //editar local
@@ -233,27 +227,36 @@ window.chamar_pagina_registar_local = () => {
 
             <thead class="bg-gray-100 ">
                 <tr>
-                <th></th>
+                <th hidden></th>
                 <th>Nome</th>
                 <th>Tipo</th>
+                 <th>Estado</th>
                 <th>Localização</th>
+
                 <th>Ações</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr v-for="local in filteredLocalizacao" :key="local.id" :data-id="local.id">
-                <td></td>
+                <td hidden></td>
                 <td class="p-3" ><strong style="color: #212529 !important;">{{ local.nome }} </strong> </td>
                 <td>{{ local.tipo }}</td>
-
+                <td>
+                    <span
+                        class="px-2 py-1 text-xs font-semibold rounded"
+                        :class="{
+                        'bg-green-100 text-green-700': local.estado === 'Activo',
+                        'bg-red-100 text-red-700': local.estado === 'Inactivo',
+                        }"
+                    >
+                        {{ local.estado }}
+                    </span>
+                </td>
                 <td>{{ local.localizacao }}</td>
-
-
-
                 <td>
                     <button class="" @click="ver_detalhes(local)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_local(local)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                    <Link :href="route('editar.local', local)" style="color:#777" ><i class="menu-icon bx bx-edit-alt"></i></Link>
                 </td>
                 </tr>
             </tbody>
@@ -291,181 +294,12 @@ window.chamar_pagina_registar_local = () => {
             </div>
         </div>
 
-
-        <!--MODAL REGISTAR-->
-        <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Registar Localização</h5>
-                        <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        ></button>
-                    </div>
-                    <form @submit.prevent="submit">
-                        <div class="modal-body">
-
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.nome }}
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Tipo de Localização</label>
-                                       <select v-model="form.departamento" class="form-select">
-                                            <option value="">Seleccione o tipo de localização</option>
-
-                                            <option
-                                                v-for="tlocal in tipoLocal"
-                                                :key="tlocal.id"
-                                                :value="tlocal.id"
-                                            >
-                                                {{ tlocal.nome }}
-                                            </option>
-
-                                        </select>
-
-
-                                        <div v-if="form.errors.departamento" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.departamento }}
-                                        </div>
-                                    </div>
-                                </div>
-                                 <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Localizacao</label>
-                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="9xxxxxxxx" />
-                                        <div v-if="form.errors.contacto" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.contacto }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="form.processing">
-                                {{ form.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
-                </div>
-            </div>
-        </div>
-
-        <!--MODAL EDITAR-->
-        <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Localização</h5>
-                        <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        ></button>
-                    </div>
-                    <form @submit.prevent="submitEditar">
-                        <div class="modal-body">
-
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input type="text" v-model="formEditar.nome" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="formEditar.errors.nome" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.nome }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input type="text" v-model="formEditar.contacto" class="form-control" placeholder="9xxxxxxxx" />
-                                        <div v-if="formEditar.errors.contacto" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.contacto }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Departamento</label>
-                                       <select v-model="formEditar.departamento" class="form-select">
-                                            <option value="">Seleccione o Departamento</option>
-
-                                            <option
-                                                v-for="dep in departamentos"
-                                                :key="dep.id"
-                                                :value="dep.id"
-                                            >
-                                                {{ dep.nome }}
-                                            </option>
-
-                                        </select>
-
-
-                                        <div v-if="formEditar.errors.departamento" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.departamento }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Cargo</label>
-                                         <select v-model="formEditar.cargo" class="form-select ">
-                                            <option value="">Seleccione o Cargo</option>
-
-                                            <option
-                                                v-for="dep in cargos"
-                                                :key="dep.id"
-                                                :value="dep.id"
-                                            >
-                                                {{ dep.nome }}
-                                            </option>
-                                        </select>
-
-                                        <div v-if="formEditar.errors.cargo" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.cargo }}
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="formEditar.processing">
-                                {{ formEditar.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
-                </div>
-            </div>
-        </div>
-
         <!--MODAL DETALHE-->
         <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Localização</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes da Localização</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -485,36 +319,21 @@ window.chamar_pagina_registar_local = () => {
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Contacto</label>
+                                <label for="emailLarge" class="form-label" >Tipo de Localização</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="contacto"></label>
+                                <label for="dobLarge" class="form-label" id="tipo"></label>
                             </div>
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Departamento</label>
+                                <label for="emailLarge" class="form-label">Localização</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="departamento"></label>
+                                <label for="dobLarge" class="form-label" id="localizacao"></label>
                             </div>
                         </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Cargo</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="cargo"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Data de Registo</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="data_registo"></label>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">

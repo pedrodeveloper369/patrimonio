@@ -72,6 +72,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/registar-localizacao', [LocalController::class, 'index_registar'])->name('registar.local') ;
     Route::post('/registar-local', [LocalController::class, 'registar_local'])->name('local.registar');
     Route::get('/local/dados', [LocalController::class, 'dados_local'])->name('dados.local') ;
+    Route::get('/editar-localizacao/{local}', [LocalController::class, 'index_editar'])->name('editar.local') ;
+    Route::post('/editar-local', [LocalController::class, 'editar_local'])->name('local.editar');
 
     //Rotas patrimonio
     Route::get('/patrimonios', [PatrimonioController::class, 'index'])->name('patrimonio') ;

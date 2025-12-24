@@ -20,12 +20,9 @@ class ResponsavelController extends Controller
     }
 
     public function index(){
-        $departamento = Departamento::all();
-        $cargo = Cargo::all();
-
         return Inertia::render('Responsavel/Responsavel',[
-            'departamento' => $departamento,
-            'cargo' => $cargo,
+            'departamento' => Departamento::all(),
+            'cargo' => Cargo::all(),
             'flash' => [
                 'success' => session('success'),
                 'erro' => session('erro'),

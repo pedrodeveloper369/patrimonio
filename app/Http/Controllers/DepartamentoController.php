@@ -18,9 +18,8 @@ class DepartamentoController extends Controller
     }
 
     public function index(){
-        $departamento = Departamento::all();
         return Inertia::render('Departamento/Departamento',[
-            'departamento' => $departamento,
+            'departamento' => Departamento::all(),
             'flash' => [
                 'success' => session('success'),
                 'erro' => session('erro'),

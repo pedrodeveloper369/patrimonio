@@ -10,21 +10,14 @@ use App\Models\Responsavel;
 class DashboardController extends Controller
 {
     public function index(){
-        $patrimonioTotal = $this->pegarTotalPatrimonio();
-        $responsavelTotal = Responsavel::count();
-        $movimentacaoTotal = $this->pegarTotalMovimentacao();
-        $categoriaTotal = $this->pegarTotalCategoria();
-        $localTotal = $this->PegarTotalLocal();
-        $departamentoTotal = Departamento::count();
-        $patrimonioRecentes = $this->pegarPatrimoniosRecentes();
-
         return Inertia::render('Dashboard',[
-            'patrimonioRecentes' => $patrimonioRecentes,
-            'departamentoTotal' =>$departamentoTotal,
-            'localTotal' => $localTotal,
-            'categoriaTotal' =>$categoriaTotal,
-            'responsavelTotal' =>$responsavelTotal,
-            'patrimonioTotal' => $patrimonioTotal
+            'patrimonioRecentes' => $this->pegarPatrimoniosRecentes(),
+            'departamentoTotal' => Departamento::count(),
+            'localTotal' => $this->PegarTotalLocal(),
+            'categoriaTotal' => $this->pegarTotalCategoria(),
+            'responsavelTotal' => Responsavel::count(),
+            'patrimonioTotal' => $this->pegarTotalPatrimonio(),
+            'movimentacaoTotal' => $this->pegarTotalMovimentacao(),
         ]);
     }
 
