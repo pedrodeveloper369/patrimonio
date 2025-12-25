@@ -158,60 +158,147 @@ const submitEditar = () => {
 
         <div class="card p-4 ">
 
-            <div class="table-responsive text-nowrap mt-3">
-            <table v-datatable="{datatableOptions, defaultPageSize: 10,
-                    deleteAction: (selectedIds) => {
-                        //chama modal
-                        openDeleteModal(selectedIds);
-                    },
-                    actionsHtml: `
-                       
-                    `
-                    }"
-                @selection-changed="onSelectionChanged"
-                @datatable-delete="onDeleteRequested"
-                class="table table-hover mt-3 min-w-full  mt-6 text-sm"
-            >
+                    <ul class="nav nav-tabs nav-fill" role="tablist">
+                      <li class="nav-item">
+                        <button
+                          type="button"
+                          class="nav-link active"
+                          role="tab"
+                          data-bs-toggle="tab"
+                          data-bs-target="#navs-justified-home"
+                          aria-controls="navs-justified-home"
+                          aria-selected="true"
+                        >
+                          <i class="tf-icons bx bx-home"></i> Movimentações
+                        </button>
+                      </li>
+                      <li class="nav-item">
+                        <button
+                          type="button"
+                          class="nav-link"
+                          role="tab"
+                          data-bs-toggle="tab"
+                          data-bs-target="#navs-justified-profile"
+                          aria-controls="navs-justified-profile"
+                          aria-selected="false"
+                        >
+                          <i class="tf-icons bx bx-user"></i> Patrimónios Movimentados
+                        </button>
+                      </li>
+                    </ul>
+                    <div class="tab-content">
+                      <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                            <div class="table-responsive text-nowrap mt-3">
+                                <table v-datatable="{datatableOptions, defaultPageSize: 10,
+                                        deleteAction: (selectedIds) => {
+                                            //chama modal
+                                            openDeleteModal(selectedIds);
+                                        },
+                                        actionsHtml: `
 
-            <thead class="bg-gray-100 ">
-                <tr>
-                <th></th>
-                <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
-                <th>Ações</th>
-                </tr>
-            </thead>
+                                        `
+                                        }"
+                                    @selection-changed="onSelectionChanged"
+                                    @datatable-delete="onDeleteRequested"
+                                    class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                                >
 
-            <tbody>
-                <tr v-for="u in users" :key="u.id" :data-id="u.id">
-                <td></td>
-                <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
-                <td>{{ u.contacto }}</td>
-                <td>{{ u.role }}</td>
-                <td>
-                     <span
-                        class="px-2 py-1 text-xs font-semibold rounded"
-                        :class="{
-                        'bg-green-100 text-green-700': u.estado === 'Activo',
-                        'bg-red-100 text-red-700': u.estado === 'Inactivo',
-                        //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
-                        }"
-                    >
-                        {{ u.estado }}
-                    </span>
+                                <thead class="bg-gray-100 ">
+                                    <tr>
+                                    <th hidden></th>
+                                    <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                                    <th>Ações</th>
+                                    </tr>
+                                </thead>
 
-                </td>
+                                <tbody>
+                                    <tr v-for="u in users" :key="u.id" :data-id="u.id">
+                                    <td hidden></td>
+                                    <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
+                                    <td>{{ u.contacto }}</td>
+                                    <td>{{ u.role }}</td>
+                                    <td>
+                                        <span
+                                            class="px-2 py-1 text-xs font-semibold rounded"
+                                            :class="{
+                                            'bg-green-100 text-green-700': u.estado === 'Activo',
+                                            'bg-red-100 text-red-700': u.estado === 'Inactivo',
+                                            //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
+                                            }"
+                                        >
+                                            {{ u.estado }}
+                                        </span>
 
-                <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
-                <td>
-                    <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
-                </td>
-                </tr>
-            </tbody>
-            </table>
-            </div>
+                                    </td>
+
+                                    <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+                                    <td>
+                                        <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                            </div>
+                      </div>
+                      <div class="tab-pane fade" id="navs-justified-profile" role="tabpanel">
+                        <label for="">Patrimonios</label>
+                            <div class="table-responsive text-nowrap mt-3">
+                                <table v-datatable="{datatableOptions, defaultPageSize: 10,
+                                        deleteAction: (selectedIds) => {
+                                            //chama modal
+                                            openDeleteModal(selectedIds);
+                                        },
+                                        actionsHtml: `
+
+                                        `
+                                        }"
+                                    @selection-changed="onSelectionChanged"
+                                    @datatable-delete="onDeleteRequested"
+                                    class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                                >
+
+                                <thead class="bg-gray-100 ">
+                                    <tr>
+                                    <th hidden></th>
+                                    <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                                    <th>Ações</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr v-for="u in users" :key="u.id" :data-id="u.id">
+                                    <td hidden></td>
+                                    <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
+                                    <td>{{ u.contacto }}</td>
+                                    <td>{{ u.role }}</td>
+                                    <td>
+                                        <span
+                                            class="px-2 py-1 text-xs font-semibold rounded"
+                                            :class="{
+                                            'bg-green-100 text-green-700': u.estado === 'Activo',
+                                            'bg-red-100 text-red-700': u.estado === 'Inactivo',
+                                            //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
+                                            }"
+                                        >
+                                            {{ u.estado }}
+                                        </span>
+
+                                    </td>
+
+                                    <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+                                    <td>
+                                        <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                            </div>
+                      </div>
+                    </div>
+            
 
         </div>
+
 
 
         <!--MODAL ELIMINAR-->

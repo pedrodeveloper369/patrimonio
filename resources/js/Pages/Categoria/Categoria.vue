@@ -9,23 +9,24 @@ const users = ref([]);
 
 //declaracao do formulario e os seus dados
 const form = useForm({
-    nome: '',
-    contacto: '',
-    email: '',
-    senha: '',
-    confirma_senha: '',
+  nome: '',
+  campos: [
+    {
+      nome: '',
+      tipo: 'text'
+    }
+  ]
 })
 
 const formEditar = useForm({
     id: '',
-    nome_editar: '',
-    contacto_editar: '',
-    email_editar: '',
-    email_copia_editar: '',
-    estado: '',
-    senha_editar: '',
-    confirma_senha_editar: '',
-    estado: '',
+    nome: '',
+    campos: [
+        {
+        nome: '',
+        tipo: 'text'
+        }
+    ]
 })
 
 const formEliminar = useForm({
@@ -34,11 +35,11 @@ const formEliminar = useForm({
 
 // Função para enviar
 const submit = () => {
-    form.post(route('utilizador.registar'), {
+    form.post(route('categoria.registar'), {
         onSuccess: () => {
             $('#modalRegistar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_categorias()  //recarrega a tabela
         }
     })
 }
@@ -105,12 +106,12 @@ function handleRowAction({ action, row }) {
 //const users = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
 // Busca os dados do Laravel via rota relativa
 onMounted(async () => {
-  listar_utilizadores()
+  listar_categorias()
 });
 
-const listar_utilizadores = async () => {
+const listar_categorias = async () => {
   try {
-    const response = await axios.get('/utilizadores/dados')
+    const response = await axios.get('/categorias/dados')
     users.value = response.data.data || response.data
   } catch (error) {
     console.error('Erro ao carregar usuários:', error)
@@ -124,10 +125,10 @@ const deleteMessage = ref("");         // Mensagem que a modal vai mostrar
 const showDeleteModal = ref(false);    // Controla a modal
 
 const submitEliminar = () => {
-    formEliminar.post(route('utilizador.eliminar'), {
+    formEliminar.post(route('categoria.eliminar'), {
         onSuccess: () => {
             $('#modalEliminar').modal('hide');
-            listar_utilizadores()  //recarrega a tabela
+            listar_categorias()  //recarrega a tabela
         }
     })
 }
@@ -141,41 +142,53 @@ function openDeleteModal(ids) {
 
 
 //ver detalhes
-function ver_detalhes(utilizador){
+function ver_detalhes(categoria){
 
-    document.getElementById('nome').innerText = utilizador.name;
-    document.getElementById('email').innerText = utilizador.email;
-    document.getElementById('contacto').innerText = utilizador.contacto;
-    document.getElementById('perfil').innerText = utilizador.role;
-    document.getElementById('estado').innerText = utilizador.estado;
-    document.getElementById('data_registo').innerText = utilizador.created_at;
+    document.getElementById('nome').innerText = categoria.name;
+    document.getElementById('email').innerText = categoria.email;
+    document.getElementById('contacto').innerText = categoria.contacto;
+    document.getElementById('perfil').innerText = categoria.role;
+    document.getElementById('estado').innerText = categoria.estado;
+    document.getElementById('data_registo').innerText = categoria.created_at;
 
 }
 
-//editar utilizador
-function editar_utilizador(utilizador){
+//editar categoria
+function editar_categoria(categoria){
     formEditar.reset(); // limpa tudo corretamente
 
-    formEditar.id = utilizador.id;
-    formEditar.nome_editar = utilizador.name;
-    formEditar.estado = utilizador.estado;
-    formEditar.contacto_editar = utilizador.contacto;
-    formEditar.email_editar = utilizador.email;
-    formEditar.email_copia_editar = utilizador.email;
-    formEditar.senha_editar =  utilizador.password;   // opcional
-    formEditar.confirma_senha_editar =  utilizador.password; // opcional
+    formEditar.id = categoria.id;
+    formEditar.nome_editar = categoria.name;
+    formEditar.estado = categoria.estado;
+    formEditar.contacto_editar = categoria.contacto;
+    formEditar.email_editar = categoria.email;
+    formEditar.email_copia_editar = categoria.email;
+    formEditar.senha_editar =  categoria.password;   // opcional
+    formEditar.confirma_senha_editar =  categoria.password; // opcional
 }
 
 // Função para enviar
 const submitEditar = () => {
-    formEditar.post(route('utilizador.editar'), {
+    formEditar.post(route('categoria.editar'), {
         onSuccess: () => {
             $('#modalEditar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_categorias()  //recarrega a tabela
         }
     })
 }
+
+function adicionarCampo() {
+  form.campos.push({
+    nome: '',
+    tipo: 'text'
+  })
+}
+
+function removerCampo(index) {
+  form.campos.splice(index, 1)
+}
+
 
 </script>
 
@@ -231,7 +244,7 @@ const submitEditar = () => {
                 <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
                 <td>
                     <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                    <button class=""  @click="editar_categoria(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
                 </td>
                 </tr>
             </tbody>
@@ -275,7 +288,7 @@ const submitEditar = () => {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Registar Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Registar Categoria</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -286,66 +299,81 @@ const submitEditar = () => {
                     <form @submit.prevent="submit">
                         <div class="modal-body">
 
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.nome }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="form.errors.contacto" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.contacto }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input type="text" v-model="form.email" class="form-control" placeholder="xxxx@xxx.xx" />
-                                    <div v-if="form.errors.email" class="text-red-500 text-sm mt-1">
-                                        {{ form.errors.email }}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input type="password" v-model="form.senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.senha }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input type="password" v-model="form.confirma_senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.confirma_senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.confirma_senha }}
-                                        </div>
+                            <div class="row" >
+                                <div class="col mb-3">
+                                    <label for="nameLarge" class="">Nome da nova Categoria</label>
+                                    <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
+                                    <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
+                                        {{ form.errors.nome }}
                                     </div>
                                 </div>
 
+                            </div>
+
+                            <label class="mb-2 fw-semibold">Campos especiais da Categoria</label>
+
+                            <div
+                                class="row mb-3 align-items-end"
+                                v-for="(campo, index) in form.campos"
+                                :key="index"
+                            >
+
+                                <!-- Nome do campo -->
+                                <div class="col-md-5">
+                                    <label>Nome</label>
+                                    <input
+                                        type="text"
+                                        v-model="campo.nome"
+                                        class="form-control"
+                                        placeholder="Ex: Número de Série"
+                                    />
+                                </div>
 
 
+                                <!-- Tipo do campo -->
+                                <div class="col-md-5">
+                                    <label>Tipo de Valor</label>
+                                    <select v-model="campo.tipo" class="form-select">
+                                        <option value="number">Numérico</option>
+                                        <option value="char">Caracter</option>
+                                        <option value="text">Texto</option>
+                                        <option value="date">Data</option>
+                                        <option value="datePast">Data Passada</option>
+                                        <option value="dateFuture">Data Futura</option>
+                                    </select>
+                                </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
+
+                                <!-- Ações -->
+                                <div class="col-md-2 text-end">
+                                    <button
+                                        v-if="index > 0"
+                                        type="button"
+                                        class="btn btn-sm"
+                                        @click="removerCampo(index)"
+                                    >
+                                        <i class="bx bx-trash"></i> Eliminar
+                                    </button>
+                                </div>
+
+                            </div>
+                            <button
+
+                                class="btn  btn-sm"
+                                @click="adicionarCampo"
+                                >
+                                <i class="bx bx-plus"></i> Adicionar campo
                             </button>
-                            <button type="submit" class="btn btn-primary" :disabled="form.processing">
-                                {{ form.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
+                                Fechar
+                                </button>
+                                <button type="submit" class="btn btn-primary" :disabled="form.processing">
+                                    {{ form.processing ? 'Enviando...' : 'Salvar' }}
+                                </button>
+                            </div>
                         </div>
-                     </form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -355,7 +383,7 @@ const submitEditar = () => {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Categoria</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -447,7 +475,7 @@ const submitEditar = () => {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Categoria</h5>
                         <button
                         type="button"
                         class="btn-close"

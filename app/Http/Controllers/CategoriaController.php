@@ -15,4 +15,17 @@ class CategoriaController extends Controller
                 ]
             ]);
     }
+
+
+    /*
+
+    $request->validate([
+    'nome' => 'required|string',
+    'campos' => 'required|array',
+    'campos.*.nome' => 'required|string',
+    'campos.*.tipo' => 'required|string',
+]);
+
+
+*/
 }
