@@ -26,7 +26,7 @@ class CargoController extends Controller
             ]);
     }
 
-     public function registar_cargo(Request $request){
+    public function registar_cargo(Request $request){
         $validacao = $this->validarcargo($request);
 
         try {

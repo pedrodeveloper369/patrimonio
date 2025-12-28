@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useForm , usePage } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 
-const users = ref([]);
+const categorias = ref([]);
 
 //declaracao do formulario e os seus dados
 const form = useForm({
@@ -87,23 +87,15 @@ onMounted(() => {
     modalEl.addEventListener('hidden.bs.modal', resetModal)
 })
 
-const columns = [
-  { label: 'Nome', key: 'name' },
-  { label: 'Contacto', key: 'contacto' },
-  { label: 'Perfil', key: 'role' },
-  { label: 'Status', key: 'status' },
-  { label: 'Criado em', key: 'created_at' },
-];
-
 function handleDelete(ids) {
-  users.value = users.value.filter(u => !ids.includes(u.id));
+  categorias.value = categorias.value.filter(u => !ids.includes(u.id));
 }
 
 function handleRowAction({ action, row }) {
   console.log(action, row);
 }
 
-//const users = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
+//const categorias = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
 // Busca os dados do Laravel via rota relativa
 onMounted(async () => {
   listar_categorias()
@@ -112,7 +104,7 @@ onMounted(async () => {
 const listar_categorias = async () => {
   try {
     const response = await axios.get('/categorias/dados')
-    users.value = response.data.data || response.data
+    categorias.value = response.data.data || response.data
   } catch (error) {
     console.error('Erro ao carregar usuários:', error)
   }
@@ -216,30 +208,16 @@ function removerCampo(index) {
             <thead class="bg-gray-100 ">
                 <tr>
                 <th></th>
-                <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                <th>Nome</th>
+                <th>Data de Registo</th>
                 <th>Ações</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr v-for="u in users" :key="u.id" :data-id="u.id">
+                <tr v-for="u in categorias" :key="u.id" :data-id="u.id">
                 <td></td>
                 <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
-                <td>{{ u.contacto }}</td>
-                <td>{{ u.role }}</td>
-                <td>
-                     <span
-                        class="px-2 py-1 text-xs font-semibold rounded"
-                        :class="{
-                        'bg-green-100 text-green-700': u.estado === 'Activo',
-                        'bg-red-100 text-red-700': u.estado === 'Inactivo',
-                        //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
-                        }"
-                    >
-                        {{ u.estado }}
-                    </span>
-
-                </td>
 
                 <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
                 <td>

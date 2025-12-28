@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Rotas patrimonio
     Route::get('/patrimonios', [PatrimonioController::class, 'index'])->name('patrimonio') ;
     Route::get('/registar-patrimonio', [PatrimonioController::class, 'index_registar'])->name('registar.patrimonio') ;
+    Route::get('/editar-patrimonio/{patrimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
 
     //Rotas movimentacoes
     Route::get('/movimentacoes',[MovimentacaoController::class, 'index'])->name('movimentacao') ;

@@ -6,7 +6,23 @@ import { useForm , usePage, router  } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 import TabelaDinamica from '@/Components/TabelaDinamica.vue';
 
-const users = ref([]);
+const patrimonio = ref([]);
+
+//pegando dados vindo do controller
+const props = defineProps({
+    responsavel: Array,
+    estado_patrimonio: Array,
+    localizacao: Array,
+    categoria: Array,
+    departamento: Array,
+
+});
+const responsavel = ref(props.responsavel);
+const estado_patrimonio = ref(props.estado_patrimonio);
+const localizacao = ref(props.localizacao);
+const categoria = ref(props.categoria);
+const departamento = ref(props.departamento);
+
 
 //declaracao do formulario e os seus dados
 const form = useForm({
@@ -39,7 +55,7 @@ const submit = () => {
         onSuccess: () => {
             $('#modalRegistar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_patrimonios()  //recarrega a tabela
         }
     })
 }
@@ -97,42 +113,34 @@ const filterCategoria = ref('')
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
 const filteredUsers = computed(() => {
-  return users.value.filter(u => {
-    const matchesStatus = !filterStatus.value || u.estado === filterStatus.value
-    const filterDepartamento = !filterDepartamento.value || u.estado === filterDepartamento.value
-    const filterResponsavel = !filterResponsavel.value || u.estado === filterResponsavel.value
-    const filterLocal = !filterLocal.value || u.estado === filterLocal.value
-    const filterCategoria = !filterCategoria.value || u.role === filterCategoria.value
+  return patrimonio.value.filter(u => {
+    const matchesStatus = !filterStatus.value || patri.estado === filterStatus.value
+    const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
+    const filterResponsavel = !filterResponsavel.value || patri.estado === filterResponsavel.value
+    const filterLocal = !filterLocal.value || patri.estado === filterLocal.value
+    const filterCategoria = !filterCategoria.value || patri.role === filterCategoria.value
     return matchesStatus && filterDepartamento && filterResponsavel && filterLocal && filterCategoria
   })
 })
 
-const columns = [
-  { label: 'Nome', key: 'name' },
-  { label: 'Contacto', key: 'contacto' },
-  { label: 'Perfil', key: 'role' },
-  { label: 'Status', key: 'status' },
-  { label: 'Criado em', key: 'created_at' },
-];
-
 function handleDelete(ids) {
-  users.value = users.value.filter(u => !ids.includes(u.id));
+  patrimonio.value = patrimonio.value.filter(u => !ids.includes(patri.id));
 }
 
 function handleRowAction({ action, row }) {
   console.log(action, row);
 }
 
-//const users = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
+//const patrimonio = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
 // Busca os dados do Laravel via rota relativa
 onMounted(async () => {
-  listar_utilizadores()
+  listar_patrimonios()
 });
 
-const listar_utilizadores = async () => {
+const listar_patrimonios = async () => {
   try {
-    const response = await axios.get('/utilizadores/dados')
-    users.value = response.data.data || response.data
+    const response = await axios.get('/patrimonios/dados')
+    patrimonio.value = response.data.data || response.data
   } catch (error) {
     console.error('Erro ao carregar usuários:', error)
   }
@@ -148,7 +156,7 @@ const submitEliminar = () => {
     formEliminar.post(route('utilizador.eliminar'), {
         onSuccess: () => {
             $('#modalEliminar').modal('hide');
-            listar_utilizadores()  //recarrega a tabela
+            listar_patrimonios()  //recarrega a tabela
         }
     })
 }
@@ -188,7 +196,7 @@ const submitEditar = () => {
         onSuccess: () => {
             $('#modalEditar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_patrimonios()  //recarrega a tabela
         }
     })
 }
@@ -196,6 +204,11 @@ const submitEditar = () => {
 //para rota
 window.chamar_pagina_registar = () => {
   router.visit(route('registar.patrimonio'));
+};
+
+//para rota
+window.chamar_pagina_registar_local = () => {
+  router.visit(route('editar.patrimonio'));
 };
 
 
@@ -212,8 +225,13 @@ window.chamar_pagina_registar = () => {
                     <i class="bx bx-info-circle icon"></i>
                     <select v-model="filterStatus" class="form-select form-select-sm">
                         <option value="">Estado do Património</option>
-                        <option>Activo</option>
-                        <option>Inactivo</option>
+                         <option
+                            v-for="estado in estado_patrimonio"
+                            :key="estado.id"
+                            :value="estado.nome"
+                        >
+                            {{ estado.nome }}
+                        </option>
                     </select>
                 </div>
 
@@ -221,8 +239,13 @@ window.chamar_pagina_registar = () => {
                     <i class="bx bx-sitemap icon"></i>
                     <select v-model="filterDepartamento" class="form-select form-select-sm">
                         <option value="">Departamento</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
+                        <option
+                            v-for="depa in departamento"
+                            :key="depa.id"
+                            :value="depa.nome"
+                        >
+                            {{ depa.nome }}
+                        </option>
                     </select>
                 </div>
 
@@ -230,8 +253,13 @@ window.chamar_pagina_registar = () => {
                     <i class="bx bx-user icon"></i>
                     <select v-model="filterResponsavel" class="form-select form-select-sm">
                         <option value="">Responsável</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
+                         <option
+                            v-for="respo in responsavel"
+                            :key="respo.id"
+                            :value="respo.nome"
+                        >
+                            {{ respo.nome }}
+                        </option>
                     </select>
                 </div>
 
@@ -239,8 +267,13 @@ window.chamar_pagina_registar = () => {
                     <i class="bx bx-map icon"></i>
                     <select v-model="filterLocal" class="form-select form-select-sm">
                         <option value="">Localização</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
+                        <option
+                            v-for="local in localizacao"
+                            :key="local.id"
+                            :value="local.nome"
+                        >
+                            {{ local.nome }}
+                        </option>
                     </select>
                 </div>
 
@@ -248,8 +281,13 @@ window.chamar_pagina_registar = () => {
                     <i class="bx bx-category icon"></i>
                     <select v-model="filterCategoria" class="form-select form-select-sm">
                         <option value="">Categoria</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
+                         <option
+                            v-for="cate in categoria"
+                            :key="cate.id"
+                            :value="cate.nome"
+                        >
+                            {{ cate.nome }}
+                        </option>
                     </select>
                 </div>
 
@@ -281,35 +319,41 @@ window.chamar_pagina_registar = () => {
                 <thead class="bg-gray-100 ">
                     <tr>
                     <th></th>
-                    <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Responsável</th>
+                    <th>Estado</th>
+                    <th>Data de Registo</th>
                     <th>Ações</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr v-for="u in users" :key="u.id" :data-id="u.id">
+                    <tr v-for="patri in patrimonio" :key="patri.id" :data-id="patri.id">
                     <td></td>
-                    <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
-                    <td>{{ u.contacto }}</td>
-                    <td>{{ u.role }}</td>
+                    <td><strong style="color: #212529 !important;">{{ patri.name }} </strong> <br> {{ patri.email }}</td>
+                    <td>{{ patri.contacto }}</td>
+                    <td>{{ patri.role }}</td>
                     <td>
                         <span
                             class="px-2 py-1 text-xs font-semibold rounded"
                             :class="{
-                            'bg-green-100 text-green-700': u.estado === 'Activo',
-                            'bg-red-100 text-red-700': u.estado === 'Inactivo',
-                            //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
+                            'bg-green-100 text-green-700': patri.estado === 'Activo',
+                            'bg-red-100 text-red-700': patri.estado === 'Inactivo',
+                            //'bg-yellow-100 text-yellow-700': patri.estado === 'Pending',
                             }"
                         >
-                            {{ u.estado }}
+                            {{ patri.estado }}
                         </span>
 
                     </td>
 
-                    <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+                    <td class="date-cell">{{ new Date(patri.created_at).toLocaleDateString() }}</td>
                     <td>
-                        <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                        <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                        <button class="" @click="ver_detalhes(patri)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                        <Link :href="route('editar.patrimonio', patri)" style="color:#777"><i class="menu-icon bx bx-edit-alt"></i></Link>
+                        <button > <i class="bx bx-transfer me-2"></i></button>
+
                     </td>
                     </tr>
                 </tbody>
