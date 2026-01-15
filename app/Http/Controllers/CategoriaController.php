@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\Helper;
 use App\Models\Categoria;
+use Illuminate\Support\Facades\DB;
 
 class CategoriaController extends Controller
 {
@@ -81,12 +82,12 @@ class CategoriaController extends Controller
             $categoria->save();
             DB::commit();
             return redirect()->route('categoria')
-                     ->with('success', 'categoria registado com sucesso!');
+                     ->with('success', 'categoria actualizada com sucesso!');
 
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('categoria')
-                    ->with('erro', 'Ocorreu um erro ao registar o categoria \n'.$th->getMessage());
+                    ->with('erro', 'Ocorreu um erro ao actualizar categoria \n'.$th->getMessage());
         }
     }
 

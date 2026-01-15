@@ -112,7 +112,6 @@ class UtilizadorController extends Controller
             'model_type' => \App\Models\User::class,
             'model_id' => $utilizador->id,
         ]);
-
         DB::commit();
     }
 

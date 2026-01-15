@@ -7,8 +7,17 @@ import Swal from 'sweetalert2'
 
 const categorias = ref([]);
 
-//declaracao do formulario e os seus dados
 const form = useForm({
+    nome: ''
+})
+
+const formEditar = useForm({
+    id: '',
+    nome: '',
+})
+
+//declaracao do formulario e os seus dados
+/*const form = useForm({
   nome: '',
   campos: [
     {
@@ -16,8 +25,9 @@ const form = useForm({
       tipo: 'text'
     }
   ]
-})
+})*/
 
+/*
 const formEditar = useForm({
     id: '',
     nome: '',
@@ -27,7 +37,7 @@ const formEditar = useForm({
         tipo: 'text'
         }
     ]
-})
+})*/
 
 const formEliminar = useForm({
     ids: []
@@ -103,7 +113,7 @@ onMounted(async () => {
 
 const listar_categorias = async () => {
   try {
-    const response = await axios.get('/categorias/dados')
+    const response = await axios.get('/categoria/dados')
     categorias.value = response.data.data || response.data
   } catch (error) {
     console.error('Erro ao carregar usuários:', error)
@@ -124,7 +134,6 @@ const submitEliminar = () => {
         }
     })
 }
-
 
 function openDeleteModal(ids) {
     deletingIds.value = ids;
@@ -148,19 +157,13 @@ function ver_detalhes(categoria){
 //editar categoria
 function editar_categoria(categoria){
     formEditar.reset(); // limpa tudo corretamente
-
     formEditar.id = categoria.id;
-    formEditar.nome_editar = categoria.name;
-    formEditar.estado = categoria.estado;
-    formEditar.contacto_editar = categoria.contacto;
-    formEditar.email_editar = categoria.email;
-    formEditar.email_copia_editar = categoria.email;
-    formEditar.senha_editar =  categoria.password;   // opcional
-    formEditar.confirma_senha_editar =  categoria.password; // opcional
+    formEditar.nome= categoria.nome;
 }
 
 // Função para enviar
 const submitEditar = () => {
+
     formEditar.post(route('categoria.editar'), {
         onSuccess: () => {
             $('#modalEditar').modal('hide');
@@ -215,14 +218,15 @@ function removerCampo(index) {
             </thead>
 
             <tbody>
-                <tr v-for="u in categorias" :key="u.id" :data-id="u.id">
+                <tr v-for="cat in categorias" :key="cat.id" :data-id="cat.id">
                 <td></td>
-                <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
+                <td><strong style="color: #212529 !important;">{{ cat.nome }} </strong> <br></td>
 
-                <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+                <td class="date-cell">{{ new Date(cat.created_at).toLocaleDateString() }}</td>
                 <td>
-                    <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_categoria(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                   <!-- <button class="" @click="ver_detalhes(cat)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                    -->
+                    <button class=""  @click="editar_categoria(cat)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
                 </td>
                 </tr>
             </tbody>
@@ -231,8 +235,8 @@ function removerCampo(index) {
 
         </div>
 
-
         <!--MODAL ELIMINAR-->
+
         <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
@@ -280,6 +284,46 @@ function removerCampo(index) {
                             <div class="row" >
                                 <div class="col mb-3">
                                     <label for="nameLarge" class="">Nome da nova Categoria</label>
+                                    <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
+                                    <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
+                                        {{ form.errors.nome }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
+                                Fechar
+                                </button>
+                                <button type="submit" class="btn btn-primary" :disabled="form.processing">
+                                    {{ form.processing ? 'Enviando...' : 'Salvar' }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Registar Categoria</h5>
+                        <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        ></button>
+                    </div>
+                    <form @submit.prevent="submit">
+                        <div class="modal-body">
+
+                            <div class="row" >
+                                <div class="col mb-3">
+                                    <label for="nameLarge" class="">Nome</label>
                                     <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
                                     <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
                                         {{ form.errors.nome }}
@@ -357,6 +401,7 @@ function removerCampo(index) {
         </div>
 
         <!--MODAL EDITAR-->
+
         <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -372,88 +417,37 @@ function removerCampo(index) {
                     <form @submit.prevent="submitEditar">
                         <div class="modal-body">
 
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input id="nome_edit"  type="text" v-model="formEditar.nome_editar" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="formEditar.errors.nome_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.nome_editar }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input id="contacto_edit" type="text" v-model="formEditar.contacto_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="formEditar.errors.contacto_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.contacto_editar }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Estado</label>
-                                       <select v-model="formEditar.estado" class="form-select">
-                                            <option value="Activo">Activar</option>
-                                            <option value="Inactivo">Desactivar</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input id="email_edit" type="text" v-model="formEditar.email_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                            <input id="email_copia_edit" type="hidden" v-model="formEditar.email_copia_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-
-                                    <div v-if="formEditar.errors.email_editar" class="text-red-500 text-sm mt-1">
-                                        {{ formEditar.errors.email_editar }}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input id="senha_edit" type="password" v-model="formEditar.senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.senha_editar }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input id="confirmar_senha_edit" type="password" v-model="formEditar.confirma_senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.confirma_senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.confirma_senha_editar }}
-                                        </div>
+                            <div class="row" >
+                                <div class="col mb-3">
+                                    <label for="nameLarge" class="">Nome</label>
+                                    <input type="text" v-model="formEditar.nome" class="form-control" placeholder="Enter Name" />
+                                    <div v-if="formEditar.errors.nome" class="text-red-500 text-sm mt-1">
+                                        {{ formEditar.errors.nome }}
                                     </div>
                                 </div>
 
+                            </div>
 
-
-
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
+                                Fechar
+                                </button>
+                                <button type="submit" class="btn btn-primary" :disabled="formEditar.processing">
+                                    {{ formEditar.processing ? 'Enviando...' : 'Salvar' }}
+                                </button>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="formEditar.processing">
-                                {{ formEditar.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <!--MODAL DETALHE-->
-        <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+    <!--
+        <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Categoria</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Registar Categoria</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -461,67 +455,89 @@ function removerCampo(index) {
                         aria-label="Close"
                         ></button>
                     </div>
-                    <div class="modal-body">
+                    <form @submit.prevent="submit">
+                        <div class="modal-body">
 
-                        <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Nome</label>
+                            <div class="row" >
+                                <div class="col mb-3">
+                                    <label for="nameLarge" class="">Nome da nova Categoria</label>
+                                    <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
+                                    <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
+                                        {{ form.errors.nome }}
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="nome"></label>
+
+                            <label class="mb-2 fw-semibold">Campos especiais da Categoria</label>
+
+                            <div
+                                class="row mb-3 align-items-end"
+                                v-for="(campo, index) in form.campos"
+                                :key="index"
+                            >
+
+
+                                <div class="col-md-5">
+                                    <label>Nome</label>
+                                    <input
+                                        type="text"
+                                        v-model="campo.nome"
+                                        class="form-control"
+                                        placeholder="Ex: Número de Série"
+                                    />
+                                </div>
+
+
+
+                                <div class="col-md-5">
+                                    <label>Tipo de Valor</label>
+                                    <select v-model="campo.tipo" class="form-select">
+                                        <option value="number">Numérico</option>
+                                        <option value="char">Caracter</option>
+                                        <option value="text">Texto</option>
+                                        <option value="date">Data</option>
+                                        <option value="datePast">Data Passada</option>
+                                        <option value="dateFuture">Data Futura</option>
+                                    </select>
+                                </div>
+
+
+
+                                <div class="col-md-2 text-end">
+                                    <button
+                                        v-if="index > 0"
+                                        type="button"
+                                        class="btn btn-sm"
+                                        @click="removerCampo(index)"
+                                    >
+                                        <i class="bx bx-trash"></i> Eliminar
+                                    </button>
+                                </div>
+
+                            </div>
+                            <button
+
+                                class="btn  btn-sm"
+                                @click="adicionarCampo"
+                                >
+                                <i class="bx bx-plus"></i> Adicionar campo
+                            </button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
+                                Fechar
+                                </button>
+                                <button type="submit" class="btn btn-primary" :disabled="form.processing">
+                                    {{ form.processing ? 'Enviando...' : 'Salvar' }}
+                                </button>
                             </div>
                         </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Email</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="email"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Contacto</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="contacto"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Perfil</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="perfil"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Estado</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="estado"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Data de Registo</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="data_registo"></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
-                        Fechar
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-
+    -->
 
     </AuthenticatedLayout>
 </template>

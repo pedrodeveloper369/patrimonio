@@ -23,7 +23,6 @@ const localizacao = ref(props.localizacao);
 const categoria = ref(props.categoria);
 const departamento = ref(props.departamento);
 
-
 //declaracao do formulario e os seus dados
 const form = useForm({
     nome: '',
@@ -91,7 +90,6 @@ watch(() => page.props.flash.success, (msg) => {
   }
 })
 
-
 // Função para resetar o formulário
 function resetModal() {
     form.reset()
@@ -109,6 +107,7 @@ const filterDepartamento = ref('')
 const filterResponsavel = ref('')
 const filterLocal = ref('')
 const filterCategoria = ref('')
+const filterStatusAquisicao = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
@@ -211,20 +210,17 @@ window.chamar_pagina_registar_local = () => {
   router.visit(route('editar.patrimonio'));
 };
 
-
 </script>
 
 <template>
     <AuthenticatedLayout>
         <h4 class=""><strong>Patrimónios</strong></h4>
          <div class="card  p-4 mb-2">
-
             <div class="d-flex flex-column flex-md-row gap-2 w-100">
-
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-info-circle icon"></i>
                     <select v-model="filterStatus" class="form-select form-select-sm">
-                        <option value="">Estado do Património</option>
+                        <option value="">Estado</option>
                          <option
                             v-for="estado in estado_patrimonio"
                             :key="estado.id"
@@ -232,6 +228,16 @@ window.chamar_pagina_registar_local = () => {
                         >
                             {{ estado.nome }}
                         </option>
+                    </select>
+                </div>
+                <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-info-circle icon"></i>
+                    <select v-model="filterStatusAquisicao" class="form-select form-select-sm">
+                        <option value="">Estado de Aquisição</option>
+                         <option value="novo">Novo</option>
+                         <option value="usado">Usado</option>
+                         <option value="outro">Outro</option>
+
                     </select>
                 </div>
 

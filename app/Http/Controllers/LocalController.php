@@ -65,13 +65,10 @@ class LocalController extends Controller
             $local->save();
             DB::commit();
 
-            return redirect()->route('registar.local')
-                     ->with('success', 'local registado com sucesso!');
-
+            return redirect()->route('registar.local')->with('success', 'local registado com sucesso!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('registar.local')
-                    ->with('erro', 'Ocorreu um erro ao registar o local \n'.$th->getMessage());
+            return redirect()->route('registar.local')->with('erro', 'Ocorreu um erro ao registar o local \n'.$th->getMessage());
         }
     }
 
@@ -90,7 +87,6 @@ class LocalController extends Controller
             DB::commit();
             return redirect()->route('editar.local',$request->id)
                      ->with('success', 'local actualizado com sucesso!');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('editar.local',$request->id)
@@ -133,12 +129,10 @@ class LocalController extends Controller
             if (!$local || !$local->parent_id || !isset($map[$local->parent_id])) {
                 return $local?->nome ?? null;
             }
-
             return $getCaminho($map[$local->parent_id]) . ' → ' . $local->nome;
         };
 
         return $locais->map(function ($local) use ($getCaminho, $map) {
-
             // começa no PAI, não no próprio
             $caminho = null;
 
@@ -191,7 +185,6 @@ class LocalController extends Controller
         });
     }*/
 
-
     function caminho(Local $local)
     {
         $path = [];
@@ -229,7 +222,6 @@ class LocalController extends Controller
             [
                 'nome' => ['required', 'min:3', 'regex:/^[0-9A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'tipoLocalizacao' => ['required'],
-                'estado' => ['required'],
             ],
             [
                 'nome.required' => 'O nome é obrigatório.',

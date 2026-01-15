@@ -26,7 +26,6 @@ class ConfiguracaoSeeder extends Seeder
         EstadoPatrimonio::create([ 'nome' => 'Emprestado', 'cor' => '#8B5CF6']);
         EstadoPatrimonio::create([ 'nome' => 'Descartado', 'cor' => '#111827']);
 
-
         //configuração inicial dos tipos de localização
         TipoLocal::create([ 'nome' => 'Pátio']);
         TipoLocal::create([ 'nome' => 'Bloco']);
@@ -38,7 +37,5 @@ class ConfiguracaoSeeder extends Seeder
         TipoLocal::create([ 'nome' => 'Sanitária']);
         TipoLocal::create([ 'nome' => 'Armazem']);
         TipoLocal::create([ 'nome' => 'Estante']);
-
-
     }
 }

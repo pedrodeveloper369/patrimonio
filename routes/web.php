@@ -19,12 +19,7 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     if(!Auth::check() == true) {
-        return Inertia::render('Auth/Login', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+        return Inertia::render('Auth/Login', ['canLogin' => Route::has('login'),'canRegister' => Route::has('register'),'laravelVersion' => Application::VERSION, 'phpVersion' => PHP_VERSION,]);
     }
     return redirect()->route('dashboard');
 });
@@ -87,14 +82,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa') ;
     Route::post('/empresa/actualizar', [EmpresaController::class, 'index'])->name('empresa.update');
 
-
     //Rotas categoria
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('categoria') ;
+    Route::post('/categoria/registar', [CategoriaController::class, 'registar_categoria'])->name('categoria.registar');
+    Route::get('/categoria/dados', [CategoriaController::class, 'dados_categoria'])->name('categoria.dados');
+    Route::post('/categoria/eliminar', [CategoriaController::class, 'eliminar_categoria'])->name('categoria.eliminar');
+    Route::post('/categoria/editar', [CategoriaController::class, 'editar_categoria'])->name('categoria.editar');
 
 
-     //Rotas relatorios
+    //Rotas relatorios
     Route::get('/relatorios',[RelatorioController::class, 'index'])->name('relatorio') ;
-
 });
 
 require __DIR__.'/auth.php';

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     */
+    */
     public function up(): void
     {
         Schema::create('patrimonios', function (Blueprint $table) {
@@ -18,17 +18,25 @@ return new class extends Migration
             $table->string('descricao')->nullable();
             $table->string('qtd')->nullable();
             $table->string('imagem')->nullable();
+            $table->string('valor_compra')->nullable();
+            $table->string('origem')->nullable();
+            $table->string('conservacao')->nullable(); //novo, usado, outro
+            $table->string('documento')->nullable();
             $table->foreignId('id_categoria')->constrained('categorias')->onDelete('cascade');
             $table->foreignId('id_localizacao')->constrained('locals')->onDelete('cascade');
             $table->foreignId('id_estado_patrimonio')->constrained('estado_patrimonios')->onDelete('cascade');
-            $table->string('valor_compra')->nullable();
+
+            $table->string('marca')->nullable();
+            $table->string('cor')->nullable();
+            $table->string('num_serie')->nullable();
+
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     */
+    */
     public function down(): void
     {
         Schema::dropIfExists('patrimonios');
