@@ -9,23 +9,55 @@ const users = ref([]);
 const passo = ref(1)
 
 function proximo() {
-  if (passo.value < 3) passo.value++
+  if (passo.value < 2) passo.value++
 }
 
 function anterior() {
   if (passo.value > 1) passo.value--
 }
 
-
 //declaracao do formulario e os seus dados
 const form = useForm({
     nome: '',
-    contacto: '',
-    email: '',
-    senha: '',
-    confirma_senha: '',
+    codigo: '',
+    descricao: '',
+    qtd: '',
+    imagem: null,
+    valor_compra: '',
+    origem: '',
+    conservacao: '',
+    documento: null,
+    id_categoria: '',
+    id_localizacao: '',
+    id_estado_patrimonio: '',
+    marca: '',
+    cor: '',
+    num_serie: '',
 })
 
+const previewImagem = ref(null)
+
+function handleFile(event) {
+
+    const file = event.target.files[0]
+
+    if (!file) return
+
+    form.imagem = file
+
+
+    if (previewImagem.value) {
+         alert(file)
+        URL.revokeObjectURL(previewImagem.value)
+    }
+
+    previewImagem.value = URL.createObjectURL(file)
+}
+
+
+function handleFileDoc(event) {
+   form.documento = event.target.files[0]
+}
 
 // Função para enviar
 const submit = () => {
@@ -75,112 +107,156 @@ watch(() => page.props.flash.success, (msg) => {
     <AuthenticatedLayout>
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Patrimonio/</span><strong>Registar Património</strong></h4>
 
-        <div class="card p-4 " >
-            <div class="d-flex align-items-center justify-content-between mb-4 stepper">
+        <div class="card p-4 ">
 
-                <div class="step" :class="{ active: passo >= 1 }">
-                    <div class="circle">1</div>
-                    <span>Informações Gerais</span>
-                </div>
-
-                <div class="line" :class="{ active: passo >= 2 }"></div>
-
-                <div class="step" :class="{ active: passo >= 2 }">
-                    <div class="circle">2</div>
-                    <span>Anexos</span>
-                </div>
-
-                <div class="line" :class="{ active: passo >= 3 }"></div>
-
-                <div class="step" :class="{ active: passo >= 3 }">
-                    <div class="circle">3</div>
-                    <span>Confirmação</span>
-                </div>
-
-            </div>
+           <form @submit.prevent="submit" class="mt-3">
 
 
-           <form @submit.prevent="submit">
-
-               <div v-if="passo === 1">
-                    <div class="row mb-3">
-                        <div class="col">
-                        <label>Nome</label>
+                <div class="row g-2 mb-3">
+                    <div class="col mb-0">
+                        <label for="emailLarge" class="">Nome do Património</label>
                         <input type="text" v-model="form.nome" class="form-control" />
-                        <div v-if="form.errors.nome" class="text-danger text-sm">
+                        <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
                             {{ form.errors.nome }}
                         </div>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Código</label>
+                        <input type="text" v-model="form.codigo" class="form-control"  />
+                        <div v-if="form.errors.codigo" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.codigo }}
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col">
-                        <label>Contacto</label>
-                        <input type="text" v-model="form.contacto" class="form-control" />
-                        <div v-if="form.errors.contacto" class="text-danger text-sm">
-                            {{ form.errors.contacto }}
-                        </div>
+                    <div class="col mb-0">
+                        <label for="emailLarge" class="">Quantidade (Opcional)</label>
+                        <input type="password" v-model="form.qtd" class="form-control"  />
+                        <div v-if="form.errors.qtd" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.qtd }}
                         </div>
                     </div>
                 </div>
 
-                <div v-if="passo === 2">
-                    <div class="row mb-3">
-                        <div class="col">
-                        <label>Email</label>
-                        <input type="email" v-model="form.email" class="form-control" />
-                        <div v-if="form.errors.email" class="text-danger text-sm">
-                            {{ form.errors.email }}
-                        </div>
+                <div class="row g-2 mb-3">
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Custo (Opcional)</label>
+                        <input type="password" v-model="form.valor_compra" class="form-control"  />
+                        <div v-if="form.errors.valor_compra" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.valor_compra }}
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col">
-                        <label>Palavra Passe</label>
-                        <input type="password" v-model="form.senha" class="form-control" />
+                    <div class="col mb-0">
+                        <label for="emailLarge" class="">Origem (Opcional)</label>
+                        <input type="password" v-model="form.origem" class="form-control" />
+                        <div v-if="form.errors.origem" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.origem }}
                         </div>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Conservação</label>
+                        <input type="password" v-model="form.conservacao" class="form-control" />
+                        <div v-if="form.errors.conservacao" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.conservacao }}
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="col">
-                        <label>Confirmar Palavra Passe</label>
-                        <input type="password" v-model="form.confirma_senha" class="form-control" />
+                <div class="row g-2 mb-3">
+                    <div class="col mb-0">
+                        <label for="emailLarge" class="">Categoria</label>
+                        <input type="password" v-model="form.id_categoria" class="form-control" />
+                        <div v-if="form.errors.id_categoria" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.id_categoria }}
                         </div>
                     </div>
-                    <div v-if="form.errors.senha || form.errors.confirma_senha" class="text-danger text-sm">
-                        {{ form.errors.senha || form.errors.confirma_senha }}
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Localização</label>
+                        <input type="password" v-model="form.id_localizacao" class="form-control" />
+                        <div v-if="form.errors.id_localizacao" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.id_localizacao }}
+                        </div>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Estado do Património</label>
+                        <input type="password" v-model="form.id_estado_patrimonio" class="form-control" />
+                        <div v-if="form.errors.id_estado_patrimonio" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.id_estado_patrimonio }}
+                        </div>
                     </div>
                 </div>
-                <div v-if="passo === 3">
-                    <h6 class="mb-3">Confirme os dados</h6>
-                    <ul class="list-group">
-                        <li class="list-group-item"><strong>Nome:</strong> {{ form.nome }}</li>
-                        <li class="list-group-item"><strong>Contacto:</strong> {{ form.contacto }}</li>
-                        <li class="list-group-item"><strong>Email:</strong> {{ form.email }}</li>
-                    </ul>
+
+                    <div class="row g-2 mb-3">
+                    <div class="col mb-0">
+                        <label for="emailLarge" class="">Marca (Opcional)</label>
+                        <input type="password" v-model="form.marca" class="form-control" />
+                        <div v-if="form.errors.marca" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.marca }}
+                        </div>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Série (Opcional)</label>
+                        <input type="password" v-model="form.num_serie" class="form-control" />
+                        <div v-if="form.errors.num_serie" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.num_serie }}
+                        </div>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Cor (Opcional)</label>
+                        <input type="password" v-model="form.cor" class="form-control" />
+                        <div v-if="form.errors.cor" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.cor }}
+                        </div>
+                    </div>
                 </div>
+
+                <!--imagem pre visualizada ao carregar uma imagem para o patrimonio-->
+                <img v-if="previewImagem" :src="previewImagem" class="img-thumbnail mt-2" style="width:100px; border-radius:9px" />
+
+                <div class="row g-2 mb-3">
+
+                    <div class="col mb-0">
+                        <label for="emailLarge" class="">Imagem (Opcional)</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            accept="image/*"
+                            @change="handleFile"
+                        />
+                        <div v-if="form.errors.imagem" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.imagem }}
+                        </div>
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Documento (Opcional)</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            @change="handleFileDoc"
+                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpeg,.PNG"
+                        />
+
+                        <div v-if="form.errors.documento" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.documento }}
+                        </div>
+                    </div>
+                </div>
+                    <div class="row g-2 mb-3">
+                    <div class="col mb-0">
+                        <label for="dobLarge" class="">Descrição (Opcional)</label>
+                        <textarea type="text" v-model="form.descricao" class="form-control" />
+                        <div v-if="form.errors.descricao" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.descricao }}
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="mt-4 float-right ">
-                    <button
-                        type="button"
-                        class="btn btn-outline-secondary mr-2"
-                        @click="anterior"
-                        v-if="passo > 1"
-                    >
-                        Voltar
-                    </button>
-
-                    <button
-                        type="button"
-                        class="btn btn-warning ms-auto"
-                        @click="proximo"
-                        v-if="passo < 3"
-                    >
-                        Próximo
-                    </button>
 
                     <button
                         type="submit"
                         class="btn btn-primary ms-auto"
-                        v-if="passo === 3"
                         :disabled="form.processing"
                     >
                         {{ form.processing ? 'Salvando...' : 'Salvar' }}
@@ -214,53 +290,6 @@ watch(() => page.props.flash.success, (msg) => {
 .equal-height {
     height: 32px; /* igual ao form-select-sm */
 }
-
-.stepper {
-  width: 100%;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 120px;
-  color: #adb5bd;
-  font-size: 0.85rem;
-}
-
-.step.active {
-  color: #fcb03f;
-}
-
-.circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid #adb5bd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  margin-bottom: 6px;
-  background: #fff;
-}
-
-.step.active .circle {
-  border-color: #fcb03f;
-  background: #fcb03f;
-  color: #fff;
-}
-
-.line {
-  flex: 1;
-  height: 2px;
-  background: #dee2e6;
-}
-
-.line.active {
-  background: #fcb03f;
-}
-
 
 </style>
 

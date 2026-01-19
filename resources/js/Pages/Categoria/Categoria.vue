@@ -141,7 +141,6 @@ function openDeleteModal(ids) {
     $('#modalEliminar').modal('show');
 }
 
-
 //ver detalhes
 function ver_detalhes(categoria){
 

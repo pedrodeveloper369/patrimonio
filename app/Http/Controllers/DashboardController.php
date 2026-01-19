@@ -6,46 +6,22 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Departamento;
 use App\Models\Responsavel;
+use App\Models\Categoria;
+use App\Models\Local;
+use App\Models\Patrimonio;
+use App\Models\Movimentacao;
 
 class DashboardController extends Controller
 {
     public function index(){
         return Inertia::render('Dashboard',[
-            'patrimonioRecentes' => $this->pegarPatrimoniosRecentes(),
+            'patrimonioRecentes' => Patrimonio::latest()->take(6)->get(),
             'departamentoTotal' => Departamento::count(),
-            'localTotal' => $this->PegarTotalLocal(),
-            'categoriaTotal' => $this->pegarTotalCategoria(),
+            'localTotal' => Local::count(),
+            'categoriaTotal' => Categoria::count(),
             'responsavelTotal' => Responsavel::count(),
-            'patrimonioTotal' => $this->pegarTotalPatrimonio(),
-            'movimentacaoTotal' => $this->pegarTotalMovimentacao(),
+            'patrimonioTotal' => Patrimonio::count(),
+            'movimentacaoTotal' => Movimentacao::count(),
         ]);
-    }
-
-    public function pegarPatrimoniosRecentes(){
-
-    }
-
-    public function pegarTotalDepartamento(){
-
-    }
-
-    public function PegarTotalLocal(){
-
-    }
-
-    public function pegarTotalCategoria(){
-
-    }
-
-    public function pegarTotalMovimentacao(){
-
-    }
-
-    public function pegarTotalResponsavel(){
-
-    }
-
-    public function pegarTotalPatrimonio(){
-
     }
 }

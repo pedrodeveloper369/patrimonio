@@ -70,7 +70,6 @@ watch(() => page.props.flash.success, (msg) => {
 })
 
 
-
 //funcao de selecção exclusiva
 function selecionarLocal(local) {
     localSelecionado.value = local
@@ -153,7 +152,7 @@ function redirecionar_pagina(){
                         </div>
 
                         <div class="col mb-0">
-                            <label class="">Localização</label>
+                            <label class="">Localização (Opcional)</label>
 
                             <div class="input-group">
                                 <input
@@ -174,7 +173,7 @@ function redirecionar_pagina(){
                                     Buscar Localização
                                 </button>
                             </div>
-
+                             <small>Se nenhum local for seleccionado, o sistema assume que o novo local a ser registado situa -se na raiz da instituição</small>
                         </div>
 
 

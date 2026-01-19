@@ -17,7 +17,7 @@ const showingNavigationDropdown = ref(false);
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme " >
                 <div class="app-brand demo mt-2">
                     <div class="col-md-4 col-12 mb-md-0">
-                        <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
+                        <img src="/assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
                     </div>
                 </div>
                 <hr>
@@ -34,7 +34,13 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
+                    <li :class="[
+                        'menu-item',
+                        (
+                        route().current('patrimonio') ||
+                        route().current('registar.patrimonio') ||
+                        route().current('editar.patrimonio')) ? 'active' : '']" >
+
                         <Link class="menu-link" :href="route('patrimonio')"  >
                             <i class="bx bx-archive me-2"></i>
                             <strong>Patrimónios</strong>
@@ -48,7 +54,13 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('local') ? 'active' : '']">
+                    <li :class="['menu-item',
+
+                       (
+                        route().current('local') ||
+                        route().current('registar.local') ||
+                        route().current('editar.local')) ? 'active' : '']" >
+
                         <Link class="menu-link" :href="route('local')"  >
                             <i class="bx bx-map me-2"></i>
                            <strong>Localizações</strong>
@@ -176,6 +188,9 @@ const showingNavigationDropdown = ref(false);
                 </ul>
             </aside>
 
+
+
+
             <div class="layout-page">
             <!-- Navbar -->
                 <nav
@@ -205,7 +220,7 @@ const showingNavigationDropdown = ref(false);
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                                    <img src="/assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
                                 </div>
                             </a>
                         <ul class="dropdown-menu dropdown-menu-end">
