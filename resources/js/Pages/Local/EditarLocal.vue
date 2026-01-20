@@ -163,7 +163,7 @@ function redirecionar_pagina(){
                                     placeholder="Seleccione a localização"
                                 />
 
-                                <button
+                                <button style="width: 110px"
                                     class="btn btn-outline-secondary"
                                     type="button"
 

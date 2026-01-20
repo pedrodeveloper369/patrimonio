@@ -111,14 +111,15 @@ const filterStatusAquisicao = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
-const filteredUsers = computed(() => {
-  return patrimonio.value.filter(u => {
+const patrimonios = computed(() => {
+  return patrimonio.value.filter(patri => {
     const matchesStatus = !filterStatus.value || patri.estado === filterStatus.value
-    const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
-    const filterResponsavel = !filterResponsavel.value || patri.estado === filterResponsavel.value
-    const filterLocal = !filterLocal.value || patri.estado === filterLocal.value
-    const filterCategoria = !filterCategoria.value || patri.role === filterCategoria.value
-    return matchesStatus && filterDepartamento && filterResponsavel && filterLocal && filterCategoria
+    const matchesStatusAq = !filterStatusAquisicao.value || patri.conservacao === filterStatusAquisicao.value
+    //const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
+    const matchesResponsavel = !filterResponsavel.value || patri.responsavel === filterResponsavel.value
+    const matchesLocal = !filterLocal.value || patri.localizacao === filterLocal.value
+    const matchesCategoria = !filterCategoria.value || patri.categoria === filterCategoria.value
+    return matchesStatus && matchesStatusAq && matchesResponsavel && matchesLocal && matchesCategoria
   })
 })
 
@@ -241,7 +242,7 @@ window.chamar_pagina_registar_local = () => {
                     </select>
                 </div>
 
-                <div class="select-icon-wrapper equal-height">
+              <!--  <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-sitemap icon"></i>
                     <select v-model="filterDepartamento" class="form-select form-select-sm">
                         <option value="">Departamento</option>
@@ -253,7 +254,7 @@ window.chamar_pagina_registar_local = () => {
                             {{ depa.nome }}
                         </option>
                     </select>
-                </div>
+                </div>-->
 
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-user icon"></i>
@@ -325,6 +326,7 @@ window.chamar_pagina_registar_local = () => {
                 <thead class="bg-gray-100 ">
                     <tr>
                     <th></th>
+                    <th>Imagem</th>
                     <th>Nome</th>
                     <th>Categoria</th>
                     <th>Responsável</th>
@@ -335,11 +337,12 @@ window.chamar_pagina_registar_local = () => {
                 </thead>
 
                 <tbody>
-                    <tr v-for="patri in patrimonio" :key="patri.id" :data-id="patri.id">
+                    <tr v-for="patri in patrimonios" :key="patri.id" :data-id="patri.id">
                     <td></td>
-                    <td><strong style="color: #212529 !important;">{{ patri.name }} </strong> <br> {{ patri.email }}</td>
-                    <td>{{ patri.contacto }}</td>
-                    <td>{{ patri.role }}</td>
+                    <td> </td>
+                    <td><strong style="color: #212529 !important;">{{ patri.nome }} </strong> <br></td>
+                    <td>{{ patri.categoria }}</td>
+                    <td>{{ patri.responsavel }}</td>
                     <td>
                         <span
                             class="px-2 py-1 text-xs font-semibold rounded"

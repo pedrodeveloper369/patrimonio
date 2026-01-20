@@ -22,10 +22,11 @@ return new class extends Migration
             $table->string('origem')->nullable();
             $table->string('conservacao')->nullable(); //novo, usado, outro
             $table->string('documento')->nullable();
-            
+
             $table->foreignId('id_categoria')->constrained('categorias')->onDelete('cascade');
             $table->foreignId('id_localizacao')->constrained('locals')->onDelete('cascade');
             $table->foreignId('id_estado_patrimonio')->constrained('estado_patrimonios')->onDelete('cascade');
+            $table->foreignId('id_responsavel')->nullable()->constrained('responsavels')->onDelete('cascade');
 
             $table->string('marca')->nullable();
             $table->string('cor')->nullable();

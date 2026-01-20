@@ -2,37 +2,45 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
 import axios from 'axios';
-import { useForm , usePage } from '@inertiajs/vue3';
+import { useForm , usePage , router} from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
+import LocalTree from '@/Components/LocalTree.vue'
 
 const users = ref([]);
 const passo = ref(1)
 
-function proximo() {
-  if (passo.value < 2) passo.value++
-}
+const props = defineProps({
+    estadoPatrimonio: Array,
+    categorias: Array,
+    caminhosLocal: Array,
+    responsaveis: Array,
+});
 
-function anterior() {
-  if (passo.value > 1) passo.value--
-}
+const estadoPatrimonio = ref(props.estadoPatrimonio);
+const categorias = ref(props.categorias);
+const caminhosLocal = ref(props.caminhosLocal);
+const responsaveis = ref(props.responsaveis);
+const localSelecionado = ref(null)
 
 //declaracao do formulario e os seus dados
 const form = useForm({
     nome: '',
     codigo: '',
     descricao: '',
-    qtd: '',
+    qtd: 1,
     imagem: null,
     valor_compra: '',
     origem: '',
     conservacao: '',
     documento: null,
     id_categoria: '',
-    id_localizacao: '',
+    id_local: 1,
+    local: '',
     id_estado_patrimonio: '',
     marca: '',
     cor: '',
     num_serie: '',
+    responsavel: '',
 })
 
 const previewImagem = ref(null)
@@ -61,11 +69,9 @@ function handleFileDoc(event) {
 
 // Função para enviar
 const submit = () => {
-    form.post(route('utilizador.registar'), {
+    form.post(route('patrimonio.registar'), {
         onSuccess: () => {
-            $('#modalRegistar').modal('hide');
-            resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            redirecionar_pagina();
         }
     })
 }
@@ -101,6 +107,36 @@ watch(() => page.props.flash.success, (msg) => {
   }
 })
 
+
+
+//funcao de selecção exclusiva
+function selecionarLocal(local) {
+    localSelecionado.value = local
+    showWarning.value = false // esconde a mensagem se o usuário selecionou algo
+}
+
+function abrirmodal(){
+    localSelecionado.value = '';
+    $('#modalBuscarLocal').modal('show')
+}
+
+function confirmarLocal() {
+    if (!localSelecionado.value) {
+        showWarning.value = true
+        return
+    }
+
+    form.id_local = localSelecionado.value.id
+    form.local = localSelecionado.value.caminho
+
+    $('#modalBuscarLocal').modal('hide')
+}
+
+function redirecionar_pagina(){
+    router.visit(route('patrimonio'));
+}
+
+
 </script>
 
 <template>
@@ -130,32 +166,28 @@ watch(() => page.props.flash.success, (msg) => {
 
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Quantidade (Opcional)</label>
-                        <input type="password" v-model="form.qtd" class="form-control"  />
-                        <div v-if="form.errors.qtd" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.qtd }}
-                        </div>
+                        <input type="number" min="1" v-model="form.qtd" class="form-control"  />
                     </div>
                 </div>
 
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Custo (Opcional)</label>
-                        <input type="password" v-model="form.valor_compra" class="form-control"  />
-                        <div v-if="form.errors.valor_compra" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.valor_compra }}
-                        </div>
+                        <input type="number" v-model="form.valor_compra" class="form-control"  />
                     </div>
 
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Origem (Opcional)</label>
                         <input type="password" v-model="form.origem" class="form-control" />
-                        <div v-if="form.errors.origem" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.origem }}
-                        </div>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Conservação</label>
-                        <input type="password" v-model="form.conservacao" class="form-control" />
+                        <select v-model="form.conservacao" class="form-select">
+                            <option value="">Seleccione o estado de aquisição</option>
+                            <option value="Novo" >Novo</option>
+                            <option value="Usado" >Usado</option>
+                            <option value="Outro" >Outro</option>
+                        </select>
                         <div v-if="form.errors.conservacao" class="text-red-500 text-sm mt-1">
                             {{ form.errors.conservacao }}
                         </div>
@@ -165,48 +197,80 @@ watch(() => page.props.flash.success, (msg) => {
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Categoria</label>
-                        <input type="password" v-model="form.id_categoria" class="form-control" />
+                        <select v-model="form.id_categoria" class="form-select">
+                            <option value="">Seleccione a categoria</option>
+
+                            <option
+                                v-for="cat in categorias"
+                                :key="cat.id"
+                                :value="cat.id"
+                            >
+                                {{ cat.nome }}
+                            </option>
+
+                        </select>
+
                         <div v-if="form.errors.id_categoria" class="text-red-500 text-sm mt-1">
                             {{ form.errors.id_categoria }}
                         </div>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Localização</label>
-                        <input type="password" v-model="form.id_localizacao" class="form-control" />
-                        <div v-if="form.errors.id_localizacao" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.id_localizacao }}
+
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                v-model="form.local"
+                                readonly
+                                placeholder="Seleccione a localização"
+                            />
+
+                            <button style="width: 110px"
+                                class="btn btn-outline-secondary"
+                                type="button"
+
+                                @click="abrirmodal()"
+                            >
+                                <i class="bx bx-search"></i>
+                                Buscar
+                            </button>
                         </div>
+                        <small>Se nenhuma localização for seleccionada, o bem passa para a local raiz</small>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Estado do Património</label>
-                        <input type="password" v-model="form.id_estado_patrimonio" class="form-control" />
+                       <select v-model="form.id_estado_patrimonio" class="form-select">
+                            <option value="">Seleccione o estado do património</option>
+
+                            <option
+                                v-for="estado in estadoPatrimonio"
+                                :key="estado.id"
+                                :value="estado.id"
+                            >
+                                {{ estado.nome }}
+                            </option>
+
+                        </select>
+
                         <div v-if="form.errors.id_estado_patrimonio" class="text-red-500 text-sm mt-1">
                             {{ form.errors.id_estado_patrimonio }}
                         </div>
                     </div>
                 </div>
 
-                    <div class="row g-2 mb-3">
+                <div class="row g-2 mb-3">
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Marca (Opcional)</label>
                         <input type="password" v-model="form.marca" class="form-control" />
-                        <div v-if="form.errors.marca" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.marca }}
-                        </div>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Série (Opcional)</label>
                         <input type="password" v-model="form.num_serie" class="form-control" />
-                        <div v-if="form.errors.num_serie" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.num_serie }}
-                        </div>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Cor (Opcional)</label>
                         <input type="password" v-model="form.cor" class="form-control" />
-                        <div v-if="form.errors.cor" class="text-red-500 text-sm mt-1">
-                            {{ form.errors.cor }}
-                        </div>
                     </div>
                 </div>
 
@@ -241,7 +305,22 @@ watch(() => page.props.flash.success, (msg) => {
                         </div>
                     </div>
                 </div>
-                    <div class="row g-2 mb-3">
+                 <div class="col mb-3">
+                        <label for="dobLarge" class="">Responsável (Opcional)</label>
+                       <select v-model="form.responsavel" class="form-select">
+                            <option value="">Seleccione o responsável do património</option>
+
+                            <option
+                                v-for="resp in responsaveis"
+                                :key="resp.id"
+                                :value="resp.id"
+                            >
+                               {{ resp.nome }} / Dep: {{ resp.departamento }}
+                            </option>
+
+                        </select>
+                    </div>
+                <div class="row g-2 mb-3">
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Descrição (Opcional)</label>
                         <textarea type="text" v-model="form.descricao" class="form-control" />
@@ -264,6 +343,50 @@ watch(() => page.props.flash.success, (msg) => {
                 </div>
             </form>
         </div>
+
+
+
+
+         <!--Modal para selecionar a localização-->
+        <div class="modal fade" id="modalBuscarLocal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Seleccionar Localização</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="text-orange-500 text-sm" v-if="showWarning">
+                        Deverás seleccionar um local antes de confirmar
+                    </label>
+
+                    <LocalTree
+                        v-for="local in caminhosLocal"
+                        :key="local.id"
+                        :local="local"
+                        :selectedId="localSelecionado?.id"
+                        @select="selecionarLocal"
+                    />
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button class="btn btn-primary"  @click="confirmarLocal">
+                        Confirmar
+                    </button>
+                </div>
+
+                </div>
+            </div>
+        </div>
+
+
     </AuthenticatedLayout>
 </template>
 
