@@ -219,7 +219,7 @@ function removerCampo(index) {
             <tbody>
                 <tr v-for="cat in categorias" :key="cat.id" :data-id="cat.id">
                 <td></td>
-                <td><strong style="color: #212529 !important;">{{ cat.nome }} </strong> <br></td>
+                <td class="p-3" ><strong style="color: #212529 !important;">{{ cat.nome }} </strong> <br></td>
 
                 <td class="date-cell">{{ new Date(cat.created_at).toLocaleDateString() }}</td>
                 <td>

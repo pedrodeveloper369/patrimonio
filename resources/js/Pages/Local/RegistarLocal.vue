@@ -99,7 +99,7 @@ function redirecionar_pagina(){
 
 <template>
     <AuthenticatedLayout>
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Localizações/</span><strong>Registar Localização</strong></h4>
+        <h4 class="fw-bold py-3 mb-4"><Link :href="route('local')" class="text-muted fw-light">Localizações/</Link><strong>Registar Localização</strong></h4>
 
         <div class="card p-4 " >
             <form @submit.prevent="submit">

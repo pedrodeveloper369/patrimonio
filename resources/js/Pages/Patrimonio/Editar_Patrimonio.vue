@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
 import axios from 'axios';
-import { useForm , usePage } from '@inertiajs/vue3';
+import { useForm , usePage , router} from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 import LocalTree from '@/Components/LocalTree.vue'
 
@@ -14,14 +14,15 @@ const props = defineProps({
     categorias: Array,
     caminhosLocal: Array,
     responsaveis: Array,
+    patrimonio: Object,
 });
 
 const estadoPatrimonio = ref(props.estadoPatrimonio);
 const categorias = ref(props.categorias);
 const caminhosLocal = ref(props.caminhosLocal);
 const responsaveis = ref(props.responsaveis);
+const patrimonio = ref(props.patrimonio);
 const localSelecionado = ref(null)
-
 
 function proximo() {
   if (passo.value < 2) passo.value++
@@ -33,24 +34,26 @@ function anterior() {
 
 //declaracao do formulario e os seus dados
 const form = useForm({
-    nome: '',
-    codigo: '',
-    descricao: '',
-    qtd: 1,
-    imagem: null,
-    valor_compra: '',
-    origem: '',
-    conservacao: '',
-    documento: null,
-    id_categoria: '',
-    id_local: '',
-    local: '',
-    id_estado_patrimonio: '',
-    marca: '',
-    cor: '',
-    num_serie: '',
-    responsavel: '',
+    id: patrimonio.value.id,
+    nome: patrimonio.value.nome ,
+    codigo: patrimonio.value.codigo ,
+    descricao: patrimonio.value.descricao ,
+    qtd: patrimonio.value.qtd ,
+    imagem: '',
+    valor_compra: patrimonio.value.valor_compra,
+    origem: patrimonio.value.origem,
+    conservacao: patrimonio.value.conservacao,
+    documento: '',
+    id_categoria: patrimonio.value.id_categoria,
+    id_local: patrimonio.value.id_localizacao,
+    local: patrimonio.value.localizacao,
+    id_estado_patrimonio: patrimonio.value.id_estado_patrimonio,
+    marca: patrimonio.value.marca,
+    cor: patrimonio.value.cor,
+    num_serie: patrimonio.value.num_serie,
+    responsavel: patrimonio.value.id_responsavel ,
 })
+
 
 const previewImagem = ref(null)
 
@@ -78,7 +81,7 @@ function handleFileDoc(event) {
 
 // Função para enviar
 const submit = () => {
-    form.post(route('patrimonio.registar'), {
+    form.post(route('patrimonio.editar'), {
         onSuccess: () => {
             redirecionar_pagina();
         }
@@ -150,7 +153,7 @@ function redirecionar_pagina(){
 
 <template>
     <AuthenticatedLayout>
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Patrimonio/</span><strong>Editar Património</strong></h4>
+        <h4 class="fw-bold py-3 mb-4"><Link :href="route('patrimonio')" class="text-muted fw-light">Patrimonio/</Link><strong>Editar Património</strong></h4>
 
         <div class="card p-4 ">
 
@@ -187,7 +190,7 @@ function redirecionar_pagina(){
 
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Origem (Opcional)</label>
-                        <input type="password" v-model="form.origem" class="form-control" />
+                        <input type="text" v-model="form.origem" class="form-control" />
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Conservação</label>
@@ -271,15 +274,15 @@ function redirecionar_pagina(){
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Marca (Opcional)</label>
-                        <input type="password" v-model="form.marca" class="form-control" />
+                        <input type="text" v-model="form.marca" class="form-control" />
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Série (Opcional)</label>
-                        <input type="password" v-model="form.num_serie" class="form-control" />
+                        <input type="text" v-model="form.num_serie" class="form-control" />
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Cor (Opcional)</label>
-                        <input type="password" v-model="form.cor" class="form-control" />
+                        <input type="text" v-model="form.cor" class="form-control" />
                     </div>
                 </div>
 

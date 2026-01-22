@@ -462,7 +462,7 @@ function deleteSelected() {
                         <th>Estado</th>
                         <th>Localização</th>
                         <th>Responsável</th>
-                        <th>Valor</th>
+                        <th>Custo</th>
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -473,10 +473,18 @@ function deleteSelected() {
                             <td>{{pat.codigo}}</td>
                             <td>{{pat.nome}}</td>
                             <td>{{pat.categoria}}</td>
-                            <td>{{pat.estado}}</td>
-                            <td>{{pat.local}}</td>
+                            <td>
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded"
+                                    :style="{ backgroundColor: pat.background, color: pat.cor }"
+
+                                >
+                                    {{ pat.estado_patrimonio }}
+                                </span>
+                            </td>
+                            <td>{{pat.localizacao}}</td>
                             <td>{{pat.responsavel}}</td>
-                            <td>{{pat.valor}}</td>
+                            <td>{{pat.valor_compra}} kz</td>
                         </tr>
                     </tbody>
                   </table>

@@ -53,9 +53,7 @@ function handleFile(event) {
 
     form.imagem = file
 
-
     if (previewImagem.value) {
-         alert(file)
         URL.revokeObjectURL(previewImagem.value)
     }
 
@@ -141,7 +139,7 @@ function redirecionar_pagina(){
 
 <template>
     <AuthenticatedLayout>
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Patrimonio/</span><strong>Registar Património</strong></h4>
+        <h4 class="fw-bold py-3 mb-4"><Link :href="route('patrimonio')"  class="text-muted fw-light">Patrimonio/</Link><strong>Registar Património</strong></h4>
 
         <div class="card p-4 ">
 
@@ -178,7 +176,7 @@ function redirecionar_pagina(){
 
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Origem (Opcional)</label>
-                        <input type="password" v-model="form.origem" class="form-control" />
+                        <input type="text" v-model="form.origem" class="form-control" />
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Conservação</label>
@@ -262,15 +260,15 @@ function redirecionar_pagina(){
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
                         <label for="emailLarge" class="">Marca (Opcional)</label>
-                        <input type="password" v-model="form.marca" class="form-control" />
+                        <input type="text" v-model="form.marca" class="form-control" />
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Série (Opcional)</label>
-                        <input type="password" v-model="form.num_serie" class="form-control" />
+                        <input type="text" v-model="form.num_serie" class="form-control" />
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Cor (Opcional)</label>
-                        <input type="password" v-model="form.cor" class="form-control" />
+                        <input type="text" v-model="form.cor" class="form-control" />
                     </div>
                 </div>
 

@@ -5,7 +5,6 @@ import { createInertiaApp, Head, Link, router  } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-
 import '../../public/assets/vendor/fonts/boxicons.css';
 import '../../public/assets/vendor/css/core.css';
 import '../../public/assets/vendor/css/pages/page-auth.css';

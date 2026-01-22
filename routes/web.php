@@ -1,18 +1,17 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DepartamentoController;
-use App\Http\Controllers\ResponsavelController;
 use App\Http\Controllers\ConfiguracaoController;
-use App\Http\Controllers\RelatorioController;
-use App\Http\Controllers\PatrimonioController;
-use App\Http\Controllers\LocalController;
 use App\Http\Controllers\MovimentacaoController;
+use App\Http\Controllers\ResponsavelController;
+use App\Http\Controllers\UtilizadorController;
+use App\Http\Controllers\PatrimonioController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\UtilizadorController;
-use App\Http\Controllers\CargoController;
+use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\CargoController;
+use App\Http\Controllers\LocalController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,7 +22,6 @@ Route::get('/', function () {
     }
     return redirect()->route('dashboard');
 });
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
     //Rotas Dashboard
@@ -76,6 +74,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/editar-patrimonio/{patrimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
     Route::post('/registar-patrimonio', [PatrimonioController::class, 'registar_patrimonio'])->name('patrimonio.registar');
     Route::get('/patrimonios/dados', [PatrimonioController::class, 'dados_patrimonios'])->name('dados.patrimonio') ;
+    Route::get('/editar-patrimonio/{parimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
+    Route::post('/editar-patrimonio', [PatrimonioController::class, 'editar_patrimonio'])->name('patrimonio.editar');
 
     //Rotas movimentacoes
     Route::get('/movimentacoes',[MovimentacaoController::class, 'index'])->name('movimentacao') ;
@@ -90,7 +90,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/categoria/dados', [CategoriaController::class, 'dados_categoria'])->name('categoria.dados');
     Route::post('/categoria/eliminar', [CategoriaController::class, 'eliminar_categoria'])->name('categoria.eliminar');
     Route::post('/categoria/editar', [CategoriaController::class, 'editar_categoria'])->name('categoria.editar');
-
 
     //Rotas relatorios
     Route::get('/relatorios',[RelatorioController::class, 'index'])->name('relatorio') ;

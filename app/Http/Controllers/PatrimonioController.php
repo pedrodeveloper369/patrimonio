@@ -52,12 +52,12 @@ class PatrimonioController extends Controller
     }
 
     public function index_editar($id_patrimonio){
-
         return Inertia::render('Patrimonio/Editar_Patrimonio',[
             'caminhosLocal' => $this->caminhos_organizados(),
             'responsaveis' => $this->buscaResponsaveis(),
             'categorias' => Categoria::all(),
             'estadoPatrimonio' => EstadoPatrimonio::all(),
+            'patrimonio' => Patrimonio::findOrFail($id_patrimonio),
             'flash' => [
                 'success' => session('success'),
                 'erro' => session('erro'),
@@ -68,19 +68,38 @@ class PatrimonioController extends Controller
     //Rota, funcao de registo de patrimonio
     public function registar_patrimonio(Request $request){
         $validacao = $this->validarPatrimonio($request);
-        try {
 
+        $imagemPath = null;
+        $documentoPath = null;
+
+         // imagem
+        if ($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $filename = time() . '_' . $file->getClientOriginalName(); // opcional: timestamp
+            $file->storeAs('patrimonios/imagens', $filename, 'public'); // salva em storage/app/public/patrimonios/imagens
+            $imagemPath = $filename; // só guarda o nome
+        }
+
+        // documento
+        if ($request->hasFile('documento')) {
+            $file = $request->file('documento');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('patrimonios/documentos', $filename, 'public'); // só guarda o nome
+            $documentoPath = $filename;
+        }
+
+        try {
             DB::beginTransaction();
             $patrimonio = new Patrimonio();
             $patrimonio->nome = $this->helper->formatarNomeProprio($request->nome);
             $patrimonio->codigo = $request->codigo;
             $patrimonio->descricao = $request->descricao;
             $patrimonio->qtd = $request->qtd;
-            $patrimonio->imagem = $request->imagem;
+            $patrimonio->imagem = $imagemPath;
             $patrimonio->valor_compra = $request->valor_compra;
             $patrimonio->origem = $request->origem;
             $patrimonio->conservacao = $request->conservacao;
-            $patrimonio->documento = $request->documento;
+            $patrimonio->documento =  $documentoPath;
             $patrimonio->id_categoria = $request->id_categoria;
             $patrimonio->id_localizacao = $request->id_local;
             $patrimonio->id_estado_patrimonio = $request->id_estado_patrimonio;
@@ -101,7 +120,77 @@ class PatrimonioController extends Controller
         }
     }
 
-     //funcao que pega da base de dados todos os patrimonios
+     //Rota, funcao de registo de patrimonio
+    public function editar_patrimonio(Request $request){
+        $validacao = $this->validarPatrimonio($request);
+
+        $imagemPath = null;
+        $documentoPath = null;
+
+         // imagem
+        if ($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $filename = time() . '_' . $file->getClientOriginalName(); // opcional: timestamp
+            $file->storeAs('patrimonios/imagens', $filename, 'public'); // salva em storage/app/public/patrimonios/imagens
+            $imagemPath = $filename; // só guarda o nome
+        }
+
+        // documento
+        if ($request->hasFile('documento')) {
+            $file = $request->file('documento');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('patrimonios/documentos', $filename, 'public'); // só guarda o nome
+            $documentoPath = $filename;
+        }
+
+        try {
+            $patrimonio = Patrimonio::findOrFail($request->id);
+            DB::beginTransaction();
+            $patrimonio->nome = $this->helper->formatarNomeProprio($request->nome);
+            $patrimonio->codigo = $request->codigo;
+            $patrimonio->descricao = $request->descricao;
+            $patrimonio->qtd = $request->qtd;
+            $patrimonio->imagem = $imagemPath;
+            $patrimonio->valor_compra = $request->valor_compra;
+            $patrimonio->origem = $request->origem;
+            $patrimonio->conservacao = $request->conservacao;
+            $patrimonio->documento =  $documentoPath;
+            $patrimonio->id_categoria = $request->id_categoria;
+            $patrimonio->id_localizacao = $request->id_local;
+            $patrimonio->id_estado_patrimonio = $request->id_estado_patrimonio;
+            $patrimonio->marca = $request->marca;
+            $patrimonio->cor = $request->cor;
+            $patrimonio->num_serie = $request->num_serie;
+            $patrimonio->id_responsavel = $request->responsavel;
+            $patrimonio->save();
+
+
+            //FAZER A MOVIMENTAÇÃO caso o responsavel, a localizacao o estado
+
+            DB::commit();
+            return redirect()->route('editar.patrimonio',$request->id)
+                     ->with('success', 'Património actualizado com sucesso!');
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('editar.patrimonio',$request->id)
+                    ->with('erro', 'Ocorreu um erro ao actualizar o patrimoónio \n'.$th->getMessage());
+        }
+    }
+
+
+    /*
+    if ($request->hasFile('imagem')) {
+            $imagemPath = $request->file('imagem')->store('patrimonios/imagens', 'public');
+        }
+
+        if ($request->hasFile('documento')) {
+            $documentoPath = $request->file('documento')->store('patrimonios/documentos', 'public');
+        }
+
+    */
+
+    //funcao que pega da base de dados todos os patrimonios
     public function dados_patrimonios(){
         $query = DB::table('patrimonios as Patr')
             ->select(
@@ -116,20 +205,63 @@ class PatrimonioController extends Controller
                 'Patr.conservacao',
                 'Patr.documento',
                 'Patr.marca',
+                'Patr.cor as cor_patrimonio',
+                'Patr.created_at',
                 'Patr.num_serie',
                 'Cat.nome as categoria',
                 'Est.nome as estado_patrimonio',
                 'Est.cor',
+                'Est.background',
                 'Resp.nome as responsavel',
-                'Lo.nome as localizacao'
+                'Lo.nome as localizacao',
+                'Lo.id as id_local'
             )
             ->leftJoin('categorias as Cat', 'Cat.id', '=', 'Patr.id_categoria')
             ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Patr.id_estado_patrimonio')
             ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Patr.id_responsavel')
             ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao');
 
-        return DataTables::of($query)->make(true);
+        return DataTables::of($query)
+            ->addColumn('caminhoLocal', function($patrimonio) {
+                $local = Local::find($patrimonio->id_local);
+                return $local ? $this->caminho($local) : '';
+            })
+        ->make(true);
     }
+
+    public function dados_patrimonio($id){
+        return DB::table('patrimonios as Patr')
+            ->select(
+                'Patr.id',
+                'Patr.nome',
+                'Patr.codigo',
+                'Patr.descricao',
+                'Patr.qtd',
+                'Patr.imagem',
+                'Patr.valor_compra',
+                'Patr.origem',
+                'Patr.conservacao',
+                'Patr.documento',
+                'Patr.marca',
+                'Patr.cor as cor_patrimonio',
+                'Patr.num_serie',
+                'Cat.nome as categoria',
+                'Est.nome as estado_patrimonio',
+                'Est.cor',
+                'Est.background',
+                'Resp.nome as responsavel',
+                'Lo.nome as localizacao',
+                'Lo.id as id_local'
+            )
+            ->leftJoin('categorias as Cat', 'Cat.id', '=', 'Patr.id_categoria')
+            ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Patr.id_estado_patrimonio')
+            ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Patr.id_responsavel')
+            ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao')
+            ->where('Patr.id','=',$id)
+            ->get();
+
+    }
+
 
     //funcao que pega da base de dados todos os responsaveles
     public function buscaResponsaveis(){
@@ -185,7 +317,6 @@ class PatrimonioController extends Controller
                 'id_categoria' => ['required'],
                 'id_estado_patrimonio' => ['required'],
                 'descricao' => ['nullable','min:3'],
-
             ],
             [
                 'nome.required' => 'O nome é obrigatório.',
