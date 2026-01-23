@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('locals', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('sala')->nullable();
-            $table->string('departamento')->nullable();
-            $table->string('sector')->nullable();
-            $table->string('armazem')->nullable();
-            $table->foreignId('id_unidade')->constrained('unidades')->onDelete('cascade');
+            $table->string('estado')->default('Activo');
+            $table->foreignId('id_tipolocal')->constrained('tipo_locals')->onDelete('cascade');
+            // Local pai (hierarquia)
+            $table->foreignId('parent_id')->nullable()->constrained('locals')->onDelete('cascade');
             $table->timestamps();
         });
     }

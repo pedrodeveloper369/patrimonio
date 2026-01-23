@@ -16,55 +16,42 @@ const showingNavigationDropdown = ref(false);
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme " >
                 <div class="app-brand demo mt-2">
-                    <div class="col-md-4 col-12 mb-3 mb-md-0">
+                    <div class="col-md-4 col-12 mb-md-0">
                         <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
                     </div>
                 </div>
                 <hr>
                 <div class="menu-inner-shadow"></div>
 
-                <ul class="menu-inner py-1 mt-3">
+                <ul class="menu-inner " >
                     <!-- Dashboard -->
                     <li :class="['menu-item', route().current('dashboard') ? 'active' : '']"
                      v-if="$page.props.auth.permissions.includes('ver_dashboard_admin')"
                     >
-                    <Link :href="route('dashboard')"  class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                        <strong>Dashboard</strong>
-                    </Link>
-                    </li>
-
-                     <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
-                        <Link class="menu-link" :href="route('patrimonio')"  >
-                            <i class="bx bx-archive me-2"></i>
-                            <strong>Património</strong>
+                        <Link :href="route('dashboard')"  class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <strong>Painel de Controlo</strong>
                         </Link>
                     </li>
-                     <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('responsavel')"  >
-                           <i class="bx bx-user me-2"></i>
-                            <strong>Responsáveis</strong>
+
+                    <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
+                        <Link class="menu-link" :href="route('patrimonio')"  >
+                            <i class="bx bx-archive me-2"></i>
+                            <strong>Patrimónios</strong>
+                        </Link>
+                    </li>
+
+                     <li :class="['menu-item', route().current('categoria') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('categoria')"  >
+                           <i class="bx bx-category me-2"></i>
+                            <strong>Categorias</strong>
                         </Link>
                     </li>
 
                     <li :class="['menu-item', route().current('local') ? 'active' : '']">
                         <Link class="menu-link" :href="route('local')"  >
                             <i class="bx bx-map me-2"></i>
-                           <strong>Local</strong>
-                        </Link>
-                    </li>
-
-                    <li :class="['menu-item', route().current('unidade') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('unidade')"  >
-
-                            <i class="bx bx-building me-2"></i>
-                            <strong>Unidades</strong>
-                        </Link>
-                    </li>
-                    <li :class="['menu-item', route().current('categoria') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('categoria')"  >
-                           <i class="bx bx-category me-2"></i>
-                            <strong>Categorias</strong>
+                           <strong>Localizações</strong>
                         </Link>
                     </li>
 
@@ -74,11 +61,35 @@ const showingNavigationDropdown = ref(false);
                             <strong>Movimentações</strong>
                         </Link>
                     </li>
-
+                    <!--
                     <li :class="['menu-item', route().current('relatorio') ? 'active' : '']">
                         <Link class="menu-link" :href="route('relatorio')"  >
                             <i class="bx bx-file me-2"></i>
                             <strong>Relatórios</strong>
+                        </Link>
+                    </li>
+                    -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Configurações</span></li>
+                    <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('departamento')"  >
+
+                            <i class="bx bx-sitemap me-2"></i>
+                            <strong>Departamentos</strong>
+                        </Link>
+                    </li>
+
+                    <li :class="['menu-item', route().current('cargo') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('cargo')"  >
+
+                            <i class="bx bx-id-card me-2"></i>
+                            <strong>Cargos</strong>
+                        </Link>
+                    </li>
+
+                    <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
+                        <Link class="menu-link" :href="route('responsavel')"  >
+                           <i class="bx bx-user me-2"></i>
+                            <strong>Funcionários</strong>
                         </Link>
                     </li>
 
@@ -141,8 +152,7 @@ const showingNavigationDropdown = ref(false);
                     <!-- Misc -->
 
 
-                   <li class="menu-header small text-uppercase"><span class="menu-header-text">Configurações</span></li>
-                     <!-- <li :class="['menu-item', route().current('empresa') ? 'active' : '']">
+                    <!-- <li :class="['menu-item', route().current('empresa') ? 'active' : '']">
                         <Link class="menu-link" :href="route('empresa')"  >
                             <i class="menu-icon bx bx-cog"></i>
                             <strong>Dados da Empresa</strong>
@@ -172,14 +182,22 @@ const showingNavigationDropdown = ref(false);
                     class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                     id="layout-navbar"
                 >
+
+
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-
+                        <!-- Search -->
+                        <div class="navbar-nav align-items-center">
+                            <div class="nav-item d-flex align-items-center">
+                                <label>Sistema de Gestão de Patrimónios</label>
+                            </div>
+                        </div>
 
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
 
@@ -194,7 +212,7 @@ const showingNavigationDropdown = ref(false);
                             <li>
                                 <div class="dropdown-item flex-grow-1">
                                     <span class="fw-semibold d-block"> {{ $page.props.auth.user.name }}</span>
-                                    <small class="text-muted">Admin</small>
+                                    <small class="text-muted">{{ $page.props.auth.user.role }}</small>
                                 </div>
                             </li>
                             <li>
@@ -202,10 +220,10 @@ const showingNavigationDropdown = ref(false);
                             </li>
 
                             <li >
-                                <a class="dropdown-item" :href="route('configuracao')">
+                                <Link class="dropdown-item" :href="route('configuracao')">
                                     <i class="bx bx-cog me-2"></i>
                                     <span class="align-middle">Configurações</span>
-                                </a>
+                                </Link>
                             </li>
 
                             <li>

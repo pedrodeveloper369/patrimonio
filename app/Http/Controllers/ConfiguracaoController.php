@@ -11,13 +11,12 @@ use Illuminate\Support\Facades\Hash;
 
 class ConfiguracaoController extends Controller
 {
-   public function index(){
-        $utilizador = User::where('id','=',Auth::id())->first();
+    public function index(){
         return Inertia::render('Configuracao/Configuracao',[
-            'utilizador' =>$utilizador,
+            'utilizador' => User::where('id','=',Auth::id())->first(),
             'flash' => [
-                        'success' => session('success'),
-                        'erro' => session('erro'),
+                'success' => session('success'),
+                'erro' => session('erro'),
             ]
         ]);
     }
@@ -61,7 +60,6 @@ class ConfiguracaoController extends Controller
                     ->with('erro', $th->getMessage());
         }
     }
-
 
     //Funcao que valida os dados do formulario do utilizador
     private function validarConfiguracaoPerfil($request)
