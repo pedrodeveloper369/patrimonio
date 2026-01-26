@@ -468,7 +468,18 @@ function deleteSelected() {
                     <tbody class="table-border-bottom-0">
                         <tr v-for="pat in patrimonioRecentes" :key="pat.id" :data-id="pat.id" >
                             <td>
-                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                                 <img
+                                    v-if="pat.imagem"
+                                    :src="`/storage/patrimonios/imagens/${pat.imagem}`"
+                                    alt="Imagem do Património"
+                                    style="width:50px; height:auto; border-radius:9px"
+                                >
+                                <img
+                                    v-else
+                                    src="/assets/img/avatars/pitruca.webp"
+                                    alt="Imagem padrão"
+                                    style="width:50px; height:auto; border-radius:9px"
+                                >
                             </td>
                             <td>{{pat.codigo}}</td>
                             <td>{{pat.nome}}</td>

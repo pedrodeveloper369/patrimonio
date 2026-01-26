@@ -76,9 +76,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/patrimonios/dados', [PatrimonioController::class, 'dados_patrimonios'])->name('dados.patrimonio') ;
     Route::get('/editar-patrimonio/{parimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
     Route::post('/editar-patrimonio', [PatrimonioController::class, 'editar_patrimonio'])->name('patrimonio.editar');
+    Route::post('/eliminar-patrimonio', [PatrimonioController::class, 'eliminar_patrimonio'])->name('patrimonio.eliminar');
 
     //Rotas movimentacoes
     Route::get('/movimentacoes',[MovimentacaoController::class, 'index'])->name('movimentacao') ;
+    Route::get('/movimentar-patrimonio/{patrimonio}',[MovimentacaoController::class, 'movimentar_patrimonio'])->name('movimento.patrimonio') ;
+    Route::post('/movimentar/patrimonio',[MovimentacaoController::class, 'movimentarPatrimonio'])->name('movimentar.patrimonio') ;
+    Route::get('/movimentacoes/dados',[MovimentacaoController::class, 'dados_movimentacoes']);
+    Route::get('/movimentacoes/dados/patrimonio',[MovimentacaoController::class, 'dados_movimentacoes_patr']);
 
     //Rotas empresa
     Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa') ;

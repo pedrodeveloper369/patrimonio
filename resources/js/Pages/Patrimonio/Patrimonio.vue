@@ -289,6 +289,8 @@ window.chamar_pagina_registar_local = () => {
         </div>
 
         <div class="card p-4 " >
+            <!--<button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
+                           -->
 
             <div class="table-responsive text-nowrap mt-3">
                 <table v-datatable="{datatableOptions, defaultPageSize: 10,
@@ -297,9 +299,8 @@ window.chamar_pagina_registar_local = () => {
                             openDeleteModal(selectedIds);
                         },
                         actionsHtml: `
-                            <button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
-                            <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
 
+                            <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
 
                         `
                         }"
@@ -359,7 +360,9 @@ window.chamar_pagina_registar_local = () => {
                     <td>
                         <button class="" @click="ver_detalhes(patri)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
                         <Link :href="route('editar.patrimonio', patri)" style="color:#777"><i class="menu-icon bx bx-edit-alt"></i></Link>
-                        <button > <i class="bx bx-transfer me-2"></i></button>
+
+                        <Link :href="route('movimento.patrimonio', patri)" style="color:#777"> <i class="bx bx-transfer me-2"></i> </Link>
+
                         <button
                             v-if="patri.documento"
                             class=""

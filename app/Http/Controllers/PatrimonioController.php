@@ -178,6 +178,24 @@ class PatrimonioController extends Controller
         }
     }
 
+    public function eliminar_patrimonio(Request $request){
+        $ids = $request->ids;
+        try {
+            // Eliminar os utilizadores dentro de uma transação
+            DB::transaction(function () use ($ids) {
+                Patrimonio::whereIn('id', $ids)
+                    ->update([
+                        'estado' => 'inativo'
+                    ]);
+            });
+            return redirect()->route('patrimonio')
+                     ->with('success', 'Eliminação bem sucedida!');
+        } catch (\Exception $e) {
+           return redirect()->route('patrimonio')
+                    ->with('erro', 'Ocorreu um erro ao eliminar \n'.$th->getMessage());
+        }
+    }
+
 
     /*
     if ($request->hasFile('imagem')) {
@@ -219,7 +237,8 @@ class PatrimonioController extends Controller
             ->leftJoin('categorias as Cat', 'Cat.id', '=', 'Patr.id_categoria')
             ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Patr.id_estado_patrimonio')
             ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Patr.id_responsavel')
-            ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao');
+            ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao')
+            ->where('Patr.estado','=', 'activo');
 
         return DataTables::of($query)
             ->addColumn('caminhoLocal', function($patrimonio) {

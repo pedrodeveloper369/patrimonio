@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('cor')->nullable();
             $table->string('num_serie')->nullable();
 
+            $table->string('estado')->default('activo');//estado para manipular a eliminacao do patrimonio
+
             $table->timestamps();
         });
     }

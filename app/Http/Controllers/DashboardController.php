@@ -54,6 +54,7 @@ class DashboardController extends Controller
             ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Patr.id_estado_patrimonio')
             ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Patr.id_responsavel')
             ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao')
+            ->where('Patr.estado','=', 'activo')
             ->orderBy('Patr.id', 'desc')
             ->limit(6)
             ->get();

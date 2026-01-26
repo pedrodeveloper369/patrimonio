@@ -46,7 +46,7 @@ class CargoController extends Controller
     }
 
      public function eliminar_cargo(Request $request){
-         try {
+        try {
             // Eliminar os utilizadores dentro de uma transação
             $this->eliminarcargo($request->ids);
             return redirect()->route('cargo')
