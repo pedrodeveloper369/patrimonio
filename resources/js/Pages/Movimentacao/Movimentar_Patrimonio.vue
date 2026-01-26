@@ -60,12 +60,6 @@ responsa_actual = patrimonio.responsavel;
 */
 // Função para enviar
 const submit = () => {
-
-    form.id = patrimonio.value.id
-    form.id_local_antigo = patrimonio.value.id_localizacao
-    form.id_estado_antigo =  patrimonio.value.id_estado_patrimonio
-    form.responsavel_antigo = patrimonio.value.id_responsavel
-
     form.post(route('movimentar.patrimonio'), {
         onSuccess: () => {
             redirecionar_pagina();
