@@ -138,7 +138,7 @@ watch(() => page.props.flash.success, (msg) => {
                 </div>
             </div>
             <div class="col-lg-6">
-                <small class="text-light fw-semibold">Horizontal</small>
+
                 <div class="demo-inline-spacing mt-3">
                 <div class="list-group list-group-horizontal-md text-md-center">
                     <a

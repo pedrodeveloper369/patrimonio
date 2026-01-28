@@ -9,6 +9,8 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Services\Helper;
+use App\Models\RoleUser;
+use Illuminate\Support\Facades\Auth;
 
 
 class UtilizadorController extends Controller
@@ -23,12 +25,16 @@ class UtilizadorController extends Controller
 
     //Rota, funcao que chama a view de listagem dos utilizadores
     public function index(){
-        return Inertia::render('Utilizador/Utilizador',[
+        if(Auth::user()->role == 'Admin'){
+            return Inertia::render('Utilizador/Utilizador',[
             'flash' => [
                 'success' => session('success'),
                 'erro' => session('erro'),
                 ]
             ]);
+        }
+        return Inertia::render('Configuracao/NotFound');
+
     }
 
     //Rota, funcao de registo de utilizador
@@ -107,11 +113,12 @@ class UtilizadorController extends Controller
         $utilizador->save();
 
         //dando o perfil de operador
-        DB::table('model_has_roles')->insert([
-            'role_id' => 2, // id da permissão
-            'model_type' => \App\Models\User::class,
+        RoleUser::create([
             'model_id' => $utilizador->id,
+            'role_id' => 2,
+            'model_type' => 'App\Models\User',
         ]);
+
         DB::commit();
     }
 

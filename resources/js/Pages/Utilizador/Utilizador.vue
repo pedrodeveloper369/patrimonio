@@ -236,6 +236,7 @@ const submitEditar = () => {
     }
 }*/
 
+
 </script>
 
 <template>
