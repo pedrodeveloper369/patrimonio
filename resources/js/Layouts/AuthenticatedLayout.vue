@@ -49,7 +49,11 @@ const showingNavigationDropdown = ref(false);
                             <strong>Patrimónios</strong>
                         </Link>
                     </li>
-                    <li :class="['menu-item', route().current('movimentacao') ? 'active' : '']"
+                    <li :class="['menu-item', (
+                        route().current('movimentacao') ||
+                        route().current('movimento.historico') ||
+                        route().current('movimento.patrimonio')) ? 'active' : '']"
+
                         v-if="$page.props.auth.permissions.includes('movimentacoes')"
                     >
                         <Link class="menu-link" :href="route('movimentacao')"  >
@@ -187,14 +191,7 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>-->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Conta</span></li>
-                    <li :class="['menu-item', route().current('configuracao') ? 'active' : '']"
-                        v-if="$page.props.auth.permissions.includes('ver_perfil_proprio')"
-                    >
-                        <Link class="menu-link" :href="route('configuracao')"  >
-                            <i class="menu-icon bx bx-cog"></i>
-                            <strong>Perfil</strong>
-                        </Link>
-                    </li>
+
 
                     <li :class="['menu-item', route().current('users') ? 'active' : '']"
                         v-if="$page.props.auth.permissions.includes('utilizadores')"

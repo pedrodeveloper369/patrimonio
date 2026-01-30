@@ -216,7 +216,7 @@ const submitEditar = () => {
                     }"
                 @selection-changed="onSelectionChanged"
                 @datatable-delete="onDeleteRequested"
-                class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                class="table table-hover table-striped  mt-3 min-w-full  mt-6 text-sm"
             >
 
             <thead class="bg-gray-100 ">

@@ -307,7 +307,7 @@ window.chamar_pagina_registar_local = () => {
                     @selection-changed="onSelectionChanged"
                     @datatable-delete="onDeleteRequested"
                      @datatable-action="onDatatableAction"
-                    class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                    class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
                 >
 
                 <thead class="bg-gray-100 ">
@@ -327,19 +327,19 @@ window.chamar_pagina_registar_local = () => {
                     <tr v-for="patri in patrimonios" :key="patri.id" :data-id="patri.id">
                     <td></td>
                     <td>
-                            <img
-                                v-if="patri.imagem"
-                                :src="`/storage/patrimonios/imagens/${patri.imagem}`"
-                                alt="Imagem do Património"
-                                style="width:50px; height:auto; border-radius:9px"
-                            >
-                            <img
-                                v-else
-                                src="/assets/img/avatars/pitruca.webp"
-                                alt="Imagem padrão"
-                                style="width:50px; height:auto; border-radius:9px"
-                            >
-                        </td>
+                        <img
+                            v-if="patri.imagem"
+                            :src="`/storage/patrimonios/imagens/${patri.imagem}`"
+                            alt="Imagem do Património"
+                            style="width:50px; height:auto; border-radius:9px"
+                        >
+                        <img
+                            v-else
+                            src="/assets/img/avatars/pitruca.webp"
+                            alt="Imagem padrão"
+                            style="width:50px; height:auto; border-radius:9px"
+                        >
+                    </td>
 
                     <td><strong style="color: #212529 !important;">{{ patri.nome }} </strong> <br></td>
                     <td>{{ patri.categoria }}</td>

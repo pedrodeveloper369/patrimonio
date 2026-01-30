@@ -65,31 +65,33 @@ function ver_detalhes(patrimonio){
                     class="nav-link active"
                     role="tab"
                     data-bs-toggle="tab"
-                    data-bs-target="#navs-justified-home"
-                    aria-controls="navs-justified-home"
-                    aria-selected="true"
+                    data-bs-target="#navs-justified-profile"
+                    aria-controls="navs-justified-profile"
+                    aria-selected="false"
                 >
-                    <i class="tf-icons bx bx-home"></i> Movimentações
+                   <i class="bx bx-archive me-2"></i> Patrimónios Movimentados
                 </button>
                 </li>
                 <li class="nav-item">
                 <button
                     type="button"
-                    class="nav-link"
+                    class="nav-link "
                     role="tab"
                     data-bs-toggle="tab"
-                    data-bs-target="#navs-justified-profile"
-                    aria-controls="navs-justified-profile"
-                    aria-selected="false"
+                    data-bs-target="#navs-justified-home"
+                    aria-controls="navs-justified-home"
+                    aria-selected="true"
                 >
-                    <i class="tf-icons bx bx-user"></i> Patrimónios Movimentados
+                    <i class="bx bx-transfer me-2"></i> Todas Movimentações
                 </button>
                 </li>
+
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                <div class="tab-pane fade show active" id="navs-justified-profile" role="tabpanel">
+
                     <div class="table-responsive text-nowrap mt-3">
-                        <table v-datatable="{datatableOptions, defaultPageSize: 10,
+                          <table v-datatable="{selectable: false,datatableOptions, defaultPageSize: 10,
                                 deleteAction: (selectedIds) => {
                                     //chama modal
                                     openDeleteModal(selectedIds);
@@ -101,13 +103,91 @@ function ver_detalhes(patrimonio){
                             @selection-changed="onSelectionChanged"
                             @datatable-delete="onDeleteRequested"
                                 @datatable-action="onDatatableAction"
-                            class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                            class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
                         >
 
                         <thead class="bg-gray-100 ">
                             <tr>
-                            <th></th>
-                            <th>Ordem</th>
+                                <th>Imagem</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Responsável</th>
+                                <th>Localização</th>
+                                <th>Estado</th>
+                                <th>Movimentado Em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="mov in patrimonios" :key="mov.id" :data-id="mov.id">
+                                 <td>
+                                    <img
+                                        v-if="mov.imagem"
+                                        :src="`/storage/patrimonios/imagens/${mov.imagem}`"
+                                        alt="Imagem do Património"
+                                        style="width:50px; height:auto; border-radius:9px"
+                                    >
+                                    <img
+                                        v-else
+                                        src="/assets/img/avatars/pitruca.webp"
+                                        alt="Imagem padrão"
+                                        style="width:50px; height:auto; border-radius:9px"
+                                    >
+                                </td>
+
+                                <td  class="p-3" ><strong style="color: #212529 !important;">{{ mov.nome }} </strong> <br></td>
+                                <td>{{ mov.categoria }}</td>
+                                <td>{{ mov.responsavel }}</td>
+                                <td class="date-cell">{{ mov.localizacao}}</td>
+
+                                <td >
+                                    <span
+                                        class="px-2 py-1 text-xs font-semibold rounded"
+                                            :style="{ backgroundColor: mov.background, color: mov.cor }"
+
+                                    >
+                                        {{ mov.estado_patrimonio }}
+                                    </span>
+
+                                </td>
+
+                                <td class="date-cell">{{ new Date(mov.ultima_ocorrencia).toLocaleDateString() }}</td>
+
+                                <td>
+                                    <button class="" @click="ver_detalhes(mov)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+
+                                    <Link :href="route('movimento.patrimonio', mov.id)" style="color:#777"> <i class="bx bx-transfer me-2"></i> </Link>
+                                    <Link :href="route('movimento.historico', mov.id)" style="color:#777"> <i class="bx bx-list-ul"></i></Link>
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade " id="navs-justified-home" role="tabpanel">
+                    <div class="table-responsive text-nowrap mt-3">
+                        <table v-datatable="{selectable: false, datatableOptions, defaultPageSize: 10,
+                                deleteAction: (selectedIds) => {
+                                    //chama modal
+                                    openDeleteModal(selectedIds);
+                                },
+                                actionsHtml: `
+
+                                `
+                                }"
+                            @selection-changed="onSelectionChanged"
+                            @datatable-delete="onDeleteRequested"
+                                @datatable-action="onDatatableAction"
+                            class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
+                        >
+
+                        <thead class="bg-gray-100 ">
+                            <tr>
+
+
                             <th>Nome</th>
                             <th>Categoria</th>
                             <th>Responsável</th>
@@ -121,8 +201,7 @@ function ver_detalhes(patrimonio){
 
                         <tbody>
                             <tr v-for="mov in movimentacoes" :key="mov.id" :data-id="mov.id">
-                            <td></td>
-                            <td>{{ mov.ordem }}</td>
+
                             <td  class="p-3" ><strong style="color: #212529 !important;" >{{ mov.nome }} </strong> </td>
                             <td>{{ mov.categoria }}</td>
                             <td>{{ mov.responsavel }}</td>
@@ -148,72 +227,7 @@ function ver_detalhes(patrimonio){
                         </table>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="navs-justified-profile" role="tabpanel">
-                <label for="">Patrimonios</label>
-                    <div class="table-responsive text-nowrap mt-3">
-                          <table v-datatable="{datatableOptions, defaultPageSize: 10,
-                                deleteAction: (selectedIds) => {
-                                    //chama modal
-                                    openDeleteModal(selectedIds);
-                                },
-                                actionsHtml: `
 
-                                `
-                                }"
-                            @selection-changed="onSelectionChanged"
-                            @datatable-delete="onDeleteRequested"
-                                @datatable-action="onDatatableAction"
-                            class="table table-hover mt-3 min-w-full  mt-6 text-sm"
-                        >
-
-                        <thead class="bg-gray-100 ">
-                            <tr>
-                            <th></th>
-
-                            <th>Nome</th>
-                            <th>Categoria</th>
-                            <th>Responsável</th>
-                            <th>Localização</th>
-                            <th>Estado</th>
-                            <th>Movimentado Em</th>
-                            <th>Ações</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr v-for="mov in patrimonios" :key="mov.id" :data-id="mov.id">
-                            <td></td>
-
-                            <td  class="p-3" ><strong style="color: #212529 !important;">{{ mov.nome }} </strong> <br></td>
-                            <td>{{ mov.categoria }}</td>
-                            <td>{{ mov.responsavel }}</td>
-                            <td class="date-cell">{{ mov.localizacao}}</td>
-
-                            <td >
-                                <span
-                                    class="px-2 py-1 text-xs font-semibold rounded"
-                                        :style="{ backgroundColor: mov.background, color: mov.cor }"
-
-                                >
-                                    {{ mov.estado_patrimonio }}
-                                </span>
-
-                            </td>
-
-                            <td class="date-cell">{{ new Date(mov.ultima_ocorrencia).toLocaleDateString() }}</td>
-
-                            <td>
-                                <button class="" @click="ver_detalhes(mov)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-
-                                <Link :href="route('movimento.patrimonio', mov.id)" style="color:#777"> <i class="bx bx-transfer me-2"></i> </Link>
-
-                            </td>
-
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -222,7 +236,7 @@ function ver_detalhes(patrimonio){
             <div class="modal-dialog" role="document">
                 <div class="modal-content" style="border:1px solid #debbb3">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes da Ultima Movimentação</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -268,7 +282,7 @@ function ver_detalhes(patrimonio){
                         </div>
                         <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Responsavel</label>
+                                <label for="emailLarge" class="form-label" >Responsavel Actual</label>
                             </div>
                             <div class="col mb-0">
                                 <label for="dobLarge" class="form-label" id="responsavel"></label>
@@ -284,7 +298,7 @@ function ver_detalhes(patrimonio){
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Estado</label>
+                                <label for="emailLarge" class="form-label">Estado Actual</label>
                             </div>
                             <div class="col mb-0">
                                 <label for="dobLarge" class="form-label" id="estado"></label>
@@ -302,7 +316,7 @@ function ver_detalhes(patrimonio){
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Localização</label>
+                                <label for="emailLarge" class="form-label">Localização Actual</label>
                             </div>
                             <div class="col mb-0">
                                 <label for="dobLarge" class="form-label" id="localizacao"></label>

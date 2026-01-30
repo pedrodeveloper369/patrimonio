@@ -134,42 +134,34 @@ function redirecionar_pagina(){
         <h4 class="fw-bold py-3 mb-4"><Link :href="route('movimentacao')" class="text-muted fw-light">Movimentações/</Link><strong>Movimentar Património</strong></h4>
 
         <div class="card p-4 ">
+                <h5 class="mb-3"><strong for="">Informações Actual</strong></h5>
+                <div class="row">
+                    <div class="col-md-2">
+                        <img
+                            v-if="patrimonio.imagem"
+                            :src="`/storage/patrimonios/imagens/${patrimonio.imagem}`"
+                            alt="Imagem do Património"
+                            style="width:150px; height:auto; border-radius:9px"
+                        >
+                        <img
+                            v-else
+                            src="/assets/img/avatars/pitruca.webp"
+                            alt="Imagem padrão"
+                            style="width:150px; height:auto; border-radius:9px"
+                        >
+                    </div>
 
-                <div class="row g-2">
-                    <div class="col mb-2">
-                        <label for="emailLarge" class=""><strong>Património:</strong>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {{patrimonio.nome_patrimonio}}</label>
+                    <div class="col-md-10">
+                        <h6 ><strong>Património:</strong>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; {{patrimonio.nome_patrimonio}}</h6>
+                        <h6 for="emailLarge" class=""><strong>Responsável:</strong>&nbsp;&nbsp;&nbsp; {{patrimonio.responsavel}}</h6>
+                        <h6 for="emailLarge" class=""><strong>Estado:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{patrimonio.estado_patrimonio}}</h6>
+                        <h6 for="emailLarge" class=""><strong>Localização :</strong> &nbsp;&nbsp;&nbsp; {{patrimonio.localizacao}} ({{patrimonio.caminhoLocal}})</h6>
                     </div>
                 </div>
-                <div class="row g-2">
-                    <div class="col mb-2">
-                        <label for="emailLarge" class=""><strong>Responsável Actual:</strong>&nbsp;&nbsp;&nbsp; {{patrimonio.responsavel}}</label>
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col mb-2">
-                        <label for="emailLarge" class=""><strong>Estado Actual:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{patrimonio.estado_patrimonio}}</label>
-                    </div>
-                </div>
-                <div class="row g-2 ">
-                    <div class="col mb-4">
-                        <label for="emailLarge" class=""><strong>Localização Actual:</strong> &nbsp;&nbsp;&nbsp;&nbsp; {{patrimonio.localizacao}} ({{patrimonio.caminhoLocal}})</label>
-                    </div>
-                </div>
-                 <img
-                    v-if="patrimonio.imagem"
-                    :src="`/storage/patrimonios/imagens/${patrimonio.imagem}`"
-                    alt="Imagem do Património"
-                    style="width:200px; height:auto; border-radius:9px"
-                >
-                <img
-                    v-else
-                    src="/assets/img/avatars/pitruca.webp"
-                    alt="Imagem padrão"
-                    style="width:50px; height:auto; border-radius:9px"
-                >
 
-           <form @submit.prevent="submit" class="mt-6">
-
+            <hr>
+            <form @submit.prevent="submit" class="mt-6">
+                <h5 ><strong for="">Novas Informações</strong></h5>
                 <div class="row g-2 mb-3">
 
                     <div class="col mb-0">
@@ -178,7 +170,7 @@ function redirecionar_pagina(){
                         <input type="text" v-model="form.id_estado_antigo" hidden>
                         <input type="text" v-model="form.responsavel_antigo" hidden>
 
-                        <label for="dobLarge" class="">Nova Localização</label>
+                        <label for="dobLarge" class="">Localização</label>
 
                         <div class="input-group">
                             <input
@@ -202,7 +194,7 @@ function redirecionar_pagina(){
                         <small>Se nenhuma localização for seleccionada, o bem passa para a local raiz</small>
                     </div>
                     <div class="col mb-0">
-                        <label for="dobLarge" class="">Novo Estado do Património</label>
+                        <label for="dobLarge" class="">Estado do Património</label>
                        <select v-model="form.id_estado_patrimonio" class="form-select">
                             <option value="">Seleccione o estado do património</option>
 
@@ -219,7 +211,7 @@ function redirecionar_pagina(){
 
                     </div>
                      <div class="col mb-3">
-                    <label for="dobLarge" class="">Novo Responsável (Opcional)</label>
+                    <label for="dobLarge" class="">Responsável</label>
                     <select v-model="form.responsavel" class="form-select">
                         <option value="">Seleccione o novo responsável</option>
                         <option

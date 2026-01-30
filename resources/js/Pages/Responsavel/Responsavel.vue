@@ -233,13 +233,13 @@ const submitEditar = () => {
                     },
                     actionsHtml: `
                         <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
-                   
-                   
+
+
                     `
                     }"
                 @selection-changed="onSelectionChanged"
                 @datatable-delete="onDeleteRequested"
-                class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
             >
 
             <thead class="bg-gray-100 ">

@@ -97,6 +97,15 @@ class MovimentacaoController extends Controller
         }
     }
 
+    public function historico_movimentacao($patrimonio){
+
+         return Inertia::render('Movimentacao/Historico_Movimentacao',[
+            'id_patrimonio' => $patrimonio,
+            'patrim' => $this->dados_patrimonio($patrimonio)
+            //'historico' => $this->dados_movimentacoes_historico($patrimonio)
+        ]);
+    }
+
 
     //funcao que pega da base de dados todos os responsaveles
     public function buscaResponsaveis(){
@@ -114,6 +123,7 @@ class MovimentacaoController extends Controller
         $patrimonio =  DB::table('patrimonios as Patr')
             ->select(
                 'Patr.id',
+                'Patr.codigo',
                 'Patr.nome as nome_patrimonio',
                 'Patr.id_localizacao',
                 'Patr.id_responsavel',
@@ -185,69 +195,116 @@ class MovimentacaoController extends Controller
         ->make(true);
     }
 
-  public function dados_movimentacoes_patr(){
-    // IDs únicos de patrimônios com movimentações
-    $patrimonioIds = DB::table('movimentacaos as Mov')
-        ->join('patrimonios as Patr', 'Patr.id', '=', 'Mov.id_patrimonio')
-        ->where('Patr.estado', 'activo')
-        ->distinct()
-        ->pluck('Patr.id');
+    public function dados_movimentacoes_historico($id_patrimonio){
+        $query = DB::table('movimentacaos as Mov')
+            ->select(
+                'Mov.id as ordem',
+                'Patr.id',
+                'Patr.nome',
+                'Patr.codigo',
+                'Patr.imagem',
+                'Patr.origem',
+                'Patr.cor as cor_patrimonio',
+                'Mov.created_at',
+                'Mov.motivo',
+                'Patr.num_serie',
+                'Cat.nome as categoria',
+                'Est.nome as estado_patrimonio',
+                'Est2.nome as antigo_estado_patrimonio',
+                'Est.cor',
+                'Est.background',
+                'Resp.nome as responsavel',
+                'Resp2.nome as antigo_responsavel',
+                'Lo.nome as localizacao',
+                'Lo2.nome as antiga_localizacao',
+                'Lo.id as id_local',
+                'U.name as nome_utilizador',
+            )
+            ->leftJoin('patrimonios as Patr', 'Patr.id', '=', 'Mov.id_patrimonio')
+            ->leftJoin('categorias as Cat', 'Cat.id', '=', 'Patr.id_categoria')
+            ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Mov.id_estado_novo')
+            ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Mov.novo_responsavel')
+            ->leftJoin('locals as Lo', 'Lo.id', '=', 'Mov.destino')
+            ->leftJoin('estado_patrimonios as Est2', 'Est2.id', '=', 'Mov.id_estado_antigo')
+            ->leftJoin('responsavels as Resp2', 'Resp2.id', '=', 'Mov.antigo_responsavel')
+            ->leftJoin('locals as Lo2', 'Lo2.id', '=', 'Mov.origem')
+            ->leftJoin('users as U', 'U.id', '=', 'Mov.id_utilizador')
+            ->where('Patr.estado','=', 'activo')
+            ->where('Patr.id','=', $id_patrimonio)
+            ->orderBy('Mov.id', 'desc');
 
-    // Subquery para pegar a última movimentação completa de cada patrimônio
-    $ultimaMovimentacao = DB::table('movimentacaos as Mov')
-        ->whereIn('Mov.id_patrimonio', $patrimonioIds)
-        ->whereRaw('Mov.created_at = (SELECT MAX(created_at) FROM movimentacaos WHERE id_patrimonio = Mov.id_patrimonio)')
-        ->select(
-            'Mov.id_patrimonio',
-            'Mov.created_at as ultima_ocorrencia',
-            'Mov.motivo',
-            'Mov.id_estado_antigo',
-            'Mov.antigo_responsavel',
-            'Mov.origem as id_local_antigo'
-        );
+        return DataTables::of($query)
+            ->addColumn('caminhoLocal', function($patrimonio) {
+                $local = Local::find($patrimonio->id_local);
+                return $local ? $this->caminho($local) : '';
+            })
+        ->make(true);
+    }
 
-    // Query principal
-    return DB::table('patrimonios as Patr')
-        ->select(
-            'Patr.id',
-            'Patr.nome',
-            'Patr.codigo',
-            'Patr.imagem',
-            'Patr.origem',
-            'Patr.conservacao',
-            'Patr.documento',
-            'Patr.marca',
-            'Patr.cor as cor_patrimonio',
-            'Patr.num_serie',
-            'Cat.nome as categoria',
-            'Est.nome as estado_patrimonio',
-            'Est.cor',
-            'Est.background',
-            'Resp.nome as responsavel',
-            'Lo.nome as localizacao',
-            'Lo.id as id_local',
-            'MovUlt.ultima_ocorrencia',
-            'MovUlt.motivo',
-            'Resp2.nome as antigo_responsavel',
-            'Lo2.nome as antiga_localizacao',
-            'Est2.nome as antigo_estado_patrimonio'
-        )
-        ->leftJoin('categorias as Cat', 'Cat.id', '=', 'Patr.id_categoria')
-        ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Patr.id_estado_patrimonio')
-        ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Patr.id_responsavel')
-        ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao')
-        // LEFT JOIN com a subquery da última movimentação
-        ->leftJoinSub($ultimaMovimentacao, 'MovUlt', function($join){
-            $join->on('Patr.id', '=', 'MovUlt.id_patrimonio');
-        })
-        // agora pegando informações antigas via joins usando as colunas da subquery
-        ->leftJoin('estado_patrimonios as Est2', 'Est2.id', '=', 'MovUlt.id_estado_antigo')
-        ->leftJoin('responsavels as Resp2', 'Resp2.id', '=', 'MovUlt.antigo_responsavel')
-        ->leftJoin('locals as Lo2', 'Lo2.id', '=', 'MovUlt.id_local_antigo')
-        ->whereIn('Patr.id', $patrimonioIds)
-        ->orderByDesc('MovUlt.ultima_ocorrencia')
-        ->get();
-}
+
+    public function dados_movimentacoes_patr(){
+        // IDs únicos de patrimônios com movimentações
+        $patrimonioIds = DB::table('movimentacaos as Mov')
+            ->join('patrimonios as Patr', 'Patr.id', '=', 'Mov.id_patrimonio')
+            ->where('Patr.estado', 'activo')
+            ->distinct()
+            ->pluck('Patr.id');
+
+        // Subquery para pegar a última movimentação completa de cada patrimônio
+        $ultimaMovimentacao = DB::table('movimentacaos as Mov')
+            ->whereIn('Mov.id_patrimonio', $patrimonioIds)
+            ->whereRaw('Mov.created_at = (SELECT MAX(created_at) FROM movimentacaos WHERE id_patrimonio = Mov.id_patrimonio)')
+            ->select(
+                'Mov.id_patrimonio',
+                'Mov.created_at as ultima_ocorrencia',
+                'Mov.motivo',
+                'Mov.id_estado_antigo',
+                'Mov.antigo_responsavel',
+                'Mov.origem as id_local_antigo'
+            );
+
+        // Query principal
+        return DB::table('patrimonios as Patr')
+            ->select(
+                'Patr.id',
+                'Patr.nome',
+                'Patr.codigo',
+                'Patr.imagem',
+                'Patr.origem',
+                'Patr.conservacao',
+                'Patr.documento',
+                'Patr.marca',
+                'Patr.cor as cor_patrimonio',
+                'Patr.num_serie',
+                'Cat.nome as categoria',
+                'Est.nome as estado_patrimonio',
+                'Est.cor',
+                'Est.background',
+                'Resp.nome as responsavel',
+                'Lo.nome as localizacao',
+                'Lo.id as id_local',
+                'MovUlt.ultima_ocorrencia',
+                'MovUlt.motivo',
+                'Resp2.nome as antigo_responsavel',
+                'Lo2.nome as antiga_localizacao',
+                'Est2.nome as antigo_estado_patrimonio'
+            )
+            ->leftJoin('categorias as Cat', 'Cat.id', '=', 'Patr.id_categoria')
+            ->leftJoin('estado_patrimonios as Est', 'Est.id', '=', 'Patr.id_estado_patrimonio')
+            ->leftJoin('responsavels as Resp', 'Resp.id', '=', 'Patr.id_responsavel')
+            ->leftJoin('locals as Lo', 'Lo.id', '=', 'Patr.id_localizacao')
+            // LEFT JOIN com a subquery da última movimentação
+            ->leftJoinSub($ultimaMovimentacao, 'MovUlt', function($join){
+                $join->on('Patr.id', '=', 'MovUlt.id_patrimonio');
+            })
+            // agora pegando informações antigas via joins usando as colunas da subquery
+            ->leftJoin('estado_patrimonios as Est2', 'Est2.id', '=', 'MovUlt.id_estado_antigo')
+            ->leftJoin('responsavels as Resp2', 'Resp2.id', '=', 'MovUlt.antigo_responsavel')
+            ->leftJoin('locals as Lo2', 'Lo2.id', '=', 'MovUlt.id_local_antigo')
+            ->whereIn('Patr.id', $patrimonioIds)
+            ->orderByDesc('MovUlt.ultima_ocorrencia')
+            ->get();
+    }
 
 
     //localizacao

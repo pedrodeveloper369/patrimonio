@@ -62,19 +62,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //Rotas locais
     Route::get('/localizacoes', [LocalController::class, 'index'])->name('local') ;
-    Route::get('/registar-localizacao', [LocalController::class, 'index_registar'])->name('registar.local') ;
+    Route::get('/localizacoes/registar-localizacao', [LocalController::class, 'index_registar'])->name('registar.local') ;
     Route::post('/registar-local', [LocalController::class, 'registar_local'])->name('local.registar');
     Route::get('/local/dados', [LocalController::class, 'dados_local'])->name('dados.local') ;
-    Route::get('/editar-localizacao/{local}', [LocalController::class, 'index_editar'])->name('editar.local') ;
+    Route::get('/localizacoes/editar-localizacao/{local}', [LocalController::class, 'index_editar'])->name('editar.local') ;
     Route::post('/editar-local', [LocalController::class, 'editar_local'])->name('local.editar');
 
     //Rotas patrimonio
     Route::get('/patrimonios', [PatrimonioController::class, 'index'])->name('patrimonio') ;
-    Route::get('/registar-patrimonio', [PatrimonioController::class, 'index_registar'])->name('registar.patrimonio') ;
+    Route::get('/patrimonios/registar-patrimonio', [PatrimonioController::class, 'index_registar'])->name('registar.patrimonio') ;
     Route::get('/editar-patrimonio/{patrimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
     Route::post('/registar-patrimonio', [PatrimonioController::class, 'registar_patrimonio'])->name('patrimonio.registar');
     Route::get('/patrimonios/dados', [PatrimonioController::class, 'dados_patrimonios'])->name('dados.patrimonio') ;
-    Route::get('/editar-patrimonio/{parimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
+    Route::get('/patrimonios/editar-patrimonio/{parimonio}', [PatrimonioController::class, 'index_editar'])->name('editar.patrimonio') ;
     Route::post('/editar-patrimonio', [PatrimonioController::class, 'editar_patrimonio'])->name('patrimonio.editar');
     Route::post('/eliminar-patrimonio', [PatrimonioController::class, 'eliminar_patrimonio'])->name('patrimonio.eliminar');
 
@@ -84,6 +84,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/movimentar/patrimonio',[MovimentacaoController::class, 'movimentarPatrimonio'])->name('movimentar.patrimonio') ;
     Route::get('/movimentacoes/dados',[MovimentacaoController::class, 'dados_movimentacoes']);
     Route::get('/movimentacoes/dados/patrimonio',[MovimentacaoController::class, 'dados_movimentacoes_patr']);
+    Route::get('/movimentacoes/historico-movimentaçoes/patrimonio/{patrimonio}',[MovimentacaoController::class, 'historico_movimentacao'])->name('movimento.historico');
+    Route::get('/historico-movimentacoes/{id_patrimonio}',[MovimentacaoController::class, 'dados_movimentacoes_historico']);
 
     //Rotas empresa
     Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa') ;
