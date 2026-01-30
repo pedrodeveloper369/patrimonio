@@ -362,6 +362,7 @@ window.chamar_pagina_registar_local = () => {
                         <Link :href="route('editar.patrimonio', patri)" style="color:#777"><i class="menu-icon bx bx-edit-alt"></i></Link>
 
                         <Link :href="route('movimento.patrimonio', patri)" style="color:#777"> <i class="bx bx-transfer me-2"></i> </Link>
+                        <Link :href="route('movimento.historico', patri.id)" style="color:#777"> <i class="bx bx-list-ul"></i></Link>
 
                         <button
                             v-if="patri.documento"

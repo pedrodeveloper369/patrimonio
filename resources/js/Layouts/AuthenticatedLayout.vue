@@ -255,7 +255,7 @@ const showingNavigationDropdown = ref(false);
                             <li >
                                 <Link class="dropdown-item" :href="route('configuracao')">
                                     <i class="bx bx-cog me-2"></i>
-                                    <span class="align-middle">Configurações</span>
+                                    <span class="align-middle">Definições</span>
                                 </Link>
                             </li>
 
