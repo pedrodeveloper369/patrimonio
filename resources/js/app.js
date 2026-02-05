@@ -14,14 +14,13 @@ import '../../public/assets/vendor/js/helpers.js';
 import '../../public/assets/js/config.js';
 //window.config = window.config || config;
 
-import DatatableDirective from './directives/datatable';
 import $ from 'jquery';
 window.$ = window.jQuery = $; // disponibiliza globalmente
 
 import 'datatables.net-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
-const appName = 'CRM';
+const appName = 'Património';
 
 createInertiaApp({
     title: (title) => `${appName}`,
@@ -34,7 +33,6 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use(DatatableDirective)
             .component('Head', Head)
             .component('Link', Link)
             .mount(el);
