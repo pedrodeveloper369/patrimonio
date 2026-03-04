@@ -9,7 +9,7 @@ import '../../public/assets/vendor/fonts/boxicons.css';
 import '../../public/assets/vendor/css/core.css';
 
 import '../../public/assets/vendor/css/theme-default.css';
-// JS Helpers e config
+// JS Helpers e config DatatableDirective
 import '../../public/assets/vendor/js/helpers.js';
 import '../../public/assets/js/config.js';
 //window.config = window.config || config;
@@ -34,7 +34,6 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use(DatatableDirective)
             .component('Head', Head)
             .component('Link', Link)
             .mount(el);
