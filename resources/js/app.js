@@ -7,13 +7,14 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import '../../public/assets/vendor/fonts/boxicons.css';
 import '../../public/assets/vendor/css/core.css';
-import '../../public/assets/vendor/css/pages/page-auth.css';
+
 import '../../public/assets/vendor/css/theme-default.css';
 // JS Helpers e config
 import '../../public/assets/vendor/js/helpers.js';
 import '../../public/assets/js/config.js';
 //window.config = window.config || config;
 
+import DatatableDirective from './directives/datatable';
 import $ from 'jquery';
 window.$ = window.jQuery = $; // disponibiliza globalmente
 
@@ -33,6 +34,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(DatatableDirective)
             .component('Head', Head)
             .component('Link', Link)
             .mount(el);
