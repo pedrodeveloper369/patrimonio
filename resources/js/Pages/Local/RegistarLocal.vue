@@ -9,7 +9,7 @@ import LocalTree from '@/Components/LocalTree.vue'
 const users = ref([]);
 const props = defineProps({
   tipoLocal: Array,
-  caminhosLocal: Array,
+  caminhosLocal: Array, 
 });
 const tipoLocal = ref(props.tipoLocal);
 const caminhosLocal = ref(props.caminhosLocal);

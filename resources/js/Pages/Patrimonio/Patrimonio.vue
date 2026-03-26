@@ -106,13 +106,13 @@ const filterStatusAquisicao = ref('')
 // filtros e a nova lista é usada na tabela
 const patrimonios = computed(() => {
   return patrimonio.value.filter(patri => {
-    const matchesStatus = !filterStatus.value || patri.estado === filterStatus.value
-    const matchesStatusAq = !filterStatusAquisicao.value || patri.conservacao === filterStatusAquisicao.value
+    const matchesStatus = !filterStatus.value || patri.estado_patrimonio === filterStatus.value
+    //const matchesStatusAq = !filterStatusAquisicao.value || patri.conservacao === filterStatusAquisicao.value
     //const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
     const matchesResponsavel = !filterResponsavel.value || patri.responsavel === filterResponsavel.value
-    const matchesLocal = !filterLocal.value || patri.localizacao === filterLocal.value
+    //const matchesLocal = !filterLocal.value || patri.localizacao === filterLocal.value
     const matchesCategoria = !filterCategoria.value || patri.categoria === filterCategoria.value
-    return matchesStatus && matchesStatusAq && matchesResponsavel && matchesLocal && matchesCategoria
+    return matchesStatus /*&& matchesStatusAq*/ && matchesResponsavel /*&& matchesLocal*/ && matchesCategoria
   })
 })
 
@@ -217,7 +217,7 @@ window.chamar_pagina_registar_local = () => {
                         </option>
                     </select>
                 </div>
-                <div class="select-icon-wrapper equal-height">
+                <!--<div class="select-icon-wrapper equal-height">
                     <i class="bx bx-info-circle icon"></i>
                     <select v-model="filterStatusAquisicao" class="form-select form-select-sm">
                         <option value="">Estado de Aquisição</option>
@@ -226,7 +226,7 @@ window.chamar_pagina_registar_local = () => {
                          <option value="outro">Outro</option>
 
                     </select>
-                </div>
+                </div>-->
 
               <!--  <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-sitemap icon"></i>
@@ -256,7 +256,7 @@ window.chamar_pagina_registar_local = () => {
                     </select>
                 </div>
 
-                <div class="select-icon-wrapper equal-height">
+                <!--<div class="select-icon-wrapper equal-height">
                     <i class="bx bx-map icon"></i>
                     <select v-model="filterLocal" class="form-select form-select-sm">
                         <option value="">Localização</option>
@@ -268,7 +268,7 @@ window.chamar_pagina_registar_local = () => {
                             {{ local.nome }}
                         </option>
                     </select>
-                </div>
+                </div>-->
 
                  <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-category icon"></i>
