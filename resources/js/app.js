@@ -5,29 +5,23 @@ import { createInertiaApp, Head, Link, router  } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-
 import '../../public/assets/vendor/fonts/boxicons.css';
 import '../../public/assets/vendor/css/core.css';
-import '../../public/assets/vendor/css/pages/page-auth.css';
-import '../../public/assets/vendor/css/theme-default.css';
 
-// JS Helpers e config
+import '../../public/assets/vendor/css/theme-default.css';
+// JS Helpers e config DatatableDirective
 import '../../public/assets/vendor/js/helpers.js';
 import '../../public/assets/js/config.js';
 //window.config = window.config || config;
 
 import DatatableDirective from './directives/datatable';
-
-
 import $ from 'jquery';
 window.$ = window.jQuery = $; // disponibiliza globalmente
 
 import 'datatables.net-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
-//import '../../public/assets/js/dashboards-analytics.js';
-const appName = 'CRM';
-
+const appName = 'Património';
 
 createInertiaApp({
     title: (title) => `${appName}`,
@@ -40,7 +34,6 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use(DatatableDirective)
             .component('Head', Head)
             .component('Link', Link)
             .mount(el);
@@ -49,6 +42,7 @@ createInertiaApp({
         color: '#0868eeff',
     },
 });
+
 
 // Reexecuta scripts do dashboard sempre que mudar de página (ex: após login)
 router.on('navigate', async (event) => {
@@ -69,10 +63,8 @@ window.initMenu = function() {
     }
 };
 
-
 //para os scripts
 window.addEventListener('load', async () => {
-
     const loadScript = (src) => {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -93,9 +85,6 @@ window.addEventListener('load', async () => {
         await loadScript('/assets/vendor/libs/apex-charts/apexcharts.js');
         await loadScript('/assets/js/main.js');
 
-
-
-
         // executar scripts Sneat ao fim
         initSneatScripts();
 
@@ -103,7 +92,6 @@ window.addEventListener('load', async () => {
         console.error('Sneat scripts load error:', error);
     }
 });
-
 
 function initSidebarScripts() {
   if (typeof $ !== 'undefined' && $('.sidebar-left').length) {

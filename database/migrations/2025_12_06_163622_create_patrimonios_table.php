@@ -8,26 +8,39 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     */
+    */
     public function up(): void
     {
         Schema::create('patrimonios', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('código')->nullable();
+            $table->string('codigo')->nullable();
             $table->string('descricao')->nullable();
             $table->string('qtd')->nullable();
+            $table->string('imagem')->nullable();
+            $table->string('valor_compra')->nullable();
+            $table->string('origem')->nullable();
+            $table->string('conservacao')->nullable(); //novo, usado, outro
+            $table->string('documento')->nullable();
+
             $table->foreignId('id_categoria')->constrained('categorias')->onDelete('cascade');
             $table->foreignId('id_localizacao')->constrained('locals')->onDelete('cascade');
             $table->foreignId('id_estado_patrimonio')->constrained('estado_patrimonios')->onDelete('cascade');
-            $table->string('valor_compra')->nullable();
+            $table->foreignId('id_responsavel')->nullable()->constrained('responsavels')->onDelete('cascade');
+
+            $table->string('marca')->nullable();
+            $table->string('cor')->nullable();
+            $table->string('num_serie')->nullable();
+
+            $table->string('estado')->default('activo');//estado para manipular a eliminacao do patrimonio
+
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     */
+    */
     public function down(): void
     {
         Schema::dropIfExists('patrimonios');
