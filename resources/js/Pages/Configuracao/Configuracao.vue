@@ -72,7 +72,7 @@ watch(() => page.props.flash.success, (msg) => {
   <AuthenticatedLayout>
     <h4>Configurações</h4>
 
-    <div class="card mb-4">
+    <div class="card mb-4" >
 
         <div class="card-body">
             <div class="row">
@@ -89,7 +89,7 @@ watch(() => page.props.flash.success, (msg) => {
                                 <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class=""><strong style="color:#050505">Nome:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.name }}</label>
                                 </div>
 
@@ -97,7 +97,7 @@ watch(() => page.props.flash.success, (msg) => {
                             <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class="" > <strong style="color:#050505">E-mail:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.email }}</label>
                                 </div>
 
@@ -112,14 +112,14 @@ watch(() => page.props.flash.success, (msg) => {
                             <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class=""><strong style="color:#050505">Perfil:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.role }} </label>
                                 </div>
                             </div>
                             <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class=""><strong style="color:#050505">Estado:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.estado }}</label>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@ watch(() => page.props.flash.success, (msg) => {
                 </div>
             </div>
             <div class="col-lg-6">
-                <small class="text-light fw-semibold">Horizontal</small>
+
                 <div class="demo-inline-spacing mt-3">
                 <div class="list-group list-group-horizontal-md text-md-center">
                     <a

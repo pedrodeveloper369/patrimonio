@@ -1,498 +1,631 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, computed , watch, onMounted  } from "vue";
-// ==========================================
-// MOCK DE UTILIZADORES (para testes)
-// ==========================================
-const rows = ref([
-  {
-    id: 1,
-    name: "João Pedro",
-    email: "joao@example.com",
-    role: "Admin",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-01-10",
-  },
-  {
-    id: 2,
-    name: "Maria Silva",
-    email: "maria@example.com",
-    role: "User",
-    status: "Inactive",
-    plan: "Basic",
-    created_at: "2025-02-04",
-  },
-  {
-    id: 3,
-    name: "Carlos Alberto",
-    email: "carlos@example.com",
-    role: "Manager",
-    status: "Pending",
-    plan: "Enterprise",
-    created_at: "2025-02-15",
-  },
-  {
-    id: 4,
-    name: "Ana Paula",
-    email: "ana@example.com",
-    role: "User",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-03-02",
+import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
+import axios from 'axios';
+import { useForm , usePage, router  } from '@inertiajs/vue3';
+import Swal from 'sweetalert2'
+import TabelaDinamica from '@/Components/TabelaDinamica.vue';
+
+const patrimonio = ref([]);
+
+//pegando dados vindo do controller
+const props = defineProps({
+    responsavel: Array,
+    estado_patrimonio: Array,
+    localizacao: Array,
+    categoria: Array,
+    departamento: Array,
+
+});
+const responsavel = ref(props.responsavel);
+const estado_patrimonio = ref(props.estado_patrimonio);
+const localizacao = ref(props.localizacao);
+const categoria = ref(props.categoria);
+const departamento = ref(props.departamento);
+const patrimonioDocumento = ref(null);
+
+
+
+
+//declaracao do formulario e os seus dados
+const form = useForm({
+    nome: '',
+    contacto: '',
+    email: '',
+    senha: '',
+    confirma_senha: '',
+})
+
+const formEditar = useForm({
+    id: '',
+    nome_editar: '',
+    contacto_editar: '',
+    email_editar: '',
+    email_copia_editar: '',
+    estado: '',
+    senha_editar: '',
+    confirma_senha_editar: '',
+    estado: '',
+})
+
+const formEliminar = useForm({
+    ids: []
+})
+
+// Função para enviar
+const submit = () => {
+    form.post(route('patrimonio.registar'), {
+        onSuccess: () => {
+
+            listar_patrimonios()  //recarrega a tabela
+        }
+    })
+}
+
+//mensagens de registo
+const page = usePage()
+watch(() => page.props.flash.erro, (msg) => {
+  if (msg) {
+    Swal.fire({
+      toast: true,          // transforma em notificação estilo toast
+      position: 'top-end',  // canto direito superior
+      icon: 'error',
+      title: msg,
+      showConfirmButton: false, // sem botão de confirmação
+      timer: 6000,          // desaparece após 3 segundos
+      timerProgressBar: true,
+    })
   }
-  ,
-  {
-    id: 5,
-    name: "Ana Paula",
-    email: "ana@example.com",
-    role: "User",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-03-02",
+})
+
+// Mensagem de sucesso
+watch(() => page.props.flash.success, (msg) => {
+  if (msg) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: msg,
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+    })
   }
-  ,
-  {
-    id: 6,
-    name: "Ana Paula",
-    email: "ana@example.com",
-    role: "User",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-03-02",
-  }
-  ,
-  {
-    id: 7,
-    name: "Ana Paula",
-    email: "ana@example.com",
-    role: "User",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-03-02",
-  }
-  ,
-  {
-    id: 8,
-    name: "Ana Paula",
-    email: "ana@example.com",
-    role: "User",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-03-02",
-  }
-  ,
-  {
-    id: 9,
-    name: "Ana Paula",
-    email: "ana@example.com",
-    role: "User",
-    status: "Active",
-    plan: "Premium",
-    created_at: "2025-03-02",
-  },
-  {
-    id: 10,
-    name: "Maria Silva",
-    email: "maria@example.com",
-    role: "User",
-    status: "Inactive",
-    plan: "Basic",
-    created_at: "2025-02-04",
-  },
-  {
-    id: 11,
-    name: "Maria Silva",
-    email: "maria@example.com",
-    role: "User",
-    status: "Inactive",
-    plan: "Basic",
-    created_at: "2025-02-04",
-  },
-   {
-    id: 12,
-    name: "Maria Silva",
-    email: "maria@example.com",
-    role: "User",
-    status: "Inactive",
-    plan: "Basic",
-    created_at: "2025-02-04",
-  },
-]);
-
-// ==========================================
-// COLUNAS DA TABELA
-// ==========================================
-const columns = [
-  { label: "Name", key: "name" },
-  { label: "Role", key: "role" },
-  { label: "Status", key: "status" },
-  { label: "Plan", key: "plan" },
-  { label: "Created At", key: "created_at" }
-];
+})
 
 
-// ==========================================
-// ESTADOS DOS FILTROS
-// ==========================================
-const filterStatus = ref("");
-const filterRole = ref("");
-const filterPlan = ref("");
-const filterDate = ref("");
+//filtros computed
+const filterStatus = ref('')
+const filterDepartamento = ref('')
+const filterResponsavel = ref('')
+const filterLocal = ref('')
+const filterCategoria = ref('')
+const filterStatusAquisicao = ref('')
 
-const search = ref("");
-const pageSize = ref(10);
-const currentPage = ref(1);
+//funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
+// filtros e a nova lista é usada na tabela
+const patrimonios = computed(() => {
+  return patrimonio.value.filter(patri => {
+    const matchesStatus = !filterStatus.value || patri.estado_patrimonio === filterStatus.value
+    //const matchesStatusAq = !filterStatusAquisicao.value || patri.conservacao === filterStatusAquisicao.value
+    //const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
+    const matchesResponsavel = !filterResponsavel.value || patri.responsavel === filterResponsavel.value
+    //const matchesLocal = !filterLocal.value || patri.localizacao === filterLocal.value
+    const matchesCategoria = !filterCategoria.value || patri.categoria === filterCategoria.value
+    return matchesStatus /*&& matchesStatusAq*/ && matchesResponsavel /*&& matchesLocal*/ && matchesCategoria
+  })
+})
 
-const pageSizeOptions = [5,10, 20, 50];
+function handleDelete(ids) {
+  patrimonio.value = patrimonio.value.filter(u => !ids.includes(patri.id));
+}
 
-// ==========================================
-// CHECKBOX GERAL
-// ==========================================
-const selectAll = ref(false);
-const selected = ref([]);
+function handleRowAction({ action, row }) {
+  console.log(action, row);
+}
 
-function toggleSelectAll() {
-  if (selectAll.value) {
-    selected.value = rows.value.map((r) => r.id);
-  } else {
-    selected.value = [];
+//const patrimonio = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
+// Busca os dados do Laravel via rota relativa
+onMounted(async () => {
+  listar_patrimonios()
+});
+
+const listar_patrimonios = async () => {
+  try {
+    const response = await axios.get('/patrimonios/dados')
+    patrimonio.value = response.data.data || response.data
+  } catch (error) {
+    console.error('Erro ao carregar usuários:', error)
   }
 }
 
+//eliminar registo da tabela
+const deletingIds = ref([]);
+const selectedToDelete = ref([]);      // IDs
+const deleteMessage = ref("");         // Mensagem que a modal vai mostrar
+const showDeleteModal = ref(false);    // Controla a modal
 
-
-// ==========================================
-// FILTRAGEM REAL
-// ==========================================
-const filteredRows = computed(() => {
-  let result = rows.value;
-
-  if (filterStatus.value) {
-    result = result.filter(r => r.status === filterStatus.value);
-  }
-
-  if (filterRole.value) {
-    result = result.filter(r => r.role === filterRole.value);
-  }
-
-  if (filterPlan.value) {
-    result = result.filter(r => r.plan === filterPlan.value);
-  }
-
-  if (filterDate.value) {
-    result = result.filter(r => r.created_at === filterDate.value);
-  }
-
-  if (search.value) {
-    const s = search.value.toLowerCase();
-    result = result.filter(r =>
-      Object.values(r).join(" ").toLowerCase().includes(s)
-    );
-  }
-
-  return result;
-});
-
-// ==========================================
-// PAGINAÇÃO
-// ==========================================
-const paginatedRows = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value;
-  return filteredRows.value.slice(start, start + pageSize.value);
-});
-
-const totalPages = computed(() =>
-  Math.ceil(filteredRows.value.length / pageSize.value)
-);
-
-// ==== PAGINAÇÃO PROFISSIONAL COM 5 PÁGINAS POR BLOCO ====
-const maxPagesToShow = 5;
-
-const pageNumbers = computed(() => {
-  const total = totalPages.value;
-  const current = currentPage.value;
-  const maxVisiblePages = 5; // número máximo de páginas centrais visíveis
-  let pages = [];
-
-  if (total <= maxVisiblePages + 2) {
-    // poucas páginas, mostra todas
-    for (let i = 1; i <= total; i++) pages.push(i);
-  } else {
-    // sempre mostra primeira e última
-    pages.push(1);
-
-    let startPage = Math.max(current - 1, 2);
-    let endPage = Math.min(current + 1, total - 1);
-
-    // Ajustes quando perto do início ou do fim
-    if (current <= 3) {
-      startPage = 2;
-      endPage = 4;
-    } else if (current >= total - 2) {
-      startPage = total - 3;
-      endPage = total - 1;
-    }
-
-    if (startPage > 2) pages.push('...');
-    for (let i = startPage; i <= endPage; i++) pages.push(i);
-    if (endPage < total - 1) pages.push('...');
-
-    pages.push(total);
-  }
-
-  return pages;
-});
-
-
-
-
-function goToPage(p) {
-  if (p >= 1 && p <= totalPages.value) {
-    currentPage.value = p;
-  }
+const submitEliminar = () => {
+    formEliminar.post(route('patrimonio.eliminar'), {
+        onSuccess: () => {
+            $('#modalEliminar').modal('hide');
+            listar_patrimonios()  //recarrega a tabela
+        }
+    })
 }
 
-function nextPage() {
-  if (currentPage.value < totalPages.value) currentPage.value++;
+function openDeleteModal(ids) {
+    deletingIds.value = ids;
+    formEliminar.ids = ids;
+    $('#modalEliminar').modal('show');
 }
-function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
+
+//ver detalhes
+function ver_detalhes(patrimonio){
+    document.getElementById('nome').innerText = patrimonio.nome;
+    document.getElementById('codigo').innerText = patrimonio.codigo;
+    document.getElementById('qtd').innerText = patrimonio.qtd;
+    document.getElementById('custo').innerText = patrimonio.valor_compra;
+    document.getElementById('origem').innerText = patrimonio.origem;
+    document.getElementById('estado_aquisicao').innerText = patrimonio.conservacao;
+    document.getElementById('marca').innerText = patrimonio.marca;
+    document.getElementById('serie').innerText = patrimonio.num_serie;
+    document.getElementById('categoria').innerText = patrimonio.categoria;
+    document.getElementById('estado').innerText = patrimonio.estado_patrimonio;
+    document.getElementById('responsavel').innerText = patrimonio.responsavel;
+    document.getElementById('localizacao').innerText = patrimonio.localizacao +"\n( "+ patrimonio.caminhoLocal+" )";
+    document.getElementById('descricao').innerText = patrimonio.descricao;
+    document.getElementById('cor_patrimonio').innerText = patrimonio.cor_patrimonio;
+    document.getElementById('data_registo').innerText = patrimonio.created_at;
 }
 
-watch(pageSize, () => {
-  currentPage.value = 1;
-});
 
-watch(filteredRows, () => {
-  if (currentPage.value > totalPages.value) {
-    currentPage.value = 1;
-  }
-});
-
-// Sempre que `selected` mudar, atualiza `selectAll`
-watch(selected, (val) => {
-  if (val.length === rows.value.length) {
-    selectAll.value = true;
-
-  } else if (val.length > 0 && val.length < rows.value.length){
-
-  } else{
-    selectAll.value = false;
-
-  }
-});
-
-function deleteSelected() {
-  if (selected.value.length === 0) return;
-
-  // Remove elementos selecionados
-  rows.value = rows.value.filter(row => !selected.value.includes(row.id));
-
-  // Limpa seleção
-  selected.value = [];
-  selectAll.value = false;
+function abrirModalFicheiro(documento) {
+    this.patrimonioDocumento = documento;
 }
+
+//para rota
+window.chamar_pagina_registar = () => {
+  router.visit(route('registar.patrimonio'));
+};
+
+//para rota
+window.chamar_pagina_registar_local = () => {
+  router.visit(route('editar.patrimonio'));
+};
+
+
 
 
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <div class="card p-4 ">
-            <h4>Gerenciamento de Leads</h4>
-            <!-- Controles: filtros + ações / botão eliminar -->
-            <div class="d-flex flex-column flex-md-row align-items-start mt-3 w-100 gap-2">
-
-            <!-- Botão Eliminar (aparece apenas se houver seleção) -->
-            <div v-if="selected.length > 0" class="ms-auto">
-                <button
-                @click="deleteSelected"
-                class="btn btn-danger btn-sm"
-                >
-                Eliminar ({{ selected.length }})
-                </button>
-            </div>
-
-            <!-- Toda a seção de filtros + pesquisa + botões, ocultada se houver seleção -->
-            <template v-else>
-
-                <!-- Filtros -->
-                <div class="d-flex flex-column flex-md-row gap-2 w-100">
-                    <select v-model="filterStatus" class="form-select search form-select-sm equal-height">
-                        <option value="">Status</option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                        <option>Pending</option>
-                    </select>
-
-                    <select v-model="filterRole" class="form-select form-select-sm equal-height">
-                        <option value="">Role</option>
-                        <option>Admin</option>
-                        <option>User</option>
-                        <option>Manager</option>
-                    </select>
-
-                    <select v-model="filterPlan" class="form-select form-select-sm equal-height">
-                        <option value="">Plan</option>
-                        <option>Basic</option>
-                        <option>Premium</option>
-                        <option>Enterprise</option>
-                    </select>
-                </div>
-
-                <!-- Ações: pesquisa, pageSize, Exportar, Adicionar -->
-                <div class="d-flex flex-column flex-md-row gap-2 w-100 mt-2 mt-md-0 ms-md-auto">
-                    <select v-model="pageSize" class="form-select form-select-sm equal-height small-width">
-                        <option v-for="opt in pageSizeOptions" :key="opt" :value="opt">
-                            {{ opt }}
+        <h4 class=""><strong>Patrimónios</strong></h4>
+         <div class="card  p-4 mb-2">
+            <div class="d-flex flex-column flex-md-row gap-2 w-100">
+                <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-info-circle icon"></i>
+                    <select v-model="filterStatus" class="form-select form-select-sm">
+                        <option value="">Estado</option>
+                         <option
+                            v-for="estado in estado_patrimonio"
+                            :key="estado.id"
+                            :value="estado.nome"
+                        >
+                            {{ estado.nome }}
                         </option>
                     </select>
+                </div>
+                <!--<div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-info-circle icon"></i>
+                    <select v-model="filterStatusAquisicao" class="form-select form-select-sm">
+                        <option value="">Estado de Aquisição</option>
+                         <option value="novo">Novo</option>
+                         <option value="usado">Usado</option>
+                         <option value="outro">Outro</option>
 
-                    <input
-                        v-model="search"
-                        placeholder="Pesquisar"
-                        class="form-control form-control-sm equal-height"
-                    />
+                    </select>
+                </div>-->
 
-                    <button class="btn btn-outline-secondary btn-sm equal-height">
-                        Exportar
-                    </button>
+              <!--  <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-sitemap icon"></i>
+                    <select v-model="filterDepartamento" class="form-select form-select-sm">
+                        <option value="">Departamento</option>
+                        <option
+                            v-for="depa in departamento"
+                            :key="depa.id"
+                            :value="depa.nome"
+                        >
+                            {{ depa.nome }}
+                        </option>
+                    </select>
+                </div>-->
 
-                    <button class="btn btn-primary btn-sm equal-height" style="min-width: 90px;">
-                        + Adicionar
-                    </button>
+                <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-user icon"></i>
+                    <select v-model="filterResponsavel" class="form-select form-select-sm">
+                        <option value="">Responsável</option>
+                         <option
+                            v-for="respo in responsavel"
+                            :key="respo.id"
+                            :value="respo.nome"
+                        >
+                            {{ respo.nome }}
+                        </option>
+                    </select>
                 </div>
 
-            </template>
+                <!--<div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-map icon"></i>
+                    <select v-model="filterLocal" class="form-select form-select-sm">
+                        <option value="">Localização</option>
+                        <option
+                            v-for="local in localizacao"
+                            :key="local.id"
+                            :value="local.nome"
+                        >
+                            {{ local.nome }}
+                        </option>
+                    </select>
+                </div>-->
+
+                 <div class="select-icon-wrapper equal-height">
+                    <i class="bx bx-category icon"></i>
+                    <select v-model="filterCategoria" class="form-select form-select-sm">
+                        <option value="">Categoria</option>
+                         <option
+                            v-for="cate in categoria"
+                            :key="cate.id"
+                            :value="cate.nome"
+                        >
+                            {{ cate.nome }}
+                        </option>
+                    </select>
+                </div>
 
             </div>
+
+        </div>
+
+        <div class="card p-4 " >
+            <!--<button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
+                           -->
+
             <div class="table-responsive text-nowrap mt-3">
-                <!--  TABELA -->
-                <table class="min-w-full  mt-6 text-sm" style="text-align:lef">
-                    <thead class="bg-gray-100 ">
-                        <tr class="border-b">
-                        <th class="py-3 px-2" >
-                            <input class=""  ref="headerCheckbox" type="checkbox" v-model="selectAll" @change="toggleSelectAll" style="border-radius:20%"/>
-                        </th>
+                <table v-datatable="{datatableOptions, defaultPageSize: 10,
+                        deleteAction: (selectedIds) => {
+                            //chama modal
+                            openDeleteModal(selectedIds);
+                        },
+                        actionsHtml: `
 
-                        <th v-for="col in columns" :key="col.key" class="py-3 px-2 font-semibold text-gray-600">
-                            {{ col.label }}
-                        </th>
+                            <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
 
-                        <th class="py-3 px-2 font-semibold text-gray-600">Actions</th>
-                        </tr>
-                    </thead>
+                        `
+                        }"
+                    @selection-changed="onSelectionChanged"
+                    @datatable-delete="onDeleteRequested"
+                     @datatable-action="onDatatableAction"
+                    class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
+                >
 
-                    <tbody>
-                        <tr v-for="row in paginatedRows" :key="row.id"  :class="{ 'bg-blue-100': selected.includes(row.id) }" class="border-b hover:bg-gray-50">
+                <thead class="bg-gray-100 ">
+                    <tr>
+                    <th></th>
+                    <th>Imagem</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Responsável</th>
+                    <th>Estado</th>
+                    <th>Data de Registo</th>
+                    <th>Ações</th>
+                    </tr>
+                </thead>
 
-                            <td class="p-3 text-left">
-                                <input type="checkbox" :value="row.id" v-model="selected" style="border-radius:20%"/>
-                            </td>
+                <tbody>
+                    <tr v-for="patri in patrimonios" :key="patri.id" :data-id="patri.id">
+                    <td></td>
+                    <td>
+                        <img
+                            v-if="patri.imagem"
+                            :src="`/storage/patrimonios/imagens/${patri.imagem}`"
+                            alt="Imagem do Património"
+                            style="width:50px; height:auto; border-radius:9px"
+                        >
+                        <img
+                            v-else
+                            src="/assets/img/avatars/pitruca.webp"
+                            alt="Imagem padrão"
+                            style="width:50px; height:auto; border-radius:9px"
+                        >
+                    </td>
 
-                            <!-- NAME + EMAIL -->
-                            <td class="p-3 text-left">
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-semibold text-gray-800">{{ row.name }}</span>
-                                    <span class="text-xs text-gray-500">{{ row.email }}</span>
-                                </div>
-                            </td>
+                    <td><strong style="color: #212529 !important;">{{ patri.nome }} </strong> <br></td>
+                    <td>{{ patri.categoria }}</td>
+                    <td>{{ patri.responsavel }}</td>
+                    <td >
+                        <span
+                            class="px-2 py-1 text-xs font-semibold rounded"
+                             :style="{ backgroundColor: patri.background, color: patri.cor }"
 
-                            <!-- ROLE -->
-                            <td class="p-3 text-left">
-                                <span class="px-2 py-1 text-xs rounded text-gray-700">
-                                    {{ row.role }}
-                                </span>
-                            </td>
+                        >
+                            {{ patri.estado_patrimonio }}
+                        </span>
 
-                            <!-- STATUS -->
-                            <td class="p-3 text-left">
-                                <span
-                                    class="px-2 py-1 text-xs font-semibold rounded"
-                                    :class="{
-                                    'bg-green-100 text-green-700': row.status === 'Active',
-                                    'bg-red-100 text-red-700': row.status === 'Inactive',
-                                    'bg-yellow-100 text-yellow-700': row.status === 'Pending',
-                                    }"
-                                >
-                                    {{ row.status }}
-                                </span>
-                            </td>
+                    </td>
 
-                            <!-- PLAN -->
-                            <td class="p-3 text-left">
-                                <span class="px-2 py-1 text-xs rounded">
-                                    {{ row.plan }}
-                                </span>
-                            </td>
+                    <td class="date-cell">{{ new Date(patri.created_at).toLocaleDateString() }}</td>
 
-                            <!-- CREATED AT -->
-                            <td class="p-3 text-left">
-                                <span class="text-xs text-gray-600">{{ row.created_at }}</span>
-                            </td>
+                    <td>
+                        <button class="" @click="ver_detalhes(patri)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                        <Link :href="route('editar.patrimonio', patri)" style="color:#777"><i class="menu-icon bx bx-edit-alt"></i></Link>
 
-                            <td class="p-3 text-gray-700 flex gap-3">
-                                <button >View</button>
-                                <button >Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
+                        <Link :href="route('movimento.patrimonio', patri)" style="color:#777"> <i class="bx bx-transfer me-2"></i> </Link>
+                        <Link :href="route('movimento.historico', patri.id)" style="color:#777"> <i class="bx bx-list-ul"></i></Link>
+
+                        <button
+                            v-if="patri.documento"
+                            class=""
+                             @click="abrirModalFicheiro(patri.documento)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalficheiro"
+                        >
+                            <i class="bx bx-file me-2"></i>
+                        </button>
+
+                    </td>
+
+                    </tr>
+                </tbody>
                 </table>
-                <!-- PAGINAÇÃO FINAL -->
-                <div class="flex items-center justify-between mt-6 px-2">
+            </div>
 
-                    <!-- TOTAL DE REGISTOS (ESQUERDA) -->
-                    <div class="text-gray-600 text-sm">
-                        Mostrando
-                        <strong>{{ paginatedRows.length }}</strong>
-                        de
-                        <strong>{{ filteredRows.length }}</strong>
-                        registos
+        </div>
+
+        <!--MODAL ELIMINAR-->
+        <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true" >
+            <div class="modal-dialog modal-sm" role="document" >
+                <div class="modal-content" style="border:1px solid #debbb3">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar Eliminação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
+                    <form @submit.prevent="submitEliminar">
+                        <input type="hidden" v-model="formEliminar.ids">
 
+                        <div class="modal-body">
+                            Tem certeza que deseja eliminar {{ deletingIds.length }} itens?
+                        </div>
 
-                <!-- CONTROLES (DIREITA) -->
-                <div class="flex items-center gap-1">
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-danger btn-sm" type="submit">
+                                 {{ submitEliminar.processing ? 'Eliminando...' : 'Eliminar' }}
+                            </button>
+                        </div>
+                    </form>
 
-                    <!-- Anterior -->
-                    <button
-                    @click="prevPage"
-                    :disabled="currentPage === 1"
-                    class="px-3 py-1 border rounded disabled:opacity-40"
-                    >
-                    «
-                    </button>
-
-                    <!-- Números das páginas -->
-                    <button
-                    v-for="p in pageNumbers"
-                    :key="p"
-                    @click="goToPage(p)"
-                    class="px-3 py-1 border rounded"
-                    :class="p === currentPage ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'"
-                    >
-                    {{ p }}
-                    </button>
-
-                    <!-- Próxima -->
-                    <button
-                    @click="nextPage"
-                    :disabled="currentPage === totalPages"
-                    class="px-3 py-1 border rounded disabled:opacity-40"
-                    >
-                    »
-                    </button>
-
-                </div>
                 </div>
             </div>
         </div>
+
+        <!--MODAL DETALHE-->
+        <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="border:1px solid #debbb3">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
+                        <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Nome</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="nome"></label>
+                            </div>
+                        </div>
+                          <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Código</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="codigo"></label>
+                            </div>
+                        </div>
+                          <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Série</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="serie"></label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Cor</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="cor_patrimonio"></label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Marca</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="marca"></label>
+                            </div>
+                        </div>
+                          <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Quantidade</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="qtd"></label>
+                            </div>
+                        </div>
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Custo</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="custo"></label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Origem</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="origem"></label>
+                            </div>
+                        </div>
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label" >Categoria</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="categoria"></label>
+                            </div>
+                        </div>
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label" >Responsavel</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="responsavel"></label>
+                            </div>
+                        </div>
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Estado</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="estado"></label>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Estado de Aquisição</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="estado_aquisicao"></label>
+                            </div>
+                        </div>
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Localização</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="localizacao"></label>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label" >Data de Registo</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="data_registo"></label>
+                            </div>
+                        </div>
+
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Descrição</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="descricao"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
+                        Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!--MODAL FICHEIRO-->
+        <div class="modal fade" id="modalficheiro" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="border:1px solid #debbb3">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Documento</h5>
+                        <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <iframe
+                            :src="`/storage/patrimonios/documentos/${patrimonioDocumento}`"
+                            width="100%"
+                            height="700px"
+                            frameborder="0"
+                        ></iframe>
+                        <p class="mt-2">
+                            <a :href="`/storage/${patrimonioDocumento}`" target="_blank">
+                                Abrir em nova aba
+                            </a>
+                        </p>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
+                        Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </AuthenticatedLayout>
 </template>
 
 <style scoped>
+.select-icon-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-icon-wrapper select {
+    padding-left: 32px !important; /* espaço para o ícone */
+}
+
+.select-icon-wrapper .icon {
+    position: absolute;
+    left: 15px;
+    top: 60%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #6c757d; /* cinza bootstrap */
+    pointer-events: none;
+}
+
+.equal-height {
+    height: 32px; /* igual ao form-select-sm */
+}
 
 </style>
+
+
+
