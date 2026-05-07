@@ -148,14 +148,14 @@ function redirecionar_pagina(){
 
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
-                        <label for="emailLarge" class="">Nome do Património</label>
+                        <label for="emailLarge" class="">Nome do Património *</label>
                         <input type="text" v-model="form.nome" class="form-control" />
                         <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
                             {{ form.errors.nome }}
                         </div>
                     </div>
                     <div class="col mb-0">
-                        <label for="dobLarge" class="">Código</label>
+                        <label for="dobLarge" class="">Código *</label>
                         <input type="text" v-model="form.codigo" class="form-control"  />
                         <div v-if="form.errors.codigo" class="text-red-500 text-sm mt-1">
                             {{ form.errors.codigo }}
@@ -179,7 +179,7 @@ function redirecionar_pagina(){
                         <input type="text" v-model="form.origem" class="form-control" />
                     </div>
                     <div class="col mb-0">
-                        <label for="dobLarge" class="">Conservação</label>
+                        <label for="dobLarge" class="">Conservação *</label>
                         <select v-model="form.conservacao" class="form-select">
                             <option value="">Seleccione o estado de aquisição</option>
                             <option value="Novo" >Novo</option>
@@ -194,7 +194,7 @@ function redirecionar_pagina(){
 
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
-                        <label for="emailLarge" class="">Categoria</label>
+                        <label for="emailLarge" class="">Categoria *</label>
                         <select v-model="form.id_categoria" class="form-select">
                             <option value="">Seleccione a categoria</option>
 
@@ -237,7 +237,7 @@ function redirecionar_pagina(){
                         <small>Se nenhuma localização for seleccionada, o bem passa para a local raiz</small>
                     </div>
                     <div class="col mb-0">
-                        <label for="dobLarge" class="">Estado do Património</label>
+                        <label for="dobLarge" class="">Estado do Património *</label>
                        <select v-model="form.id_estado_patrimonio" class="form-select">
                             <option value="">Seleccione o estado do património</option>
 
