@@ -22,7 +22,7 @@ class DashboardController extends Controller
             'localTotal' => Local::count(),
             'categoriaTotal' => Categoria::count(),
             'responsavelTotal' => Responsavel::count(),
-            'patrimonioTotal' => Patrimonio::count(),
+            'patrimonioTotal' => Patrimonio::where('estado','activo')->count(),
             'movimentacaoTotal' => Movimentacao::count(),
         ]);
     }
