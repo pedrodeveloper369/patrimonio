@@ -56,7 +56,7 @@ const showingNavigationDropdown = ref(false);
 
                         v-if="$page.props.auth.permissions.includes('movimentacoes')"
                     >
-                        <Link class="menu-link" :href="route('movimentacao')"  >
+                        <Link class="menu-link"><!-- :href="route('movimentacao')"-->
                             <i class="bx bx-transfer me-2"></i>
                             <strong>Movimentações</strong>
                         </Link>
