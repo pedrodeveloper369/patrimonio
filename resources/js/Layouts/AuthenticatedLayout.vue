@@ -190,7 +190,7 @@ const showingNavigationDropdown = ref(false);
                             <strong>Dados da Empresa</strong>
                         </Link>
                     </li>-->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Conta</span></li>
+                    <li v-if="$page.props.auth.permissions.includes('utilizadores')" class="menu-header small text-uppercase"><span class="menu-header-text">Conta</span></li>
 
 
                     <li :class="['menu-item', route().current('users') ? 'active' : '']"
