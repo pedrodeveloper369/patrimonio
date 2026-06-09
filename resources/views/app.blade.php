@@ -12,7 +12,7 @@
         <!-- Configuração do template (temas, cores, layout) -->
         <script src="{{asset('assets/js/config.js')}}"></script>
         <!-- Favicon icon
-        <link rel="icon" href="{{asset('assets/img/favicon/favicon.web')}}" type="image/x-icon">
+        <link rel="icon" href="{{asset('assets/img/favicon/favicon.jpeg')}}" type="image/x-icon">
 -->
         <!-- Scripts -->
         @routes
