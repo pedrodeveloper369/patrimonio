@@ -348,6 +348,7 @@ class PatrimonioController extends Controller
                 'origem.required' => 'A origem é obrigatória.',
                 'conservacao.required' => 'O conservacao é obrigatório.',
                 'id_categoria.required' => 'A categoria é obrigatório.',
+                'marca.required' => 'A marca é obrigatório.',
                 'id_estado_patrimonio.required' => 'O estado é obrigatório.',
                 'descricao.min' => 'A descriçãó deve ter pelo menos 3 caracteres.',
                 'documento.required' => 'O documento é obrigatório.',
