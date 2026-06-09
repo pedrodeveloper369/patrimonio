@@ -17,7 +17,7 @@ const showingNavigationDropdown = ref(false);
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme " >
                 <div class="app-brand demo mt-2">
                     <div class="col-md-4 col-12 mb-md-0">
-                        <img src="/assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
+                        <img src="/assets/img/avatars/pitruca.jpeg" alt class="h-auto rounded-circle" />
                     </div>
                 </div>
                 <hr>
@@ -238,7 +238,7 @@ const showingNavigationDropdown = ref(false);
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="/assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                                    <img src="/assets/img/avatars/pitruca.jpeg" alt class="w-px-40 h-auto rounded-circle" />
                                 </div>
                             </a>
                         <ul class="dropdown-menu dropdown-menu-end">

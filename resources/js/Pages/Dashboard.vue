@@ -316,7 +316,7 @@ function deleteSelected() {
                     <div class="d-flex align-items-end row">
                       <div class="col-sm-8">
                         <div class="card-body" >
-                          <img src="assets/img/avatars/pitruca.webp" style="height:150px"/>
+                          <img src="assets/img/avatars/pitruca.jpeg" style="height:150px"/>
                         </div>
                       </div>
 
@@ -476,7 +476,7 @@ function deleteSelected() {
                                 >
                                 <img
                                     v-else
-                                    src="/assets/img/avatars/pitruca.webp"
+                                    src="/assets/img/avatars/pitruca.jpeg"
                                     alt="Imagem padrão"
                                     style="width:50px; height:auto; border-radius:9px"
                                 >
