@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('estado_patrimonios', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
+            $table->string('cor');
+             $table->string('background');
             $table->timestamps();
         });
     }

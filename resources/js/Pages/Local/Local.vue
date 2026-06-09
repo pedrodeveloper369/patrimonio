@@ -2,30 +2,34 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ref, onMounted, computed, onUnmounted, watch  } from "vue";
 import axios from 'axios';
-import { useForm , usePage } from '@inertiajs/vue3';
+import { useForm , usePage, router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2'
 
-const users = ref([]);
+const local = ref([]);
+
+//pegando dados vindo do controller
+const props = defineProps({
+  tipoLocal: Array,
+  locais: Array,
+});
+const tipoLocal = ref(props.tipoLocal);
+const locais = ref(props.locais);
+
 
 //declaracao do formulario e os seus dados
 const form = useForm({
     nome: '',
     contacto: '',
-    email: '',
-    senha: '',
-    confirma_senha: '',
+    departamento: '',
+    cargo: '',
 })
 
 const formEditar = useForm({
     id: '',
-    nome_editar: '',
-    contacto_editar: '',
-    email_editar: '',
-    email_copia_editar: '',
-    estado: '',
-    senha_editar: '',
-    confirma_senha_editar: '',
-    estado: '',
+    nome: '',
+    contacto: '',
+    departamento: '',
+    cargo: '',
 })
 
 const formEliminar = useForm({
@@ -34,17 +38,18 @@ const formEliminar = useForm({
 
 // Função para enviar
 const submit = () => {
-    form.post(route('utilizador.registar'), {
+    form.post(route('local.registar'), {
         onSuccess: () => {
             $('#modalRegistar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_locais()  //recarrega a tabela
         }
     })
 }
 
 //mensagens de registo
 const page = usePage()
+
 watch(() => page.props.flash.erro, (msg) => {
   if (msg) {
     Swal.fire({
@@ -81,56 +86,40 @@ function resetModal() {
     form.clearErrors()
 }
 
-onMounted(() => {
-    const modalEl = document.getElementById('modalRegistar')
-    modalEl.addEventListener('hidden.bs.modal', resetModal)
-})
 
 //filtros computed
-const filterStatus = ref('')
-const filterRole = ref('')
+const filterLocal = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
-
-const filteredUsers = computed(() => {
-  return users.value.filter(u => {
-    const matchesStatus = !filterStatus.value || u.estado === filterStatus.value
-    const matchesRole   = !filterRole.value || u.role === filterRole.value
-    return matchesStatus && matchesRole /*&& matchesSearch*/
+const filteredLocalizacao = computed(() => {
+  return local.value.filter(local => {
+    const matchesLocal = !filterLocal.value || local.tipo === filterLocal.value
+    return matchesLocal
   })
 })
 
 
-
-const columns = [
-  { label: 'Nome', key: 'name' },
-  { label: 'Contacto', key: 'contacto' },
-  { label: 'Perfil', key: 'role' },
-  { label: 'Status', key: 'status' },
-  { label: 'Criado em', key: 'created_at' },
-];
-
 function handleDelete(ids) {
-  users.value = users.value.filter(u => !ids.includes(u.id));
+  local.value = local.value.filter(u => !ids.includes(u.id));
 }
 
 function handleRowAction({ action, row }) {
   console.log(action, row);
 }
 
-//const users = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
+//const local = ref(usePage().props.value.query);  caso os dados sao passados diretos na view
 // Busca os dados do Laravel via rota relativa
 onMounted(async () => {
-  listar_utilizadores()
+  listar_locais()
 });
 
-const listar_utilizadores = async () => {
+const listar_locais = async () => {
   try {
-    const response = await axios.get('/utilizadores/dados')
-    users.value = response.data.data || response.data
+    const response = await axios.get('/local/dados')
+    local.value = response.data.data || response.data
   } catch (error) {
-    console.error('Erro ao carregar usuários:', error)
+    console.error('Erro ao carregar locais:', error)
   }
 }
 
@@ -141,14 +130,13 @@ const deleteMessage = ref("");         // Mensagem que a modal vai mostrar
 const showDeleteModal = ref(false);    // Controla a modal
 
 const submitEliminar = () => {
-    formEliminar.post(route('utilizador.eliminar'), {
+    formEliminar.post(route('local.eliminar'), {
         onSuccess: () => {
             $('#modalEliminar').modal('hide');
-            listar_utilizadores()  //recarrega a tabela
+            listar_locais()  //recarrega a tabela
         }
     })
 }
-
 
 function openDeleteModal(ids) {
     deletingIds.value = ids;
@@ -156,114 +144,63 @@ function openDeleteModal(ids) {
     $('#modalEliminar').modal('show');
 }
 
-
 //ver detalhes
-function ver_detalhes(utilizador){
-
-    document.getElementById('nome').innerText = utilizador.name;
-    document.getElementById('email').innerText = utilizador.email;
-    document.getElementById('contacto').innerText = utilizador.contacto;
-    document.getElementById('perfil').innerText = utilizador.role;
-    document.getElementById('estado').innerText = utilizador.estado;
-    document.getElementById('data_registo').innerText = utilizador.created_at;
-
+function ver_detalhes(local){
+    document.getElementById('nome').innerText = local.nome;
+    document.getElementById('tipo').innerText = local.tipo;
+    document.getElementById('localizacao').innerText = local.caminho_completo;
 }
 
-//editar utilizador
-function editar_utilizador(utilizador){
+//editar local
+function editar_local(local){
     formEditar.reset(); // limpa tudo corretamente
-
-    formEditar.id = utilizador.id;
-    formEditar.nome_editar = utilizador.name;
-    formEditar.estado = utilizador.estado;
-    formEditar.contacto_editar = utilizador.contacto;
-    formEditar.email_editar = utilizador.email;
-    formEditar.email_copia_editar = utilizador.email;
-    formEditar.senha_editar =  utilizador.password;   // opcional
-    formEditar.confirma_senha_editar =  utilizador.password; // opcional
+    formEditar.id = local.id;
+    formEditar.nome = local.nome;
+    formEditar.contacto = local.contacto;
+    formEditar.departamento = local.id_departamento;
+    formEditar.cargo = local.id_cargo;
 }
 
 // Função para enviar
 const submitEditar = () => {
-    formEditar.post(route('utilizador.editar'), {
+    formEditar.post(route('local.editar'), {
         onSuccess: () => {
             $('#modalEditar').modal('hide');
             resetModal()       // reseta o formulário
-            listar_utilizadores()  //recarrega a tabela
+            listar_locais()  //recarrega a tabela
         }
     })
 }
 
-//funcao que envia os ids para o back para eliminar
-/*async function confirmDelete() {
-    //fecha  a modal
-    $('#modalEliminar').modal('hide');
-
-    try {
-        await axios.post('/utilizadores/delete', { ids: deletingIds.value });
-
-        // Atualiza a tabela
-        listar_utilizadores();
-
-        // Limpa arrays
-        alert(deletingIds.value );
-        deletingIds.value = [];
-
-        selectedToDelete.value = [];
-        desmarcartabela();
-
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Eliminação bem sucedida',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-
-    } catch (error) {
-        console.error(error); // opcional para debugging
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: error.response?.data?.message || 'Ocorreu um erro ao eliminar',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-    }
-}*/
+//para rota
+window.chamar_pagina_registar_local = () => {
+  router.visit(route('registar.local'));
+};
 
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <h4 class=""><strong>Local</strong></h4>
+        <h4 class=""><strong>Localizações </strong></h4>
          <div class="card  p-4 mb-2">
 
            <div class="d-flex flex-column flex-md-row gap-2 w-100">
 
                 <!-- Status -->
                 <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-filter icon"></i>
-                    <select v-model="filterStatus" class="form-select form-select-sm">
-                        <option value="">Estado</option>
-                        <option>Activo</option>
-                        <option>Inactivo</option>
+                    <i class="bx bx-sitemap icon"></i>
+                    <select v-model="filterLocal" class="form-select form-select-sm">
+                        <option value="">Tipo de Localização</option>
+                        <option
+                            v-for="tlocal in tipoLocal"
+                            :key="tlocal.id"
+                            :value="tlocal.nome"
+                        >
+                            {{ tlocal.nome }}
+                        </option>
                     </select>
                 </div>
 
-                <!-- Role -->
-                <div class="select-icon-wrapper equal-height">
-                    <i class="bx bx-user icon"></i>
-                    <select v-model="filterRole" class="form-select form-select-sm">
-                        <option value="">Perfil</option>
-                        <option>Admin</option>
-                        <option>Gestor</option>
-                    </select>
-                </div>
             </div>
 
 
@@ -278,46 +215,48 @@ const submitEditar = () => {
                         openDeleteModal(selectedIds);
                     },
                     actionsHtml: `
-                        <button class='btn btn-primary btn-sm' id='btn-add'  data-bs-toggle='modal' data-bs-target='#modalRegistar'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
+                        <button onclick='window.chamar_pagina_registar_local()'    class='btn btn-primary btn-sm' id='btn-add' ><i class='menu-icon bx bx-plus'></i> Adicionar</button>
+
+
                     `
                     }"
                 @selection-changed="onSelectionChanged"
                 @datatable-delete="onDeleteRequested"
-                class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
             >
 
             <thead class="bg-gray-100 ">
                 <tr>
-                <th></th>
-                <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+                <th hidden></th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                 <th>Estado</th>
+                <th>Localização</th>
+
                 <th>Ações</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr v-for="u in filteredUsers" :key="u.id" :data-id="u.id">
-                <td></td>
-                <td><strong style="color: #212529 !important;">{{ u.name }} </strong> <br> {{ u.email }}</td>
-                <td>{{ u.contacto }}</td>
-                <td>{{ u.role }}</td>
+                <tr v-for="local in filteredLocalizacao" :key="local.id" :data-id="local.id">
+                <td hidden></td>
+                <td class="p-3" ><strong style="color: #212529 !important;">{{ local.nome }} </strong> </td>
+                <td>{{ local.tipo }}</td>
                 <td>
-                     <span
+                    <span
                         class="px-2 py-1 text-xs font-semibold rounded"
                         :class="{
-                        'bg-green-100 text-green-700': u.estado === 'Activo',
-                        'bg-red-100 text-red-700': u.estado === 'Inactivo',
-                        //'bg-yellow-100 text-yellow-700': u.estado === 'Pending',
+                        'bg-green-100 text-green-700': local.estado === 'Activo',
+                        'bg-red-100 text-red-700': local.estado === 'Inactivo',
                         }"
                     >
-                        {{ u.estado }}
+                        {{ local.estado }}
                     </span>
-
                 </td>
-
-                <td class="date-cell">{{ new Date(u.created_at).toLocaleDateString() }}</td>
+                <td>{{ local.localizacao }}</td>
                 <td>
-                    <button class="" @click="ver_detalhes(u)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
-                    <button class=""  @click="editar_utilizador(u)"  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class="menu-icon bx bx-edit-alt"></i></button>
+                    <button class="" @click="ver_detalhes(local)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
+                    <Link :href="route('editar.local', local)" style="color:#777" ><i class="menu-icon bx bx-edit-alt"></i></Link>
                 </td>
                 </tr>
             </tbody>
@@ -355,185 +294,12 @@ const submitEditar = () => {
             </div>
         </div>
 
-
-        <!--MODAL REGISTAR-->
-        <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Registar Utilizador</h5>
-                        <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        ></button>
-                    </div>
-                    <form @submit.prevent="submit">
-                        <div class="modal-body">
-
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.nome }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="form.errors.contacto" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.contacto }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input type="text" v-model="form.email" class="form-control" placeholder="xxxx@xxx.xx" />
-                                    <div v-if="form.errors.email" class="text-red-500 text-sm mt-1">
-                                        {{ form.errors.email }}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input type="password" v-model="form.senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.senha }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input type="password" v-model="form.confirma_senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.confirma_senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.confirma_senha }}
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="form.processing">
-                                {{ form.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
-                </div>
-            </div>
-        </div>
-
-        <!--MODAL EDITAR-->
-        <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Utilizador</h5>
-                        <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        ></button>
-                    </div>
-                    <form @submit.prevent="submitEditar">
-                        <div class="modal-body">
-
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input id="nome_edit"  type="text" v-model="formEditar.nome_editar" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="formEditar.errors.nome_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.nome_editar }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input id="contacto_edit" type="text" v-model="formEditar.contacto_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="formEditar.errors.contacto_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.contacto_editar }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Estado</label>
-                                       <select v-model="formEditar.estado" class="form-select">
-                                            <option value="Activo">Activar</option>
-                                            <option value="Inactivo">Desactivar</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input id="email_edit" type="text" v-model="formEditar.email_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                            <input id="email_copia_edit" type="hidden" v-model="formEditar.email_copia_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-
-                                    <div v-if="formEditar.errors.email_editar" class="text-red-500 text-sm mt-1">
-                                        {{ formEditar.errors.email_editar }}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input id="senha_edit" type="password" v-model="formEditar.senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.senha_editar }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input id="confirmar_senha_edit" type="password" v-model="formEditar.confirma_senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.confirma_senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.confirma_senha_editar }}
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="formEditar.processing">
-                                {{ formEditar.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
-                </div>
-            </div>
-        </div>
-
         <!--MODAL DETALHE-->
         <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes do Utilizador</h5>
+                        <h5 class="modal-title" id="exampleModalLabel3">Detallhes da Localização</h5>
                         <button
                         type="button"
                         class="btn-close"
@@ -553,44 +319,21 @@ const submitEditar = () => {
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Email</label>
+                                <label for="emailLarge" class="form-label" >Tipo de Localização</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="email"></label>
+                                <label for="dobLarge" class="form-label" id="tipo"></label>
                             </div>
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Contacto</label>
+                                <label for="emailLarge" class="form-label">Localização</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="contacto"></label>
+                                <label for="dobLarge" class="form-label" id="localizacao"></label>
                             </div>
                         </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Perfil</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="perfil"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Estado</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="estado"></label>
-                            </div>
-                        </div>
-                         <div class="row g-2">
-                            <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Data de Registo</label>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="data_registo"></label>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
