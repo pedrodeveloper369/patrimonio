@@ -34,8 +34,9 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .component('Head', Head)
-            .component('Link', Link)
+            .use(DatatableDirective)
+            .component("Head", Head)
+            .component("Link", Link)
             .mount(el);
     },
     progress: {
