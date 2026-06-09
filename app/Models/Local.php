@@ -18,7 +18,7 @@ class Local extends Model
         return $this->belongsTo(Local::class, 'parent_id');
     }
 
-   public function children()
+    public function children()
     {
         return $this->hasMany(Local::class, 'parent_id');
     }

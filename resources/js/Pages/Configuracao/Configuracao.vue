@@ -81,7 +81,7 @@ watch(() => page.props.flash.success, (msg) => {
                 <div class="mt-3">
                     <div class="row">
                         <div class="col-md-4 col-12 mb-3 mb-md-0">
-                            <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
+                            <img src="assets/img/avatars/pitruca.jpeg" alt class="h-auto rounded-circle" />
                         </div>
                         <div class="col-md-8 col-12">
 
@@ -89,7 +89,7 @@ watch(() => page.props.flash.success, (msg) => {
                                 <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class=""><strong style="color:#050505">Nome:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.name }}</label>
                                 </div>
 
@@ -97,7 +97,7 @@ watch(() => page.props.flash.success, (msg) => {
                             <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class="" > <strong style="color:#050505">E-mail:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.email }}</label>
                                 </div>
 
@@ -112,14 +112,14 @@ watch(() => page.props.flash.success, (msg) => {
                             <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class=""><strong style="color:#050505">Perfil:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.role }} </label>
                                 </div>
                             </div>
                             <div class="row g-2">
                                 <div class="col mb-2">
                                     <label for="emailLarge" class=""><strong style="color:#050505">Estado:</strong>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{ props.utilizador.estado }}</label>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@ watch(() => page.props.flash.success, (msg) => {
                 </div>
             </div>
             <div class="col-lg-6">
-                <small class="text-light fw-semibold">Horizontal</small>
+
                 <div class="demo-inline-spacing mt-3">
                 <div class="list-group list-group-horizontal-md text-md-center">
                     <a

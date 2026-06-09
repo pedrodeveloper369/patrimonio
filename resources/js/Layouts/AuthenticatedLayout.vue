@@ -17,7 +17,7 @@ const showingNavigationDropdown = ref(false);
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme " >
                 <div class="app-brand demo mt-2">
                     <div class="col-md-4 col-12 mb-md-0">
-                        <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
+                        <img src="/assets/img/avatars/pitruca.jpeg" alt class="h-auto rounded-circle" />
                     </div>
                 </div>
                 <hr>
@@ -26,7 +26,7 @@ const showingNavigationDropdown = ref(false);
                 <ul class="menu-inner " >
                     <!-- Dashboard -->
                     <li :class="['menu-item', route().current('dashboard') ? 'active' : '']"
-                     v-if="$page.props.auth.permissions.includes('ver_dashboard_admin')"
+                     v-if="$page.props.auth.permissions.includes('ver_dashboard')"
                     >
                         <Link :href="route('dashboard')"  class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
@@ -34,33 +34,60 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('patrimonio') ? 'active' : '']" >
+                    <li :class="[
+                        'menu-item',
+                        (
+                        route().current('patrimonio') ||
+                        route().current('registar.patrimonio') ||
+                        route().current('editar.patrimonio')) ? 'active' : '']"
+
+                        v-if="$page.props.auth.permissions.includes('patrimonio')"
+                        >
+
                         <Link class="menu-link" :href="route('patrimonio')"  >
                             <i class="bx bx-archive me-2"></i>
                             <strong>Patrimónios</strong>
                         </Link>
                     </li>
+                    <li :class="['menu-item', (
+                        route().current('movimentacao') ||
+                        route().current('movimento.historico') ||
+                        route().current('movimento.patrimonio')) ? 'active' : '']"
 
-                     <li :class="['menu-item', route().current('categoria') ? 'active' : '']">
+                        v-if="$page.props.auth.permissions.includes('movimentacoes')"
+                    >
+                        <Link class="menu-link" :href="route('movimentacao')"  >
+                            <i class="bx bx-transfer me-2"></i>
+                            <strong>Movimentações</strong>
+                        </Link>
+                    </li>
+
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Configurações</span></li>
+                    <li :class="['menu-item', route().current('categoria') ? 'active' : '']"
+                        v-if="$page.props.auth.permissions.includes('categorias')"
+                    >
                         <Link class="menu-link" :href="route('categoria')"  >
                            <i class="bx bx-category me-2"></i>
                             <strong>Categorias</strong>
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('local') ? 'active' : '']">
+                    <li :class="['menu-item',
+
+                       (
+                        route().current('local') ||
+                        route().current('registar.local') ||
+                        route().current('editar.local')) ? 'active' : '']"
+                            v-if="$page.props.auth.permissions.includes('localizacao')"
+                        >
+
                         <Link class="menu-link" :href="route('local')"  >
                             <i class="bx bx-map me-2"></i>
                            <strong>Localizações</strong>
                         </Link>
                     </li>
 
-                   <li :class="['menu-item', route().current('movimentacao') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('movimentacao')"  >
-                            <i class="bx bx-transfer me-2"></i>
-                            <strong>Movimentações</strong>
-                        </Link>
-                    </li>
+
                     <!--
                     <li :class="['menu-item', route().current('relatorio') ? 'active' : '']">
                         <Link class="menu-link" :href="route('relatorio')"  >
@@ -69,8 +96,9 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
                     -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Configurações</span></li>
-                    <li :class="['menu-item', route().current('departamento') ? 'active' : '']">
+                    <li :class="['menu-item', route().current('departamento') ? 'active' : '']"
+                        v-if="$page.props.auth.permissions.includes('departamento')"
+                    >
                         <Link class="menu-link" :href="route('departamento')"  >
 
                             <i class="bx bx-sitemap me-2"></i>
@@ -78,7 +106,9 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('cargo') ? 'active' : '']">
+                    <li :class="['menu-item', route().current('cargo') ? 'active' : '']"
+                        v-if="$page.props.auth.permissions.includes('ver_dashboard_admin')"
+                    >
                         <Link class="menu-link" :href="route('cargo')"  >
 
                             <i class="bx bx-id-card me-2"></i>
@@ -86,7 +116,9 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </li>
 
-                    <li :class="['menu-item', route().current('responsavel') ? 'active' : '']">
+                    <li :class="['menu-item', route().current('responsavel') ? 'active' : '']"
+                        v-if="$page.props.auth.permissions.includes('responsaveis')"
+                    >
                         <Link class="menu-link" :href="route('responsavel')"  >
                            <i class="bx bx-user me-2"></i>
                             <strong>Funcionários</strong>
@@ -158,14 +190,12 @@ const showingNavigationDropdown = ref(false);
                             <strong>Dados da Empresa</strong>
                         </Link>
                     </li>-->
-                    <li :class="['menu-item', route().current('configuracao') ? 'active' : '']">
-                        <Link class="menu-link" :href="route('configuracao')"  >
-                            <i class="menu-icon bx bx-cog"></i>
-                            <strong>Configurações</strong>
-                        </Link>
-                    </li>
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Conta</span></li>
 
-                    <li :class="['menu-item', route().current('users') ? 'active' : '']">
+
+                    <li :class="['menu-item', route().current('users') ? 'active' : '']"
+                        v-if="$page.props.auth.permissions.includes('utilizadores')"
+                    >
                         <Link class="menu-link" :href="route('users')"  >
                             <i class="menu-icon bx bx-group"></i>
                             <strong>Utilizadores</strong>
@@ -175,6 +205,9 @@ const showingNavigationDropdown = ref(false);
 
                 </ul>
             </aside>
+
+
+
 
             <div class="layout-page">
             <!-- Navbar -->
@@ -200,12 +233,12 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
-
+                         {{ $page.props.auth.user.name }}
                         <!-- User -->
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                                    <img src="/assets/img/avatars/pitruca.jpeg" alt class="w-px-40 h-auto rounded-circle" />
                                 </div>
                             </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -222,7 +255,7 @@ const showingNavigationDropdown = ref(false);
                             <li >
                                 <Link class="dropdown-item" :href="route('configuracao')">
                                     <i class="bx bx-cog me-2"></i>
-                                    <span class="align-middle">Configurações</span>
+                                    <span class="align-middle">Definições</span>
                                 </Link>
                             </li>
 

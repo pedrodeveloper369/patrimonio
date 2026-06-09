@@ -2,8 +2,9 @@
 export default {
   install(app) {
     app.directive('datatable', {
-      mounted(el, binding) {
+        mounted(el, binding) {
         const opts = binding.value || {};
+        const selectable = opts.selectable !== false; // default = true
         const pageSizeOptions = opts.pageSizeOptions || [5, 10, 20, 50];
         let pageSize = opts.defaultPageSize || pageSizeOptions[0];
         let currentPage = 1;
@@ -89,6 +90,7 @@ export default {
 
         //funcao para marcar todos elementos da tabela
         function ensureCheckboxes(rows) {
+            if (!selectable) return;
           const headerFirstCell = table.tHead ? table.tHead.rows[0].cells[0] : null;
           if (headerFirstCell && !headerFirstCell.querySelector('input.dt-select-all')) {
             const cb = document.createElement('input');
@@ -139,6 +141,7 @@ export default {
 
 
         function renderDeleteButton() {
+            if (!selectable) return;
             if (selectedIds.size > 0) {
                 deleteContainer.style.display = 'flex';
                 deleteContainer.innerHTML = '';

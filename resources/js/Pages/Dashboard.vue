@@ -123,12 +123,22 @@ const rows = ref([
 
 
 const props = defineProps({
-  departamentoTotal: Number,
-  responsavelTotal: Number,
+    departamentoTotal: Number,
+    responsavelTotal: Number,
+    categoriaTotal: Number,
+    localTotal: Number,
+    movimentacaoTotal: Number,
+    patrimonioTotal: Number,
+    patrimonioRecentes: Array,
 });
+
 const departamentoTotal = ref(props.departamentoTotal);
 const responsavelTotal = ref(props.responsavelTotal);
-
+const categoriaTotal = ref(props.categoriaTotal);
+const localTotal = ref(props.localTotal);
+const movimentacaoTotal = ref(props.movimentacaoTotal);
+const patrimonioTotal = ref(props.patrimonioTotal);
+const patrimonioRecentes = ref(props.patrimonioRecentes);
 
 // ==========================================
 // COLUNAS DA TABELA
@@ -295,7 +305,6 @@ function deleteSelected() {
   selectAll.value = false;
 }
 
-
 </script>
 
 <template>
@@ -303,19 +312,18 @@ function deleteSelected() {
         <h4 class=""><strong>Painel de Controlo</strong></h4>
         <div class="row">
             <div class="col-lg-12 mb-4 order-0">
-                  <div class="card" style="border:1px solid #debbb3">
+                  <div class="card" >
                     <div class="d-flex align-items-end row">
                       <div class="col-sm-8">
                         <div class="card-body" >
-                          <img src="assets/img/avatars/pitruca.webp" style="height:300px"/>
+                          <img src="assets/img/avatars/pitruca.jpeg" style="height:150px"/>
                         </div>
                       </div>
 
                       <div class="col-sm-4 text-center text-sm-left">
-                        <div class="card-body pb-0 px-0 px-md-4">
-                          <img
+                        <div class="card-body pb-0 px-0 px-md-4 float-right">
+                          <img style="height:150px"
                             src="assets/img/illustrations/man-with-laptop-light.png"
-                            height="140"
                             alt="View Badge User"
                             data-app-dark-img="illustrations/man-with-laptop-dark.png"
                             data-app-light-img="illustrations/man-with-laptop-light.png"
@@ -331,7 +339,7 @@ function deleteSelected() {
             <div class="col-lg-12 col-md-4 order-1">
                 <div class="row">
                     <div class="col-lg-2 col-md-4 col-6 mb-4" >
-                        <div class="card" style="border:1px solid #debbb3">
+                        <div class="card" >
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -342,13 +350,13 @@ function deleteSelected() {
                                         />
                                     </div>
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Património</span>
-                                <h3 class="card-title mb-2">12</h3>
+                                <span class="fw-semibold d-block mb-1">Patrimónios</span>
+                                <h3 class="card-title mb-2">{{patrimonioTotal}}</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card" style="border:1px solid #debbb3">
+                        <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -360,13 +368,13 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Responsavel</span>
+                                <span class="fw-semibold d-block mb-1">Responsaveis</span>
                                 <h3 class="card-title mb-2">{{ responsavelTotal }}</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card" style="border:1px solid #debbb3">
+                        <div class="card" >
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -376,15 +384,14 @@ function deleteSelected() {
                                         class="rounded"
                                         />
                                     </div>
-
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Localização</span>
-                                <h3 class="card-title mb-2">12</h3>
+                                <span class="fw-semibold d-block mb-1">Localizações</span>
+                                <h3 class="card-title mb-2">{{localTotal}}</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card" style="border:1px solid #debbb3">
+                        <div class="card" >
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -396,13 +403,13 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Departamento</span>
+                                <span class="fw-semibold d-block mb-1">Departamentos</span>
                                 <h3 class="card-title mb-2">{{departamentoTotal}}</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card" style="border:1px solid #debbb3">
+                        <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -414,13 +421,13 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Categoria</span>
-                                <h3 class="card-title mb-2">12</h3>
+                                <span class="fw-semibold d-block mb-1">Categorias</span>
+                                <h3 class="card-title mb-2">{{categoriaTotal}}</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-12 col-6 mb-4">
-                        <div class="card" style="border:1px solid #debbb3">
+                        <div class="card" >
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
@@ -432,8 +439,8 @@ function deleteSelected() {
                                     </div>
 
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Movimentação</span>
-                                <h3 class="card-title mb-2">12</h3>
+                                <span class="fw-semibold d-block mb-1">Movimentações</span>
+                                <h3 class="card-title mb-2">{{movimentacaoTotal}}</h3>
                             </div>
                         </div>
                     </div>
@@ -442,7 +449,7 @@ function deleteSelected() {
             </div>
         </div>
 
-        <div class="card" style="border:1px solid #debbb3">
+        <div class="card" >
                 <h5 class="card-header">Patrimónios Recentes</h5>
                 <div class="table-responsive text-nowrap">
                   <table class="table table-hover table-striped">
@@ -450,73 +457,290 @@ function deleteSelected() {
                       <tr>
                        <th>Foto</th>
                         <th>Código</th>
-                        <th>Patrimonio</th>
+                        <th>Nome</th>
                         <th>Categoria</th>
                         <th>Estado</th>
                         <th>Localização</th>
                         <th>Responsável</th>
-                        <th>Valor</th>
+                        <th>Custo</th>
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        <tr>
+                        <tr v-for="pat in patrimonioRecentes" :key="pat.id" :data-id="pat.id" >
                             <td>
-                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
+                                 <img
+                                    v-if="pat.imagem"
+                                    :src="`/storage/patrimonios/imagens/${pat.imagem}`"
+                                    alt="Imagem do Património"
+                                    style="width:50px; height:auto; border-radius:9px"
+                                >
+                                <img
+                                    v-else
+                                    src="/assets/img/avatars/pitruca.jpeg"
+                                    alt="Imagem padrão"
+                                    style="width:50px; height:auto; border-radius:9px"
+                                >
                             </td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td><span class="badge bg-label-primary me-1">Active</span></td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                        </tr>
-                         <tr>
+                            <td>{{pat.codigo}}</td>
+                            <td>{{pat.nome}}</td>
+                            <td>{{pat.categoria}}</td>
                             <td>
-                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
-                            </td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td><span class="badge bg-label-primary me-1">Active</span></td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                        </tr>
-                         <tr>
-                            <td>
-                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
-                            </td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td><span class="badge bg-label-primary me-1">Active</span></td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                        </tr>
-                         <tr>
-                            <td>
-                                <img src="assets/img/avatars/pitruca.webp" alt class="w-px-40 h-auto rounded-circle" />
-                            </td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td><span class="badge bg-label-primary me-1">Active</span></td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                            <td>Albert Cook</td>
-                        </tr>
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded"
+                                    :style="{ backgroundColor: pat.background, color: pat.cor }"
 
+                                >
+                                    {{ pat.estado_patrimonio }}
+                                </span>
+                            </td>
+                            <td>{{pat.localizacao}}</td>
+                            <td>{{pat.responsavel}}</td>
+                            <td>{{pat.valor_compra}} kz</td>
+                        </tr>
                     </tbody>
                   </table>
                 </div>
         </div>
 
+
+        <!--<div class="row mt-3">
+
+            <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Top 10 Patrimónios mais movimentados</h5>
+                            <small class="text-muted">42.82 k Total Sales</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3"></div>
+                        <ul class="p-0 m-0">
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-primary"
+                                    ><i class="bx bx-mobile-alt"></i
+                                ></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Electronic</h6>
+                                    <small class="text-muted">Mobile, Earbuds, TV</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">82.5k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Fashion</h6>
+                                    <small class="text-muted">T-shirt, Jeans, Shoes</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">23.8k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Decor</h6>
+                                    <small class="text-muted">Fine Art, Dining</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">849k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-secondary"
+                                    ><i class="bx bx-football"></i
+                                ></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Sports</h6>
+                                    <small class="text-muted">Football, Cricket Kit</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">99</small>
+                                </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Top 10 Responsaveis com mais patrimónios</h5>
+                            <small class="text-muted">42.82 k Total Sales</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3"></div>
+                        <ul class="p-0 m-0">
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-primary"
+                                    ><i class="bx bx-mobile-alt"></i
+                                ></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Electronic</h6>
+                                    <small class="text-muted">Mobile, Earbuds, TV</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">82.5k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Fashion</h6>
+                                    <small class="text-muted">T-shirt, Jeans, Shoes</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">23.8k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Decor</h6>
+                                    <small class="text-muted">Fine Art, Dining</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">849k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-secondary"
+                                    ><i class="bx bx-football"></i
+                                ></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Sports</h6>
+                                    <small class="text-muted">Football, Cricket Kit</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">99</small>
+                                </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Top 10 Localizações com mais movimentados</h5>
+                            <small class="text-muted">42.82 k Total Sales</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3"></div>
+                        <ul class="p-0 m-0">
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-primary"
+                                    ><i class="bx bx-mobile-alt"></i
+                                ></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Electronic</h6>
+                                    <small class="text-muted">Mobile, Earbuds, TV</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">82.5k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Fashion</h6>
+                                    <small class="text-muted">T-shirt, Jeans, Shoes</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">23.8k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Decor</h6>
+                                    <small class="text-muted">Fine Art, Dining</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">849k</small>
+                                </div>
+                                </div>
+                            </li>
+                            <li class="d-flex">
+                                <div class="avatar flex-shrink-0 me-3">
+                                <span class="avatar-initial rounded bg-label-secondary"
+                                    ><i class="bx bx-football"></i
+                                ></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0">Sports</h6>
+                                    <small class="text-muted">Football, Cricket Kit</small>
+                                </div>
+                                <div class="user-progress">
+                                    <small class="fw-semibold">99</small>
+                                </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>-->
+
     </AuthenticatedLayout>
 </template>
 
 <style scoped>
-
-
 </style>

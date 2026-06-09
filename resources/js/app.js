@@ -5,12 +5,11 @@ import { createInertiaApp, Head, Link, router  } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-
 import '../../public/assets/vendor/fonts/boxicons.css';
 import '../../public/assets/vendor/css/core.css';
-import '../../public/assets/vendor/css/pages/page-auth.css';
+
 import '../../public/assets/vendor/css/theme-default.css';
-// JS Helpers e config
+// JS Helpers e config DatatableDirective
 import '../../public/assets/vendor/js/helpers.js';
 import '../../public/assets/js/config.js';
 //window.config = window.config || config;
@@ -22,7 +21,7 @@ window.$ = window.jQuery = $; // disponibiliza globalmente
 import 'datatables.net-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
-const appName = 'CRM';
+const appName = 'Património';
 
 createInertiaApp({
     title: (title) => `${appName}`,
@@ -36,8 +35,8 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(DatatableDirective)
-            .component('Head', Head)
-            .component('Link', Link)
+            .component("Head", Head)
+            .component("Link", Link)
             .mount(el);
     },
     progress: {

@@ -9,7 +9,7 @@ import LocalTree from '@/Components/LocalTree.vue'
 const users = ref([]);
 const props = defineProps({
   tipoLocal: Array,
-  caminhosLocal: Array,
+  caminhosLocal: Array, 
 });
 const tipoLocal = ref(props.tipoLocal);
 const caminhosLocal = ref(props.caminhosLocal);
@@ -99,7 +99,7 @@ function redirecionar_pagina(){
 
 <template>
     <AuthenticatedLayout>
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Localizações/</span><strong>Registar Localização</strong></h4>
+        <h4 class="fw-bold py-3 mb-4"><Link :href="route('local')" class="text-muted fw-light">Localizações/</Link><strong>Registar Localização</strong></h4>
 
         <div class="card p-4 " >
             <form @submit.prevent="submit">
@@ -136,7 +136,7 @@ function redirecionar_pagina(){
                         </div>
 
                         <div class="col mb-0">
-                            <label class="">Localização</label>
+                            <label class="">Localização (Opcional)</label>
 
                             <div class="input-group">
                                 <input
@@ -147,7 +147,7 @@ function redirecionar_pagina(){
                                     placeholder="Seleccione a localização"
                                 />
 
-                                <button
+                                <button style="width: 110px"
                                     class="btn btn-outline-secondary"
                                     type="button"
 
@@ -157,6 +157,8 @@ function redirecionar_pagina(){
                                     Buscar Localização
                                 </button>
                             </div>
+                            <small>Se nenhum local for seleccionado, o sistema assume que o novo local a ser registado situa -se na raiz da instituição</small>
+
 
                         </div>
 

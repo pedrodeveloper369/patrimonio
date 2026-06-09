@@ -141,7 +141,6 @@ function openDeleteModal(ids) {
     $('#modalEliminar').modal('show');
 }
 
-
 //ver detalhes
 function ver_detalhes(categoria){
 
@@ -205,7 +204,7 @@ function removerCampo(index) {
                     }"
                 @selection-changed="onSelectionChanged"
                 @datatable-delete="onDeleteRequested"
-                class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
             >
 
             <thead class="bg-gray-100 ">
@@ -220,7 +219,7 @@ function removerCampo(index) {
             <tbody>
                 <tr v-for="cat in categorias" :key="cat.id" :data-id="cat.id">
                 <td></td>
-                <td><strong style="color: #212529 !important;">{{ cat.nome }} </strong> <br></td>
+                <td class="p-3" ><strong style="color: #212529 !important;">{{ cat.nome }} </strong> <br></td>
 
                 <td class="date-cell">{{ new Date(cat.created_at).toLocaleDateString() }}</td>
                 <td>

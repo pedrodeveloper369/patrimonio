@@ -22,6 +22,10 @@ const estado_patrimonio = ref(props.estado_patrimonio);
 const localizacao = ref(props.localizacao);
 const categoria = ref(props.categoria);
 const departamento = ref(props.departamento);
+const patrimonioDocumento = ref(null);
+
+
+
 
 //declaracao do formulario e os seus dados
 const form = useForm({
@@ -50,10 +54,9 @@ const formEliminar = useForm({
 
 // Função para enviar
 const submit = () => {
-    form.post(route('utilizador.registar'), {
+    form.post(route('patrimonio.registar'), {
         onSuccess: () => {
-            $('#modalRegistar').modal('hide');
-            resetModal()       // reseta o formulário
+
             listar_patrimonios()  //recarrega a tabela
         }
     })
@@ -90,16 +93,6 @@ watch(() => page.props.flash.success, (msg) => {
   }
 })
 
-// Função para resetar o formulário
-function resetModal() {
-    form.reset()
-    form.clearErrors()
-}
-
-onMounted(() => {
-    const modalEl = document.getElementById('modalRegistar')
-    modalEl.addEventListener('hidden.bs.modal', resetModal)
-})
 
 //filtros computed
 const filterStatus = ref('')
@@ -111,14 +104,15 @@ const filterStatusAquisicao = ref('')
 
 //funcao que pesquisa os filtros, pega a lista de dados, merge com uma nova lista de modo a fazer funcionar os
 // filtros e a nova lista é usada na tabela
-const filteredUsers = computed(() => {
-  return patrimonio.value.filter(u => {
-    const matchesStatus = !filterStatus.value || patri.estado === filterStatus.value
-    const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
-    const filterResponsavel = !filterResponsavel.value || patri.estado === filterResponsavel.value
-    const filterLocal = !filterLocal.value || patri.estado === filterLocal.value
-    const filterCategoria = !filterCategoria.value || patri.role === filterCategoria.value
-    return matchesStatus && filterDepartamento && filterResponsavel && filterLocal && filterCategoria
+const patrimonios = computed(() => {
+  return patrimonio.value.filter(patri => {
+    const matchesStatus = !filterStatus.value || patri.estado_patrimonio === filterStatus.value
+    //const matchesStatusAq = !filterStatusAquisicao.value || patri.conservacao === filterStatusAquisicao.value
+    //const filterDepartamento = !filterDepartamento.value || patri.estado === filterDepartamento.value
+    const matchesResponsavel = !filterResponsavel.value || patri.responsavel === filterResponsavel.value
+    //const matchesLocal = !filterLocal.value || patri.localizacao === filterLocal.value
+    const matchesCategoria = !filterCategoria.value || patri.categoria === filterCategoria.value
+    return matchesStatus /*&& matchesStatusAq*/ && matchesResponsavel /*&& matchesLocal*/ && matchesCategoria
   })
 })
 
@@ -152,7 +146,7 @@ const deleteMessage = ref("");         // Mensagem que a modal vai mostrar
 const showDeleteModal = ref(false);    // Controla a modal
 
 const submitEliminar = () => {
-    formEliminar.post(route('utilizador.eliminar'), {
+    formEliminar.post(route('patrimonio.eliminar'), {
         onSuccess: () => {
             $('#modalEliminar').modal('hide');
             listar_patrimonios()  //recarrega a tabela
@@ -167,37 +161,27 @@ function openDeleteModal(ids) {
 }
 
 //ver detalhes
-function ver_detalhes(utilizador){
-    document.getElementById('nome').innerText = utilizador.name;
-    document.getElementById('email').innerText = utilizador.email;
-    document.getElementById('contacto').innerText = utilizador.contacto;
-    document.getElementById('perfil').innerText = utilizador.role;
-    document.getElementById('estado').innerText = utilizador.estado;
-    document.getElementById('data_registo').innerText = utilizador.created_at;
+function ver_detalhes(patrimonio){
+    document.getElementById('nome').innerText = patrimonio.nome;
+    document.getElementById('codigo').innerText = patrimonio.codigo;
+    document.getElementById('qtd').innerText = patrimonio.qtd;
+    document.getElementById('custo').innerText = patrimonio.valor_compra;
+    document.getElementById('origem').innerText = patrimonio.origem;
+    document.getElementById('estado_aquisicao').innerText = patrimonio.conservacao;
+    document.getElementById('marca').innerText = patrimonio.marca;
+    document.getElementById('serie').innerText = patrimonio.num_serie;
+    document.getElementById('categoria').innerText = patrimonio.categoria;
+    document.getElementById('estado').innerText = patrimonio.estado_patrimonio;
+    document.getElementById('responsavel').innerText = patrimonio.responsavel;
+    document.getElementById('localizacao').innerText = patrimonio.localizacao +"\n( "+ patrimonio.caminhoLocal+" )";
+    document.getElementById('descricao').innerText = patrimonio.descricao;
+    document.getElementById('cor_patrimonio').innerText = patrimonio.cor_patrimonio;
+    document.getElementById('data_registo').innerText = patrimonio.created_at;
 }
 
-//editar utilizador
-function editar_utilizador(utilizador){
-    formEditar.reset(); // limpa tudo corretamente
-    formEditar.id = utilizador.id;
-    formEditar.nome_editar = utilizador.name;
-    formEditar.estado = utilizador.estado;
-    formEditar.contacto_editar = utilizador.contacto;
-    formEditar.email_editar = utilizador.email;
-    formEditar.email_copia_editar = utilizador.email;
-    formEditar.senha_editar =  utilizador.password;   // opcional
-    formEditar.confirma_senha_editar =  utilizador.password; // opcional
-}
 
-// Função para enviar
-const submitEditar = () => {
-    formEditar.post(route('utilizador.editar'), {
-        onSuccess: () => {
-            $('#modalEditar').modal('hide');
-            resetModal()       // reseta o formulário
-            listar_patrimonios()  //recarrega a tabela
-        }
-    })
+function abrirModalFicheiro(documento) {
+    this.patrimonioDocumento = documento;
 }
 
 //para rota
@@ -209,6 +193,9 @@ window.chamar_pagina_registar = () => {
 window.chamar_pagina_registar_local = () => {
   router.visit(route('editar.patrimonio'));
 };
+
+
+
 
 </script>
 
@@ -230,7 +217,7 @@ window.chamar_pagina_registar_local = () => {
                         </option>
                     </select>
                 </div>
-                <div class="select-icon-wrapper equal-height">
+                <!--<div class="select-icon-wrapper equal-height">
                     <i class="bx bx-info-circle icon"></i>
                     <select v-model="filterStatusAquisicao" class="form-select form-select-sm">
                         <option value="">Estado de Aquisição</option>
@@ -239,9 +226,9 @@ window.chamar_pagina_registar_local = () => {
                          <option value="outro">Outro</option>
 
                     </select>
-                </div>
+                </div>-->
 
-                <div class="select-icon-wrapper equal-height">
+              <!--  <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-sitemap icon"></i>
                     <select v-model="filterDepartamento" class="form-select form-select-sm">
                         <option value="">Departamento</option>
@@ -253,7 +240,7 @@ window.chamar_pagina_registar_local = () => {
                             {{ depa.nome }}
                         </option>
                     </select>
-                </div>
+                </div>-->
 
                 <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-user icon"></i>
@@ -269,7 +256,7 @@ window.chamar_pagina_registar_local = () => {
                     </select>
                 </div>
 
-                <div class="select-icon-wrapper equal-height">
+                <!--<div class="select-icon-wrapper equal-height">
                     <i class="bx bx-map icon"></i>
                     <select v-model="filterLocal" class="form-select form-select-sm">
                         <option value="">Localização</option>
@@ -281,7 +268,7 @@ window.chamar_pagina_registar_local = () => {
                             {{ local.nome }}
                         </option>
                     </select>
-                </div>
+                </div>-->
 
                  <div class="select-icon-wrapper equal-height">
                     <i class="bx bx-category icon"></i>
@@ -302,6 +289,8 @@ window.chamar_pagina_registar_local = () => {
         </div>
 
         <div class="card p-4 " >
+            <!--<button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
+                           -->
 
             <div class="table-responsive text-nowrap mt-3">
                 <table v-datatable="{datatableOptions, defaultPageSize: 10,
@@ -310,21 +299,21 @@ window.chamar_pagina_registar_local = () => {
                             openDeleteModal(selectedIds);
                         },
                         actionsHtml: `
-                            <button class='btn btn-outline-danger btn-sm' id='btn-add'><i class='menu-icon bx bx-export'></i> PDF</button>
-                            <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
 
+                            <button onclick='window.chamar_pagina_registar()'  class='btn btn-primary btn-sm' id='btn-add'><i class='menu-icon bx bx-plus'></i> Adicionar</button>
 
                         `
                         }"
                     @selection-changed="onSelectionChanged"
                     @datatable-delete="onDeleteRequested"
                      @datatable-action="onDatatableAction"
-                    class="table table-hover mt-3 min-w-full  mt-6 text-sm"
+                    class="table table-hover table-striped mt-3 min-w-full  mt-6 text-sm"
                 >
 
                 <thead class="bg-gray-100 ">
                     <tr>
                     <th></th>
+                    <th>Imagem</th>
                     <th>Nome</th>
                     <th>Categoria</th>
                     <th>Responsável</th>
@@ -335,32 +324,58 @@ window.chamar_pagina_registar_local = () => {
                 </thead>
 
                 <tbody>
-                    <tr v-for="patri in patrimonio" :key="patri.id" :data-id="patri.id">
+                    <tr v-for="patri in patrimonios" :key="patri.id" :data-id="patri.id">
                     <td></td>
-                    <td><strong style="color: #212529 !important;">{{ patri.name }} </strong> <br> {{ patri.email }}</td>
-                    <td>{{ patri.contacto }}</td>
-                    <td>{{ patri.role }}</td>
                     <td>
+                        <img
+                            v-if="patri.imagem"
+                            :src="`/storage/patrimonios/imagens/${patri.imagem}`"
+                            alt="Imagem do Património"
+                            style="width:50px; height:auto; border-radius:9px"
+                        >
+                        <img
+                            v-else
+                            src="/assets/img/avatars/pitruca.webp"
+                            alt="Imagem padrão"
+                            style="width:50px; height:auto; border-radius:9px"
+                        >
+                    </td>
+
+                    <td><strong style="color: #212529 !important;">{{ patri.nome }} </strong> <br></td>
+                    <td>{{ patri.categoria }}</td>
+                    <td>{{ patri.responsavel }}</td>
+                    <td >
                         <span
                             class="px-2 py-1 text-xs font-semibold rounded"
-                            :class="{
-                            'bg-green-100 text-green-700': patri.estado === 'Activo',
-                            'bg-red-100 text-red-700': patri.estado === 'Inactivo',
-                            //'bg-yellow-100 text-yellow-700': patri.estado === 'Pending',
-                            }"
+                             :style="{ backgroundColor: patri.background, color: patri.cor }"
+
                         >
-                            {{ patri.estado }}
+                            {{ patri.estado_patrimonio }}
                         </span>
 
                     </td>
 
                     <td class="date-cell">{{ new Date(patri.created_at).toLocaleDateString() }}</td>
+
                     <td>
                         <button class="" @click="ver_detalhes(patri)"   data-bs-toggle='modal' data-bs-target='#modalDetalhes' ><i class="menu-icon bx bx-show"></i></button>
                         <Link :href="route('editar.patrimonio', patri)" style="color:#777"><i class="menu-icon bx bx-edit-alt"></i></Link>
-                        <button > <i class="bx bx-transfer me-2"></i></button>
+
+                        <Link :href="route('movimento.patrimonio', patri)" style="color:#777"> <i class="bx bx-transfer me-2"></i> </Link>
+                        <Link :href="route('movimento.historico', patri.id)" style="color:#777"> <i class="bx bx-list-ul"></i></Link>
+
+                        <button
+                            v-if="patri.documento"
+                            class=""
+                             @click="abrirModalFicheiro(patri.documento)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalficheiro"
+                        >
+                            <i class="bx bx-file me-2"></i>
+                        </button>
 
                     </td>
+
                     </tr>
                 </tbody>
                 </table>
@@ -396,178 +411,6 @@ window.chamar_pagina_registar_local = () => {
             </div>
         </div>
 
-        <!--MODAL REGISTAR-->
-        <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" style="border:1px solid #debbb3">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Registar Utilizador</h5>
-                        <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        ></button>
-                    </div>
-                    <form @submit.prevent="submit">
-                        <div class="modal-body">
-
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input type="text" v-model="form.nome" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="form.errors.nome" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.nome }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input type="text" v-model="form.contacto" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="form.errors.contacto" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.contacto }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input type="text" v-model="form.email" class="form-control" placeholder="xxxx@xxx.xx" />
-                                    <div v-if="form.errors.email" class="text-red-500 text-sm mt-1">
-                                        {{ form.errors.email }}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input type="password" v-model="form.senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.senha }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input type="password" v-model="form.confirma_senha" class="form-control" placeholder="******" />
-                                        <div v-if="form.errors.confirma_senha" class="text-red-500 text-sm mt-1">
-                                            {{ form.errors.confirma_senha }}
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="form.processing">
-                                {{ form.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
-                </div>
-            </div>
-        </div>
-
-        <!--MODAL EDITAR-->
-        <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" style="border:1px solid #debbb3">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">Actualizar Utilizador</h5>
-                        <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        ></button>
-                    </div>
-                    <form @submit.prevent="submitEditar">
-                        <div class="modal-body">
-
-                                <div class="row" >
-                                    <div class="col mb-3">
-                                        <label for="nameLarge" class="">Nome</label>
-                                        <input id="nome_edit"  type="text" v-model="formEditar.nome_editar" class="form-control" placeholder="Enter Name" />
-                                        <div v-if="formEditar.errors.nome_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.nome_editar }}
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Contacto</label>
-                                        <input id="contacto_edit" type="text" v-model="formEditar.contacto_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                        <div v-if="formEditar.errors.contacto_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.contacto_editar }}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="row  mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Estado</label>
-                                       <select v-model="formEditar.estado" class="form-select">
-                                            <option value="Activo">Activar</option>
-                                            <option value="Inactivo">Desactivar</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Email</label>
-                                        <input id="email_edit" type="text" v-model="formEditar.email_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-                                            <input id="email_copia_edit" type="hidden" v-model="formEditar.email_copia_editar" class="form-control" placeholder="xxxx@xxx.xx" />
-
-                                    <div v-if="formEditar.errors.email_editar" class="text-red-500 text-sm mt-1">
-                                        {{ formEditar.errors.email_editar }}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label for="emailLarge" class="">Palavra Passe</label>
-                                        <input id="senha_edit" type="password" v-model="formEditar.senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.senha_editar }}
-                                        </div>
-                                    </div>
-                                    <div class="col mb-0">
-                                        <label for="dobLarge" class="">Confirmar Palavra Passe</label>
-                                        <input id="confirmar_senha_edit" type="password" v-model="formEditar.confirma_senha_editar" class="form-control" placeholder="******" />
-                                        <div v-if="formEditar.errors.confirma_senha_editar" class="text-red-500 text-sm mt-1">
-                                            {{ formEditar.errors.confirma_senha_editar }}
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary " data-bs-dismiss="modal">
-                            Fechar
-                            </button>
-                            <button type="submit" class="btn btn-primary" :disabled="formEditar.processing">
-                                {{ formEditar.processing ? 'Enviando...' : 'Salvar' }}
-                            </button>
-                        </div>
-                     </form>
-                </div>
-            </div>
-        </div>
-
         <!--MODAL DETALHE-->
         <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -591,28 +434,76 @@ window.chamar_pagina_registar_local = () => {
                                 <label for="dobLarge" class="form-label" id="nome"></label>
                             </div>
                         </div>
-                         <div class="row g-2">
+                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Email</label>
+                                <label for="emailLarge" class="form-label">Código</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="email"></label>
+                                <label for="dobLarge" class="form-label" id="codigo"></label>
+                            </div>
+                        </div>
+                          <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Série</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="serie"></label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Cor</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="cor_patrimonio"></label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Marca</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="marca"></label>
+                            </div>
+                        </div>
+                          <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Quantidade</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="qtd"></label>
                             </div>
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label" >Contacto</label>
+                                <label for="emailLarge" class="form-label">Custo</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="contacto"></label>
+                                <label for="dobLarge" class="form-label" id="custo"></label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Origem</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="origem"></label>
                             </div>
                         </div>
                          <div class="row g-2">
                             <div class="col mb-0">
-                                <label for="emailLarge" class="form-label">Perfil</label>
+                                <label for="emailLarge" class="form-label" >Categoria</label>
                             </div>
                             <div class="col mb-0">
-                                <label for="dobLarge" class="form-label" id="perfil"></label>
+                                <label for="dobLarge" class="form-label" id="categoria"></label>
+                            </div>
+                        </div>
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label" >Responsavel</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="responsavel"></label>
                             </div>
                         </div>
                          <div class="row g-2">
@@ -623,7 +514,25 @@ window.chamar_pagina_registar_local = () => {
                                 <label for="dobLarge" class="form-label" id="estado"></label>
                             </div>
                         </div>
+
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Estado de Aquisição</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="estado_aquisicao"></label>
+                            </div>
+                        </div>
                          <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Localização</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="localizacao"></label>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
                             <div class="col mb-0">
                                 <label for="emailLarge" class="form-label" >Data de Registo</label>
                             </div>
@@ -631,6 +540,54 @@ window.chamar_pagina_registar_local = () => {
                                 <label for="dobLarge" class="form-label" id="data_registo"></label>
                             </div>
                         </div>
+
+                         <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailLarge" class="form-label">Descrição</label>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobLarge" class="form-label" id="descricao"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
+                        Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!--MODAL FICHEIRO-->
+        <div class="modal fade" id="modalficheiro" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="border:1px solid #debbb3">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">Documento</h5>
+                        <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <iframe
+                            :src="`/storage/patrimonios/documentos/${patrimonioDocumento}`"
+                            width="100%"
+                            height="700px"
+                            frameborder="0"
+                        ></iframe>
+                        <p class="mt-2">
+                            <a :href="`/storage/${patrimonioDocumento}`" target="_blank">
+                                Abrir em nova aba
+                            </a>
+                        </p>
+
+
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">

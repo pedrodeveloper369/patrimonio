@@ -15,16 +15,16 @@ class ConfiguracaoSeeder extends Seeder
     public function run(): void
     {
         //configuracoes iniciais do estado que os patrimonios vai assumir
-        EstadoPatrimonio::create([ 'nome' => 'Activo', 'cor' => '#22C55E']);
-        EstadoPatrimonio::create([ 'nome' => 'Inactivo', 'cor' => '#6B7280']);
-        EstadoPatrimonio::create([ 'nome' => 'Disponível', 'cor' => '#3B82F6']);
-        EstadoPatrimonio::create([ 'nome' => 'Danificado', 'cor' => '#F97316']);
-        EstadoPatrimonio::create([ 'nome' => 'Em manutenção', 'cor' => '#EAB308']);
-        EstadoPatrimonio::create([ 'nome' => 'Perdido', 'cor' => '#EF4444']);
-        EstadoPatrimonio::create([ 'nome' => 'Obsoleto', 'cor' => '#4B5563']);
-        EstadoPatrimonio::create([ 'nome' => 'Transferido', 'cor' => '#1D4ED8']);
-        EstadoPatrimonio::create([ 'nome' => 'Emprestado', 'cor' => '#8B5CF6']);
-        EstadoPatrimonio::create([ 'nome' => 'Descartado', 'cor' => '#111827']);
+        EstadoPatrimonio::create([ 'nome' => 'Activo', 'cor' => '#15803D', 'background' => '#DCFCE7']);
+        EstadoPatrimonio::create([ 'nome' => 'Inactivo', 'cor' => '#374151' , 'background' => '#F3F4F6']);
+        EstadoPatrimonio::create([ 'nome' => 'Disponível', 'cor' => '#1D4ED8' , 'background' => '#DBEAFE']);
+        EstadoPatrimonio::create([ 'nome' => 'Danificado', 'cor' => '#C2410C' , 'background' => '#FFEDD5']);
+        EstadoPatrimonio::create([ 'nome' => 'Em manutenção', 'cor' => '#A16207' , 'background' => '#FEF9C3']);
+        EstadoPatrimonio::create([ 'nome' => 'Perdido', 'cor' => '#B91C1C' , 'background' => '#FEE2E2']);
+        EstadoPatrimonio::create([ 'nome' => 'Obsoleto', 'cor' => '#374151' , 'background' => '#E5E7EB']);
+        EstadoPatrimonio::create([ 'nome' => 'Transferido', 'cor' => '#1D4ED8' , 'background' => '#E0E7FF']);
+        EstadoPatrimonio::create([ 'nome' => 'Emprestado', 'cor' => '#6D28D9' , 'background' => '#EDE9FE']);
+        EstadoPatrimonio::create([ 'nome' => 'Descartado', 'cor' => '#111827' , 'background' => '#F9FAFB']);
 
         //configuração inicial dos tipos de localização
         TipoLocal::create([ 'nome' => 'Pátio']);
