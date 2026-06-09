@@ -68,10 +68,8 @@ class PatrimonioController extends Controller
     //Rota, funcao de registo de patrimonio
     public function registar_patrimonio(Request $request){
         $validacao = $this->validarPatrimonio($request);
-
         $imagemPath = null;
         $documentoPath = null;
-
          // imagem
         if ($request->hasFile('imagem')) {
             $file = $request->file('imagem');
@@ -79,7 +77,6 @@ class PatrimonioController extends Controller
             $file->storeAs('patrimonios/imagens', $filename, 'public'); // salva em storage/app/public/patrimonios/imagens
             $imagemPath = $filename; // só guarda o nome
         }
-
         // documento
         if ($request->hasFile('documento')) {
             $file = $request->file('documento');
@@ -87,7 +84,6 @@ class PatrimonioController extends Controller
             $file->storeAs('patrimonios/documentos', $filename, 'public'); // só guarda o nome
             $documentoPath = $filename;
         }
-
         try {
             DB::beginTransaction();
             $patrimonio = new Patrimonio();
@@ -108,11 +104,8 @@ class PatrimonioController extends Controller
             $patrimonio->num_serie = $request->num_serie;
             $patrimonio->id_responsavel = $request->responsavel;
             $patrimonio->save();
-
             DB::commit();
-            return redirect()->route('registar.patrimonio')
-                     ->with('success', 'Património registado com sucesso!');
-
+            return redirect()->route('registar.patrimonio')->with('success', 'Património registado com sucesso!');
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('registar.patrimonio')
@@ -333,8 +326,15 @@ class PatrimonioController extends Controller
             [
                 'nome' => ['required', 'min:3', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÂÊÔâêôÃÕãõçÇ\s]+$/'],
                 'codigo' => ['required'],
+                'qtd' => ['required'],
+                'valor_compra' => ['required'],
+                'origem' => ['required'],
                 'conservacao' => ['required'],
+                'marca' => ['required'],
+                'num_serie' => ['required'],
                 'id_categoria' => ['required'],
+                'documento' => ['required'],
+                'responsavel' => ['required'],
                 'id_estado_patrimonio' => ['required'],
                 'descricao' => ['nullable','min:3'],
             ],
@@ -343,10 +343,17 @@ class PatrimonioController extends Controller
                 'nome.min' => 'O nome deve ter pelo menos 3 caracteres.',
                 'nome.regex' => 'O nome deve conter apenas letras e espaços.',
                 'codigo.required' => 'O codigo é obrigatório.',
+                'qtd.required' => 'A quantidade é obrigatória.',
+                'valor_compra.required' => 'O valor de compra é obrigatório.',
+                'origem.required' => 'A origem é obrigatória.',
                 'conservacao.required' => 'O conservacao é obrigatório.',
                 'id_categoria.required' => 'A categoria é obrigatório.',
+                'marca.required' => 'A marca é obrigatório.',
                 'id_estado_patrimonio.required' => 'O estado é obrigatório.',
                 'descricao.min' => 'A descriçãó deve ter pelo menos 3 caracteres.',
+                'documento.required' => 'O documento é obrigatório.',
+                'responsavel.required' => 'O responsável é obrigatório.',
+                'num_serie.required' => 'O número de série é obrigatório.',
             ]
         );
     }
