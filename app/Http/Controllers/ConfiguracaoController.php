@@ -42,12 +42,24 @@ class ConfiguracaoController extends Controller
     }
 
      public function actualizar_definicao(Request $request){
-        $this->validarConfiguracaoDefinicao($request);
+
+        if($request->email_anterior == $request->email && $request->senha != ''){
+            $this->validarConfiguracaoDefinicaoSemEmail($request);
+        }else if($request->email_anterior != $request->email && $request->senha == ''){
+            $this->validarConfiguracaoDefinicaoSemPassword($request);
+        }else{
+            $this->validarConfiguracaoDefinicao($request);
+        }
+
         try {
             $utilizador = User::findOrFail(Auth::id());
             DB::beginTransaction();
-            $utilizador->email = $request->email;
-            $utilizador->password = Hash::make($request->senha);
+            if($request->email_anterior != $request->email) {
+                $utilizador->email = $request->email;
+            }
+            if($request->senha != '') {
+                $utilizador->password = Hash::make($request->senha);
+            }
             $utilizador->save();
             DB::commit();
 
@@ -81,7 +93,7 @@ class ConfiguracaoController extends Controller
         );
     }
 
-    //Funcao que valida os dados do formulario do utilizador
+    //Funcao que valida os dados do formulario do utilizador com email e senha
     private function validarConfiguracaoDefinicao($request)
     {
         return $request->validate(
@@ -95,6 +107,39 @@ class ConfiguracaoController extends Controller
                 'email.email' => 'Informe um email válido.',
                 'email.unique' => 'Este email já está registado.',
 
+                'senha.required' => 'A senha é obrigatória.',
+                'senha.min' => 'A senha deve ter pelo menos 6 caracteres.',
+
+                'confirma_senha.required' => 'A confirmação da senha é obrigatória.',
+                'confirma_senha.same' => 'A confirmação não corresponde à senha.',
+            ]
+        );
+    }
+
+    //Funcao que valida os dados do formulario do utilizador com email e senha
+    private function validarConfiguracaoDefinicaoSemPassword($request)
+    {
+        return $request->validate(
+            [
+                'email' => ['required', 'email','unique:users,email'],
+            ],
+            [
+                'email.required' => 'O email é obrigatório.',
+                'email.email' => 'Informe um email válido.',
+                'email.unique' => 'Este email já está registado.',
+            ]
+        );
+    }
+
+    //Funcao que valida os dados do formulario do utilizador sem email
+    private function validarConfiguracaoDefinicaoSemEmail($request)
+    {
+        return $request->validate(
+            [
+                'senha' => ['required', 'min:6'],
+                'confirma_senha' => ['required', 'min:6', 'same:senha'],
+            ],
+            [
                 'senha.required' => 'A senha é obrigatória.',
                 'senha.min' => 'A senha deve ter pelo menos 6 caracteres.',
 
