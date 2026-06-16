@@ -17,6 +17,7 @@ const form = useForm({
 
 const form2 = useForm({
     email: props.utilizador.email,
+    email_anterior: props.utilizador.email,
     senha: '',
     confirma_senha: '',
 })
