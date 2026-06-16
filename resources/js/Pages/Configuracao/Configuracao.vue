@@ -17,6 +17,7 @@ const form = useForm({
 
 const form2 = useForm({
     email: props.utilizador.email,
+    email_anterior: props.utilizador.email,
     senha: '',
     confirma_senha: '',
 })
@@ -81,7 +82,7 @@ watch(() => page.props.flash.success, (msg) => {
                 <div class="mt-3">
                     <div class="row">
                         <div class="col-md-4 col-12 mb-3 mb-md-0">
-                            <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
+                            <img src="assets/img/avatars/pitruca.jpeg" alt class="h-auto rounded-circle" />
                         </div>
                         <div class="col-md-8 col-12">
 

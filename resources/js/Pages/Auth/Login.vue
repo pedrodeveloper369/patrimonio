@@ -41,7 +41,7 @@ const submit = () => {
                     <a href="index.html" class="app-brand-link gap-2">
                     <span class="app-brand-logo demo">
                         <div class="col-md-4 col-12 mb-3 mb-md-0">
-                            <img src="assets/img/avatars/pitruca.webp" alt class="h-auto rounded-circle" />
+                            <img src="assets/img/avatars/pitruca.jpeg" alt class="h-auto rounded-circle" />
                         </div>
                      </span>
                     </a>

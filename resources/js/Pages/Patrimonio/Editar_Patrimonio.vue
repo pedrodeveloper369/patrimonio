@@ -177,20 +177,29 @@ function redirecionar_pagina(){
                     </div>
 
                     <div class="col mb-0">
-                        <label for="emailLarge" class="">Quantidade (Opcional)</label>
+                        <label for="emailLarge" class="">Quantidade</label>
                         <input type="number" min="1" v-model="form.qtd" class="form-control"  />
+                        <div v-if="form.errors.qtd" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.qtd }}
+                        </div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
-                        <label for="dobLarge" class="">Custo (Opcional)</label>
+                        <label for="dobLarge" class="">Custo</label>
                         <input type="number" v-model="form.valor_compra" class="form-control"  />
+                        <div v-if="form.errors.valor_compra" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.valor_compra }}
+                        </div>
                     </div>
 
                     <div class="col mb-0">
-                        <label for="emailLarge" class="">Origem (Opcional)</label>
+                        <label for="emailLarge" class="">Origem</label>
                         <input type="text" v-model="form.origem" class="form-control" />
+                        <div v-if="form.errors.origem" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.origem }}
+                        </div>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Conservação</label>
@@ -273,12 +282,18 @@ function redirecionar_pagina(){
 
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
-                        <label for="emailLarge" class="">Marca (Opcional)</label>
+                        <label for="emailLarge" class="">Marca</label>
                         <input type="text" v-model="form.marca" class="form-control" />
+                        <div v-if="form.errors.marca" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.marca }}
+                        </div>
                     </div>
                     <div class="col mb-0">
-                        <label for="dobLarge" class="">Série (Opcional)</label>
+                        <label for="dobLarge" class="">Série</label>
                         <input type="text" v-model="form.num_serie" class="form-control" />
+                        <div v-if="form.errors.num_serie" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.num_serie }}
+                        </div>
                     </div>
                     <div class="col mb-0">
                         <label for="dobLarge" class="">Cor (Opcional)</label>
@@ -331,6 +346,9 @@ function redirecionar_pagina(){
                             </option>
 
                         </select>
+                        <div v-if="form.errors.responsavel" class="text-red-500 text-sm mt-1">
+                            {{ form.errors.responsavel }}
+                        </div>
                     </div>
                 <div class="row g-2 mb-3">
                     <div class="col mb-0">
